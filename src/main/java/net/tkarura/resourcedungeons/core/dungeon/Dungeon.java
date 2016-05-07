@@ -226,6 +226,7 @@ public class Dungeon {
 		return "Dungeon [" + (id != null ? "id=" + id + ", " : "") + "support=" + support + ", enable=" + enable + ", "
 				+ (directory != null ? "directory=" + directory + ", " : "")
 				+ (name != null ? "name=" + name + ", " : "") + (version != null ? "version=" + version + ", " : "")
+				+ (discription != null ? "discription=" + discription + ", " : "")
 				+ (authors != null ? "authors=" + authors + ", " : "")
 				+ (contributors != null ? "contributors=" + contributors + ", " : "")
 				+ "]";
