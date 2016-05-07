@@ -28,6 +28,8 @@ public class Dungeon {
 	protected String name = "Empty Name.";
 	protected String version = "Empty Version.";
 	protected String discription = "";
+	protected List<UserData> authors = new ArrayList<UserData>();
+	protected List<UserData> contributors = new ArrayList<UserData>();
 	
 	/**
 	 * 識別用のIDを指定して生成します。
@@ -61,6 +63,8 @@ public class Dungeon {
 		this.name = new String(dungeon.name);
 		this.version = new String(dungeon.version);
 		this.discription = new String(dungeon.discription);
+		this.authors = new ArrayList<UserData>(dungeon.authors);
+		this.contributors = new ArrayList<UserData>(dungeon.contributors);
 	}
 	
 	// Setter.
@@ -108,6 +112,24 @@ public class Dungeon {
 	public void setDiscription(String discription) {
 		Validate.notNull(discription, "discription is null.");
 		this.discription = discription;
+	}
+	
+	/**
+	 * 製作者情報を追加します。
+	 * @param user 追加する製作者情報
+	 */
+	public void addAuthor(UserData user) {
+		Validate.notNull(user, "user is null.");
+		this.authors.add(user);
+	}
+	
+	/**
+	 * 貢献者情報を追加します。
+	 * @param user 追加する貢献者情報
+	 */
+	public void addContributor(UserData user) {
+		Validate.notNull(user, "user is null.");
+		this.contributors.add(user);
 	}
 	
 	// Executor.
@@ -182,12 +204,30 @@ public class Dungeon {
 		return this.discription;
 	}
 	
+	/**
+	 * 製作者情報一覧を返します。
+	 * @return 製作者情報が格納されたList情報
+	 */
+	public List<UserData> getAuthors() {
+		return new ArrayList<UserData>(authors);
+	}
+	
+	/**
+	 * 貢献者情報一覧を返します。
+	 * @return 貢献者情報が格納されたList情報
+	 */
+	public List<UserData> getContributors() {
+		return new ArrayList<UserData>(contributors);
+	}
+	
 	/** Eclipseからの自動生成 */
 	@Override
 	public String toString() {
 		return "Dungeon [" + (id != null ? "id=" + id + ", " : "") + "support=" + support + ", enable=" + enable + ", "
 				+ (directory != null ? "directory=" + directory + ", " : "")
 				+ (name != null ? "name=" + name + ", " : "") + (version != null ? "version=" + version + ", " : "")
+				+ (authors != null ? "authors=" + authors + ", " : "")
+				+ (contributors != null ? "contributors=" + contributors + ", " : "")
 				+ "]";
 	}
 	
