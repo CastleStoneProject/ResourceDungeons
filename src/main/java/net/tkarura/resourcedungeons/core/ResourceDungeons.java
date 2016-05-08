@@ -22,6 +22,9 @@ public final class ResourceDungeons {
 	// instance.
 	private final static ResourceDungeons instance = new ResourceDungeons();
 	
+	// DungeonManager.
+	private final DungeonManager dungeons = new DungeonManager();
+	
 	// logger.
 	private Logger log = Logger.getLogger("ResourceDungeons");
 	
@@ -62,6 +65,9 @@ public final class ResourceDungeons {
 			dungeon_dir.mkdirs();
 		}
 		
+		// DungeonManagerを初期化
+		dungeons.init();
+		
 		// 初期化終了の通知
 		log.info("Complate Initialize.");
 		
@@ -81,6 +87,14 @@ public final class ResourceDungeons {
 	 */
 	public static Logger getLogger() {
 		return instance.log;
+	}
+	
+	/**
+	 * Dungeon管理クラスを返します。
+	 * @return DungeonManagerクラス
+	 */
+	public DungeonManager getDungeonManager() {
+		return this.dungeons;
 	}
 	
 	/**
