@@ -110,7 +110,7 @@ public final class ResourceDungeons {
 	 * @return ディレクトリ情報
 	 */
 	public File getDungeonsDirectory() {
-		return this.directory;
+		return this.dungeon_dir;
 	}
 	
 	/**
