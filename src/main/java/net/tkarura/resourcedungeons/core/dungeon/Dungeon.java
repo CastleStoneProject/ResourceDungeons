@@ -31,6 +31,12 @@ public class Dungeon {
 	protected List<UserData> authors = new ArrayList<UserData>();
 	protected List<UserData> contributors = new ArrayList<UserData>();
 	
+	// スクリプト情報
+	protected List<DungeonScript> scripts = new ArrayList<DungeonScript>();
+	
+	// 自動生成情報
+	protected List<GenerateOption> generates = new ArrayList<GenerateOption>();
+	
 	/**
 	 * 識別用のIDを指定して生成します。
 	 * @param id 識別用ID
@@ -65,6 +71,8 @@ public class Dungeon {
 		this.discription = new String(dungeon.discription);
 		this.authors = new ArrayList<UserData>(dungeon.authors);
 		this.contributors = new ArrayList<UserData>(dungeon.contributors);
+		this.scripts = new ArrayList<DungeonScript>(dungeon.scripts);
+		this.generates = new ArrayList<GenerateOption>(dungeon.generates);
 	}
 	
 	// Setter.
@@ -130,6 +138,24 @@ public class Dungeon {
 	public void addContributor(UserData user) {
 		Validate.notNull(user, "user is null.");
 		this.contributors.add(user);
+	}
+	
+	/**
+	 * スクリプト情報を追加します。
+	 * @param script 追加するスクリプト情報
+	 */
+	public void addScript(DungeonScript script) {
+		Validate.notNull(script, "script is null.");
+		this.scripts.add(script);
+	}
+	
+	/**
+	 * 生成情報を追加します。
+	 * @param option 追加する生成情報
+	 */
+	public void addGenerate(GenerateOption option) {
+		Validate.notNull(option, "option is null.");
+		this.generates.add(option);
 	}
 	
 	// Executor.
@@ -220,6 +246,24 @@ public class Dungeon {
 		return new ArrayList<UserData>(contributors);
 	}
 	
+	/**
+	 * スクリプト情報一覧を返します。
+	 * ダンジョンの動作にはこのスクリプト情報から行われます。
+	 * @return スクリプト情報。
+	 */
+	public List<DungeonScript> getScripts() {
+		return new ArrayList<DungeonScript>(scripts);
+	}
+	
+	/**
+	 * 生成情報一覧を返します。
+	 * 自動生成における生成の判定にはこの生成情報から行われます。
+	 * @return 生成情報
+	 */
+	public List<GenerateOption> getGenerates() {
+		return new ArrayList<GenerateOption>(generates);
+	}
+	
 	/** Eclipseからの自動生成 */
 	@Override
 	public String toString() {
@@ -229,7 +273,7 @@ public class Dungeon {
 				+ (discription != null ? "discription=" + discription + ", " : "")
 				+ (authors != null ? "authors=" + authors + ", " : "")
 				+ (contributors != null ? "contributors=" + contributors + ", " : "")
-				+ "]";
+				+ (scripts != null ? "scripts=" + scripts : "") + "]";
 	}
 	
 }
