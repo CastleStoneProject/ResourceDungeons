@@ -19,7 +19,7 @@ ResourceDungeonsの基本的な機能を行う部分を基本部実行環境に�
 
 プロジェクトに貢献して頂ける方を募集しています。応募にはプロジェクトにはLGPLv3を適応している為ライセンスの下で行う必要があります。
 
-## Lisense
+## License
 
 [LGPLv3](http://www.gnu.org/licenses/lgpl-3.0.html)
 
