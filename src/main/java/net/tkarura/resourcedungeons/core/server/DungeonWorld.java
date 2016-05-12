@@ -1,7 +1,5 @@
 package net.tkarura.resourcedungeons.core.server;
 
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
-
 /**
  * ワールドに関する処理を受け渡す中間クラスです。
  * @author the_karura
@@ -29,24 +27,6 @@ public abstract class DungeonWorld {
 	 * @param applyPhysics 周囲の更新の有無
 	 */
 	public abstract void setBlock(int x, int y, int z, String block, byte damage, boolean applyPhysics);
-	
-	/**
-	 * タイル情報を設定します。
-	 * @param loc ブロックの位置情報
-	 * @param nbt 設定するNBT情報
-	 */
-	public void setTileEntityNBT(DungeonLocation loc, DNBTTagCompound nbt) {
-		setTileEntityNBT(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), nbt);
-	}
-	
-	/**
-	 * タイル情報を設定します。
-	 * @param x ブロックの位置x座標
-	 * @param y ブロックの位置y座標
-	 * @param z ブロックの位置z座標
-	 * @param nbt 設定するNBT情報
-	 */
-	public abstract void setTileEntityNBT(int x, int y, int z, DNBTTagCompound nbt);
 	
 	/**
 	 * ブロック情報を更新します。
@@ -101,34 +81,6 @@ public abstract class DungeonWorld {
 	public abstract int getMaxHeight();
 	
 	/**
-	 * 指定した位置情報のブロック情報を返します。
-	 * @param loc 位置情報
-	 * @return ブロック情報
-	 */
-	public DungeonBlock getBlock(DungeonLocation loc) {
-		return getBlock(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-	}
-	
-	/**
-	 * 指定した位置情報のブロック情報を返します。
-	 * @param x 位置x座標
-	 * @param y 位置y座標
-	 * @param z 位置z座標
-	 * @return ブロック情報
-	 */
-	public DungeonBlock getBlock(int x, int y, int z) {
-		DungeonLocation loc = new DungeonLocation(this, x, y, z);
-		String registory_id = getBlockID(x, y, z);
-		byte damage = getData(x, y, z);
-		if (isTileEntity(x, y, z)) {
-			return new DungeonBlock(loc, registory_id, damage);
-		} else {
-			DNBTTagCompound nbt = getTileEntityNBT(x, y, z);
-			return new DungeonBlock(loc, registory_id, damage, nbt);
-		}
-	}
-	
-	/**
 	 * 指定した位置情報のブロックIDを返します。
 	 * @param loc 位置情報
 	 * @return ブロックID
@@ -181,42 +133,6 @@ public abstract class DungeonWorld {
 	 * @return 空である場合はtrueを返します。
 	 */
 	public abstract boolean isEmpty(int x, int y, int z);
-	
-	/**
-	 * 指定した位置情報のブロックがTileEntityであるかを確認します。
-	 * @param loc 位置情報
-	 * @return TileEntityであればtrueを返します。
-	 */
-	public boolean isTileEntity(DungeonLocation loc) {
-		return loc.getWorld().isTileEntity(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-	}
-	
-	/**
-	 * 指定した位置情報のブロックがTileEntityであるかを確認します。
-	 * @param x 位置x座標
-	 * @param y 位置y座標
-	 * @param z 位置z座標
-	 * @return TileEntityであればtrueを返します。
-	 */
-	public abstract boolean isTileEntity(int x, int y, int z);
-	
-	/**
-	 * 指定した位置情報のTileEntityのNBTTagを取得します。
-	 * @param loc 位置情報
-	 * @return TileEntityのNBTTagCompound もしTileEntityで無ければnullを返します。
-	 */
-	public DNBTTagCompound getTileEntityNBT(DungeonLocation loc) {
-		return getTileEntityNBT(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-	}
-	
-	/**
-	 * 指定した位置情報のTileEntityのNBTTagを取得します。
-	 * @param x 位置x座標
-	 * @param y 位置y座標
-	 * @param z 位置z座標
-	 * @return TileEntityのNBTTagCompound もしTileEntityで無ければnullを返します。
-	 */
-	public abstract DNBTTagCompound getTileEntityNBT(int x, int y, int z);
 	
 	/**
 	 * 指定した位置情報のバイオームIDを返します。
