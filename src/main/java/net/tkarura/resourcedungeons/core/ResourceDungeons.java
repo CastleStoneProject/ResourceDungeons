@@ -3,8 +3,7 @@ package net.tkarura.resourcedungeons.core;
 import java.io.File;
 import java.util.logging.Logger;
 
-import net.tkarura.resourcedungeons.core.command.Commands;
-import net.tkarura.resourcedungeons.core.server.DungeonServer;
+import net.tkarura.resourcedungeons.core.command.CommandManager;
 
 /**
  * ResourceDungeonsの本体 ResourceDungeonsに関わるクラスの初期化とクラスの管理を行います。
@@ -32,6 +31,9 @@ public final class ResourceDungeons {
 	private File directory = new File("");
 	private File dungeon_dir = new File(directory, "Dungeons");
 	private File script_dir = new File(directory, "scripts");
+	
+	// Commands
+	private CommandManager commands = new CommandManager();
 	
 	// Contractor.
 	private ResourceDungeons() {}
@@ -119,6 +121,10 @@ public final class ResourceDungeons {
 	 */
 	public File getScriptsDirectory() {
 		return this.script_dir;
+	}
+	
+	public CommandManager getCommands() {
+		return this.commands;
 	}
 	
 }
