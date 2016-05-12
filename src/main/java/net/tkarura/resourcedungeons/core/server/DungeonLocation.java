@@ -6,9 +6,21 @@ package net.tkarura.resourcedungeons.core.server;
  */
 public class DungeonLocation {
 	
+	private DungeonWorld world;
 	private double x;
 	private double y;
 	private double z;
+	
+	/**
+	 * 位置情報を指定して生成
+	 * <p>この場合{@link #getWorld()}が返す値はnullになります。
+	 * @param x x座標
+	 * @param y y座標
+	 * @param z z座標
+	 */
+	public DungeonLocation(double x, double y, double z) {
+		this(null, x, y ,z);
+	}
 	
 	/**
 	 * ワールド情報と位置情報を指定して生成
@@ -17,7 +29,8 @@ public class DungeonLocation {
 	 * @param y y座標
 	 * @param z z座標
 	 */
-	public DungeonLocation(double x, double y, double z) {
+	public DungeonLocation(DungeonWorld world, double x, double y, double z) {
+		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -93,6 +106,14 @@ public class DungeonLocation {
 	 */
 	public void setZ(double z) {
 		this.z = z;
+	}
+	
+	/**
+	 * ワールド情報を返します。
+	 * @return 位置情報が持つワールド情報
+	 */
+	public DungeonWorld getWorld() {
+		return this.world;
 	}
 	
 	/**
