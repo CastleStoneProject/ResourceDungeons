@@ -24,6 +24,10 @@ public class CommandManager {
 	 * クラスを生成します。
 	 */
 	public CommandManager() {
+		registerInternalCommand(new HelpCommand());
+		registerInternalCommand(new ListCommand());
+		registerInternalCommand(new InfoCommand());
+		registerInternalCommand(new ReloadCommand());
 	}
 	
 	/**
