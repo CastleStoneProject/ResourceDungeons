@@ -32,5 +32,12 @@ public final class FileHandler {
 			return pathname.getName().endsWith("js");
 		}
 	};
+
+	public static final FileFilter XML_FILTER = new FileFilter() {
+		@Override
+		public boolean accept(File pathname) {
+			return pathname.getName().endsWith("xml");
+		}
+	};
 	
 }

@@ -45,34 +45,29 @@ public final class DungeonManager {
 		
 		// Dungeonsディレクトリを検索します。
 		for (File dungeon_dir : dungeons_dir.listFiles(FileHandler.FOLDER_FILTER)) {
+			hedder = new File(dungeon_dir, "dungeon.xml");
 			
-			// Dungeonsディレクトリ内の子ディレクトリを検索してxml情報を取得します。
-			for (File dungeon_folder : dungeon_dir.listFiles(FileHandler.FOLDER_FILTER)) {
+			// 該当のファイルがあるかを確認します。
+			if (hedder.exists()) {
 				
-				hedder = new File(dungeon_folder, "dungeon.xml");
-				
-				// 該当のファイルがあるかを確認します。
-				if (hedder.exists()) {
+				try {
 					
-					try {
-						
-						// ビルダークラスにファイル情報を渡します。
-						builder = new XMLDungeonBuilder(new FileInputStream(hedder), dungeon_folder);
-						
-						// ビルダークラスから結果を取得します。
-						dungeon = builder.getResult();
-						
-						// ダンジョン情報を登録処理へ
-						registerDungeon(dungeon);
-						
-					} catch (DungeonLoadException | FileNotFoundException | IllegalArgumentException
-							| NullPointerException e) {
-						e.printStackTrace();
-					}
+					// ビルダークラスにファイル情報を渡します。
+					builder = new XMLDungeonBuilder(new FileInputStream(hedder), dungeon_dir);
 					
-					// breakでループを抜けて不必要な処理をさせないようにします。
-					break;
+					// ビルダークラスから結果を取得します。
+					dungeon = builder.getResult();
+					
+					// ダンジョン情報を登録処理へ
+					registerDungeon(dungeon);
+					
+					ResourceDungeons.getLogger().info("dungeon loaded \"" + dungeon.getID() + "\"");
+					
+				} catch (DungeonLoadException | FileNotFoundException | IllegalArgumentException
+						| NullPointerException e) {
+					e.printStackTrace();
 				}
+				
 			}
 		}
 	}
