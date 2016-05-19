@@ -30,6 +30,7 @@ public class CommandManager {
 		registerInternalCommand(new ListCommand());
 		registerInternalCommand(new InfoCommand());
 		registerInternalCommand(new ReloadCommand());
+		registerInternalCommand(new GenerateCommand());
 	}
 	
 	/**
