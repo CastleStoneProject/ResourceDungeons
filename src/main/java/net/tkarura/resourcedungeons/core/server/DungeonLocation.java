@@ -1,5 +1,7 @@
 package net.tkarura.resourcedungeons.core.server;
 
+import net.tkarura.resourcedungeons.core.server.world.DungeonWorld;
+
 /**
  * ワールド情報とワールド座標を決めるX,Y,Zを保管するクラスです。
  * @author the_karura

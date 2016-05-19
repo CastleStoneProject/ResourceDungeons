@@ -5,7 +5,7 @@ import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
 import net.tkarura.resourcedungeons.core.dungeon.GenerateOption;
 import net.tkarura.resourcedungeons.core.exception.CommandException;
-import net.tkarura.resourcedungeons.core.server.DungeonSender;
+import net.tkarura.resourcedungeons.core.server.sender.DungeonSender;
 
 /**
  * 読み込んだダンジョンの詳細情報を表示するコマンドクラスです。

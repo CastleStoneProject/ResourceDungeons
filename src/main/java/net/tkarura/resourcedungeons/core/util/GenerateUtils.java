@@ -99,10 +99,12 @@ public final class GenerateUtils {
 			
 			loc.add(base_loc.getX(), base_loc.getY(), base_loc.getZ());
 			
-			if (!option.getBlocks().contains(base_loc.getWorld().getBlock(loc)))
+			if (!option.getBlocks().contains(base_loc.getWorld()
+					.getBlock(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())))
 				return false;
 			
-			if (!option.getBlocks().contains(base_loc.getWorld().getBiome(loc)))
+			if (!option.getBlocks().contains(base_loc.getWorld()
+					.getBiome(loc.getBlockX(), loc.getBlockZ())))
 				return false;
 			
 		}

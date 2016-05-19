@@ -6,7 +6,8 @@ import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
 import net.tkarura.resourcedungeons.core.exception.CommandException;
 import net.tkarura.resourcedungeons.core.exception.DungeonGenerateException;
 import net.tkarura.resourcedungeons.core.generator.DungeonGenerate;
-import net.tkarura.resourcedungeons.core.server.DungeonSender;
+import net.tkarura.resourcedungeons.core.server.entity.DungeonPlayer;
+import net.tkarura.resourcedungeons.core.server.sender.DungeonSender;
 
 /**
  * ダンジョンを生成する処理を行うコマンドクラスです。
@@ -32,9 +33,10 @@ public final class GenerateCommand implements Command {
 		
 		try {
 			
+			DungeonPlayer player = (DungeonPlayer) sender;
 			DungeonGenerate generate = new DungeonGenerate(dungeon);
 			
-			generate.execute(sender.getLocation(), args[2]);
+			generate.execute(player.getLocation(), args[2]);
 			
 			sender.sendMessage("Dungeon Generate Complate.");
 			

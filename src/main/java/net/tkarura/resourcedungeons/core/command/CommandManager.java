@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.tkarura.resourcedungeons.core.exception.CommandException;
-import net.tkarura.resourcedungeons.core.server.DungeonSender;
+import net.tkarura.resourcedungeons.core.server.entity.DungeonPlayer;
+import net.tkarura.resourcedungeons.core.server.sender.DungeonConsole;
+import net.tkarura.resourcedungeons.core.server.sender.DungeonSender;
 
 /**
  * コマンド情報を管理するマネージャクラスです。
@@ -58,11 +60,11 @@ public class CommandManager {
 		}
 		
 		// プレイヤーのみの実行でありなおかつコンソールからの実行であるかを確認します。
-		if (command.isPlayer() && sender.isConsole())
+		if (command.isPlayer() && sender instanceof DungeonConsole)
 			throw new CommandException("Player Only Command.");
 		
 		// プレイヤーがコマンド実行に必要な権限を持つっているのかを確認します。
-		if (!command.isPlayer() && !sender.isConsole()) {
+		if (!command.isPlayer() && sender instanceof DungeonPlayer) {
 			
 			if (!sender.hasPermission(command.getPermission()))
 				throw new CommandException("You don't have " + command.getPermission());

@@ -1,7 +1,7 @@
 package net.tkarura.resourcedungeons.core.command;
 
 import net.tkarura.resourcedungeons.core.exception.CommandException;
-import net.tkarura.resourcedungeons.core.server.DungeonSender;
+import net.tkarura.resourcedungeons.core.server.sender.DungeonSender;
 
 /**
  * コマンドに関する処理を表します。
