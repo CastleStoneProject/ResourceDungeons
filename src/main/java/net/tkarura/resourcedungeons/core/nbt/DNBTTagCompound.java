@@ -126,12 +126,12 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定して値を習得します。
+	 * 鍵を指定してタグ情報を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
-	public Object get(String key) {
-		return this.value.get(key).getValue();
+	public DNBTBase get(String key) {
+		return this.value.get(key);
 	}
 	
 	/**
