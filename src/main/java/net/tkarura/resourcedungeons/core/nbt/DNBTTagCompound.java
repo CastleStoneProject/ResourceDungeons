@@ -135,7 +135,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してbyte型の値を習得します。
+	 * 鍵を指定してbyte型の値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -148,7 +148,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してshort型の値を習得します。
+	 * 鍵を指定してshort型の値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -161,7 +161,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してint型の値を習得します。
+	 * 鍵を指定してint型の値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -174,7 +174,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してfloat型の値を習得します。
+	 * 鍵を指定してfloat型の値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -187,7 +187,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してdouble型の値を習得します。
+	 * 鍵を指定してdouble型の値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -200,7 +200,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してStringの値を習得します。
+	 * 鍵を指定してStringの値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -213,7 +213,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してbyte arrayの値を習得します。
+	 * 鍵を指定してbyte arrayの値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -226,7 +226,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してint arrayの値を習得します。
+	 * 鍵を指定してint arrayの値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -239,7 +239,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してListの値を習得します。
+	 * 鍵を指定してListの値を取得します。
 	 * @param key 鍵
 	 * @return 値
 	 */
@@ -252,7 +252,7 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
-	 * 鍵を指定してNBTTagCompoundの情報を習得します。
+	 * 鍵を指定してNBTTagCompoundの情報を取得します。
 	 * @param key 鍵
 	 * @return 情報
 	 */
