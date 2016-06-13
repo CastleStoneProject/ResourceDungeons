@@ -74,6 +74,87 @@ public abstract class DNBTBase {
 		}
 	}
 	
+	/**
+	 * byte引数のタグを返します。
+	 * @param value byte
+	 * @return byte引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagByte valueOf(byte value) {
+		return new DNBTTagByte(value);
+	}
+	
+	/**
+	 * short引数のタグを返します。
+	 * @param value short
+	 * @return short引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagShort valueOf(short value) {
+		return new DNBTTagShort(value);
+	}
+	
+	/**
+	 * int引数のタグを返します。
+	 * @param value int
+	 * @return int引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagInt valueOf(int value) {
+		return new DNBTTagInt(value);
+	}
+	
+	/**
+	 * long引数のタグを返します。
+	 * @param value long
+	 * @return long引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagLong valueOf(long value) {
+		return new DNBTTagLong(value);
+	}
+	
+	/**
+	 * float引数のタグを返します。
+	 * @param value float
+	 * @return float引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagFloat valueOf(float value) {
+		return new DNBTTagFloat(value);
+	}
+	
+	/**
+	 * double引数のタグを返します。
+	 * @param value double
+	 * @return double引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagDouble valueOf(double value) {
+		return new DNBTTagDouble(value);
+	}
+	
+	/**
+	 * byte配列引数のタグを返します。
+	 * @param value byte配列
+	 * @return byte配列引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagByteArray valueOf(byte[] value) {
+		return new DNBTTagByteArray(value);
+	}
+	
+	/**
+	 * String引数のタグを返します。
+	 * @param value String
+	 * @return String引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagString valueOf(String value) {
+		return new DNBTTagString(value);
+	}
+	
+	/**
+	 * int配列引数のタグを返します。
+	 * @param value int配列
+	 * @return int配列引数が格納されたタグが返されます。
+	 */
+	public static DNBTTagIntArray valueOf(int[] value) {
+		return new DNBTTagIntArray(value);
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof DNBTBase)) {
