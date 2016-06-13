@@ -13,6 +13,18 @@ import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonScript;
 import net.tkarura.resourcedungeons.core.exception.DungeonGenerateException;
+import net.tkarura.resourcedungeons.core.nbt.DNBTBase;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagByte;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagByteArray;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagCompound;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagDouble;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagFloat;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagInt;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagIntArray;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagList;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagLong;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagShort;
+import net.tkarura.resourcedungeons.core.nbt.DNBTTagString;
 import net.tkarura.resourcedungeons.core.server.DungeonLocation;
 import net.tkarura.resourcedungeons.core.util.FileHandler;
 
@@ -49,6 +61,20 @@ public class DungeonGenerate {
 		// javascriptを呼び出します。
 		this.engine = new ScriptEngineManager().getEngineByName("javascript");
 		
+		// スクリプトに必要なクラスを関連付けします。
+		this.registerJavaClass(DNBTBase.class);
+		this.registerJavaClass(DNBTTagByte.class);
+		this.registerJavaClass(DNBTTagShort.class);
+		this.registerJavaClass(DNBTTagInt.class);
+		this.registerJavaClass(DNBTTagLong.class);
+		this.registerJavaClass(DNBTTagFloat.class);
+		this.registerJavaClass(DNBTTagDouble.class);
+		this.registerJavaClass(DNBTTagByteArray.class);
+		this.registerJavaClass(DNBTTagString.class);
+		this.registerJavaClass(DNBTTagList.class);
+		this.registerJavaClass(DNBTTagCompound.class);
+		this.registerJavaClass(DNBTTagIntArray.class);
+		
 		// スクリプトディレクトリが無ければ例外を出します。
 		if (!script_dir.isDirectory()) {
 			throw new FileNotFoundException("Directory is not folder.");
@@ -57,6 +83,12 @@ public class DungeonGenerate {
 		// スクリプトディレクトリ内のスクリプト情報を全て読み込みます。
 		loadFolder(script_dir);
 		
+	}
+	
+	// 引数で指定されたクラスをエンジンに登録します。
+	private void registerJavaClass(Class<?> clazz) throws ScriptException {
+		this.engine.put(clazz.getSimpleName() + "JavaClass", clazz);
+		this.engine.eval("var " + clazz.getSimpleName() + " = " + clazz.getSimpleName() + "JavaClass.static;");
 	}
 	
 	// 再帰処理を使用して登録された情報一覧を習得します。
