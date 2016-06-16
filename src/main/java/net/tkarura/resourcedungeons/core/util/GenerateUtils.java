@@ -8,7 +8,8 @@ import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
 import net.tkarura.resourcedungeons.core.dungeon.GenerateOption;
 import net.tkarura.resourcedungeons.core.exception.DungeonGenerateException;
-import net.tkarura.resourcedungeons.core.generator.DungeonGenerate;
+import net.tkarura.resourcedungeons.core.script.JavaScriptExecutor;
+import net.tkarura.resourcedungeons.core.script.ScriptExecutor;
 import net.tkarura.resourcedungeons.core.server.DungeonLocation;
 
 /**
@@ -123,7 +124,7 @@ public final class GenerateUtils {
 	public static void generate(Dungeon dungeon, DungeonLocation loc, GenerateOption option)
 			throws DungeonGenerateException {
 		
-		DungeonGenerate generate = new DungeonGenerate(dungeon);
+		ScriptExecutor generate = new JavaScriptExecutor(dungeon);
 		
 		generate.execute(loc, option.getFunction());
 		

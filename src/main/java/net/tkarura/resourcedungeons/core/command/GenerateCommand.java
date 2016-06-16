@@ -1,15 +1,12 @@
 package net.tkarura.resourcedungeons.core.command;
 
-import java.io.FileNotFoundException;
-
-import javax.script.ScriptException;
-
 import net.tkarura.resourcedungeons.core.DungeonManager;
 import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
 import net.tkarura.resourcedungeons.core.exception.CommandException;
 import net.tkarura.resourcedungeons.core.exception.DungeonGenerateException;
-import net.tkarura.resourcedungeons.core.generator.DungeonGenerate;
+import net.tkarura.resourcedungeons.core.script.JavaScriptExecutor;
+import net.tkarura.resourcedungeons.core.script.ScriptExecutor;
 import net.tkarura.resourcedungeons.core.server.entity.DungeonPlayer;
 import net.tkarura.resourcedungeons.core.server.sender.DungeonSender;
 
@@ -38,7 +35,7 @@ public final class GenerateCommand implements Command {
 		try {
 			
 			DungeonPlayer player = (DungeonPlayer) sender;
-			DungeonGenerate generate = new DungeonGenerate(dungeon);
+			ScriptExecutor generate = new JavaScriptExecutor(dungeon);
 			
 			generate.init();
 			generate.execute(player.getLocation(), args[2]);
@@ -47,10 +44,6 @@ public final class GenerateCommand implements Command {
 			
 		} catch (DungeonGenerateException e) {
 			sender.sendMessage(e.getLocalizedMessage());
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (ScriptException e) {
 			e.printStackTrace();
 		}
 		
