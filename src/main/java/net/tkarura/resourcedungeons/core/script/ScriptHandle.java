@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.generator;
+package net.tkarura.resourcedungeons.core.script;
 
 import javax.script.Invocable;
 
@@ -11,7 +11,7 @@ import net.tkarura.resourcedungeons.core.server.DungeonLocation;
  * @author the_karura
  */
 @Deprecated 
-public final class GenerateHandle {
+public final class ScriptHandle {
 	
 	private Dungeon dungeon;
 	private DungeonLocation loc;
@@ -21,7 +21,7 @@ public final class GenerateHandle {
 	 * @param dungeon ダンジョン情報
 	 * @param loc 生成する位置情報
 	 */
-	public GenerateHandle(Dungeon dungeon, DungeonLocation loc) {
+	public ScriptHandle(Dungeon dungeon, DungeonLocation loc) {
 		this.dungeon = dungeon;
 		this.loc = loc;
 	}
