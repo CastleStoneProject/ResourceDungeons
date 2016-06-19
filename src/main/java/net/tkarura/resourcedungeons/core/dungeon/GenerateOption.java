@@ -74,6 +74,36 @@ public class GenerateOption {
 		this.biomes.remove(biome_id);
 	}
 	
+	public boolean isMatchOptions(DungeonLocation loc) {
+		
+		DungeonLocation ll;
+		
+		for (DungeonLocation l : this.locs) {
+			
+			ll = loc;
+			ll.add(l.getX(), l.getY(), l.getZ());
+			
+			if (!isMatchOption(ll))
+				return false;
+			
+		}
+		
+		return true;
+	}
+	
+	private boolean isMatchOption(DungeonLocation loc) {
+		
+		if (!this.biomes.contains(
+				loc.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ())))
+			return false;
+		
+		if (!this.biomes.contains(
+				loc.getWorld().getBlockID(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())))
+			return false;
+		
+		return true;
+	}
+	
 	/**
 	 * 関数名を返します。
 	 * @return 関数名
