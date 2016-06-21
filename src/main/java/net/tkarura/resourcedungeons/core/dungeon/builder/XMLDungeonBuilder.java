@@ -229,9 +229,9 @@ public class XMLDungeonBuilder implements DungeonBuilder {
 				
 				// 不正な文字列が含まれた場合値を全て0に設定
 				try {
-					x = Integer.valueOf(nums[0]);
-					y = Integer.valueOf(nums[1]);
-					z = Integer.valueOf(nums[2]);
+					x = Integer.valueOf(nums[0].trim());
+					y = Integer.valueOf(nums[1].trim());
+					z = Integer.valueOf(nums[2].trim());
 				} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
 					x = 0;
 					y = 0;
