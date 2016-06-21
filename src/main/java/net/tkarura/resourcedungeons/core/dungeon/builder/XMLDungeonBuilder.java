@@ -210,7 +210,16 @@ public class XMLDungeonBuilder implements DungeonBuilder {
 		if (node.getAttributes().getNamedItem("function") == null)
 			throw new DungeonLoadException();
 		
-		GenerateOption option = new GenerateOption(node.getAttributes().getNamedItem("function").getNodeValue());
+		String function = node.getAttributes().getNamedItem("function").getNodeValue();
+		double percent = 0.0d;
+		
+		try {
+			percent = Double.valueOf(node.getAttributes().getNamedItem("percent").getNodeValue());
+		} catch (NumberFormatException e) {
+			percent = 0.0d;
+		}
+		
+		GenerateOption option = new GenerateOption(function, percent);
 		
 		NodeList generate_nodes = node.getChildNodes();
 		
