@@ -31,7 +31,7 @@ public class GenerateOption {
 	 * @param function 関数名
 	 */
 	public GenerateOption(String function) {
-		this(function, 100.0f);
+		this(function, 0.0d);
 	}
 	
 	public GenerateOption(String function, double percent) {
