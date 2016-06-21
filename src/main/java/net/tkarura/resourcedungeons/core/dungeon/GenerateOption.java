@@ -21,6 +21,7 @@ import net.tkarura.resourcedungeons.core.server.DungeonLocation;
 public class GenerateOption {
 	
 	private final String function;
+	private final double percent;
 	private final List<DungeonLocation> locs = new ArrayList<DungeonLocation>();
 	private final List<String> blocks = new ArrayList<String>();
 	private final List<String> biomes = new ArrayList<String>();
@@ -30,7 +31,12 @@ public class GenerateOption {
 	 * @param function 関数名
 	 */
 	public GenerateOption(String function) {
+		this(function, 100.0f);
+	}
+	
+	public GenerateOption(String function, double percent) {
 		this.function = function;
+		this.percent = percent;
 	}
 	
 	/**
@@ -110,6 +116,10 @@ public class GenerateOption {
 	 */
 	public String getFunction() {
 		return this.function;
+	}
+	
+	public double getPercent() {
+		return this.percent;
 	}
 	
 	/**
