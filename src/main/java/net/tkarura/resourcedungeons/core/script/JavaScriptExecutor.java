@@ -25,7 +25,9 @@ import net.tkarura.resourcedungeons.core.nbt.DNBTTagList;
 import net.tkarura.resourcedungeons.core.nbt.DNBTTagLong;
 import net.tkarura.resourcedungeons.core.nbt.DNBTTagShort;
 import net.tkarura.resourcedungeons.core.nbt.DNBTTagString;
+import net.tkarura.resourcedungeons.core.server.DungeonItem;
 import net.tkarura.resourcedungeons.core.server.DungeonLocation;
+import net.tkarura.resourcedungeons.core.server.world.DungeonBlock;
 import net.tkarura.resourcedungeons.core.util.FileHandler;
 
 /**
@@ -77,6 +79,10 @@ public class JavaScriptExecutor implements ScriptExecutor {
 			this.registerJavaClass(DNBTTagList.class);
 			this.registerJavaClass(DNBTTagCompound.class);
 			this.registerJavaClass(DNBTTagIntArray.class);
+			
+			this.registerJavaClass(DungeonLocation.class);
+			this.registerJavaClass(DungeonBlock.class);
+			this.registerJavaClass(DungeonItem.class);
 			
 			// スクリプトディレクトリが無ければ例外を出します。
 			if (!script_dir.isDirectory()) {
