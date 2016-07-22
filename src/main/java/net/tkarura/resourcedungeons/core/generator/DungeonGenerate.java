@@ -1,155 +1,172 @@
 package net.tkarura.resourcedungeons.core.generator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
-import net.tkarura.resourcedungeons.core.dungeon.DungeonScript;
+import net.tkarura.resourcedungeons.core.dungeon.GenerateOption;
 import net.tkarura.resourcedungeons.core.exception.DungeonGenerateException;
-import net.tkarura.resourcedungeons.core.nbt.DNBTBase;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagByte;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagByteArray;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagCompound;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagDouble;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagFloat;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagInt;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagIntArray;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagList;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagLong;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagShort;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagString;
+import net.tkarura.resourcedungeons.core.script.JavaScriptExecutor;
+import net.tkarura.resourcedungeons.core.script.ScriptExecutor;
 import net.tkarura.resourcedungeons.core.server.DungeonLocation;
-import net.tkarura.resourcedungeons.core.util.FileHandler;
+import net.tkarura.resourcedungeons.core.server.world.DungeonChunk;
 
 /**
- * ダンジョンを生成するクラスです。
+ * 自動生成処理を管理するクラスです。
+ * クラスへのアクセスには{@link #getInstance()}を使用します。
+ * <p>
+ * クラスを使用する手続きは以下の手順に従います。
+ * <ol>
+ * <li>{@link #init()} クラスの初期化処理
+ * 		特別な理由がない限りは{@link #getInstance()}の後に呼び出してください。</li>
+ * <li>{@link #searchGenerateChunk(DungeonChunk)}もしくは
+ * 		{@link #searchGenerateLocation(DungeonLocation)}からダンジョン生成確認</li>
+ * <li>{@link #generate()}からダンジョン生成</li>
+ * </ol>
+ * 
  * @author the_karura
  */
 public class DungeonGenerate {
 	
-	// 実行に使用するスクリプト
-	private ScriptEngine engine = null;
+	private static DungeonGenerate instance = new DungeonGenerate();
 	
-	// 生成処理を行うダンジョン情報
-	private Dungeon dungeon;
+	private final List<DungeonStorage> gen_dungeons = new ArrayList<DungeonStorage>();
+	
+	// 検索した結果を補完する内部クラス
+	private class DungeonStorage {
+		
+		// 生成するダンジョン
+		public Dungeon dungeon;
+		
+		// 呼び出す関数
+		public GenerateOption option;
+		
+		// 生成する位置
+		public DungeonLocation loc;
+		
+	}
+	
+	private DungeonGenerate() {}
 	
 	/**
-	 * ダンジョン情報を指定して生成します。
-	 * @param dungeon
+	 * クラス内の情報を初期化します。
 	 */
-	public DungeonGenerate(Dungeon dungeon) {
-		this.dungeon = dungeon;
-	}
-	
-	/**
-	 * 実行前に必要な情報を初期化します。
-	 * @throws FileNotFoundException
-	 * @throws ScriptException
-	 */
-	public void init() throws FileNotFoundException, ScriptException {
-		
-		// スクリプトディレクトリを呼び出します。
-		File script_dir = ResourceDungeons.getInstance().getScriptsDirectory();
-		
-		// javascriptを呼び出します。
-		this.engine = new ScriptEngineManager().getEngineByName("javascript");
-		
-		// スクリプトに必要なクラスを関連付けします。
-		this.registerJavaClass(DNBTBase.class);
-		this.registerJavaClass(DNBTTagByte.class);
-		this.registerJavaClass(DNBTTagShort.class);
-		this.registerJavaClass(DNBTTagInt.class);
-		this.registerJavaClass(DNBTTagLong.class);
-		this.registerJavaClass(DNBTTagFloat.class);
-		this.registerJavaClass(DNBTTagDouble.class);
-		this.registerJavaClass(DNBTTagByteArray.class);
-		this.registerJavaClass(DNBTTagString.class);
-		this.registerJavaClass(DNBTTagList.class);
-		this.registerJavaClass(DNBTTagCompound.class);
-		this.registerJavaClass(DNBTTagIntArray.class);
-		
-		// スクリプトディレクトリが無ければ例外を出します。
-		if (!script_dir.isDirectory()) {
-			throw new FileNotFoundException("Directory is not folder.");
-		}
-		
-		// スクリプトディレクトリ内のスクリプト情報を全て読み込みます。
-		loadFolder(script_dir);
-		
-	}
-	
-	// 引数で指定されたクラスをエンジンに登録します。
-	private void registerJavaClass(Class<?> clazz) throws ScriptException {
-		this.engine.put(clazz.getSimpleName() + "JavaClass", clazz);
-		this.engine.eval("var " + clazz.getSimpleName() + " = " + clazz.getSimpleName() + "JavaClass.static;");
-	}
-	
-	// 再帰処理を使用して登録された情報一覧を習得します。
-	private void loadFolder(File folder) throws FileNotFoundException, ScriptException {
-		
-		for (File file : folder.listFiles()) {
-			
-			if (file.isDirectory()) {
-				loadFolder(file);
-			}
-			
-			if (FileHandler.JAVA_SCRIPT_FILTER.accept(file)) {
-				engine.eval(new FileReader(file));
-			}
-		}
+	public void init() {
+		this.gen_dungeons.clear();
 	}
 	
 	/**
-	 * スクリプトを実行します。
-	 * 実行する前に必ず一度{@link #init()}で情報を初期化してください。
-	 * @param loc 実行する位置情報
-	 * @param function_name 実行を開始する関数名 (関数には1つの引数が必要です。)
-	 * @throws DungeonGenerateException 実行中に例外が発生した場合
+	 * チャンク単位での検索処理を行います。
+	 * @param chunk 検索を行うチャンク情報
+	 * @throws DungeonGenerateException 生成中に例外が発生した場合
 	 */
-	@SuppressWarnings("deprecation")
-	public void execute(DungeonLocation loc, String function_name) throws DungeonGenerateException {
+	public void searchGenerateChunk(DungeonChunk chunk) {
 		
-		try {
+		for (int y = 0; y < chunk.getWorld().getMaxHeight(); y++) {
 			
-			// 登録されたスクリプト情報一覧をループで実行
-			for (DungeonScript script : dungeon.getScripts()) {
-				
-				// スクリプト対応別に処理
-				switch (script.getScriptType()) {
-				
-				// ファイル位置情報
-				case FILE_LOCATION:
-					
-					engine.eval(new FileReader(new File(dungeon.getDirectory(), script.getScript())));
-					
-					break;
-					
-				// 文字列情報
-				case TEXT_CONTENT:
-					
-					engine.eval(script.getScript());
-					
-					break;
-				}
-				
-			}
+			// 生成位置を設定
+			DungeonLocation loc = chunk.getLocation(DungeonChunk.MAX_X / 2, y, DungeonChunk.MAX_Z / 2);
 			
-			Invocable invocable = (Invocable) engine;
+			// 単域のブロック検索を行います。
+			searchGenerateLocation(loc);
 			
-			// 非推奨クラスだが理由を元にサポートされます。
-			invocable.invokeFunction(function_name, new GenerateHandle(dungeon, loc));
-			
-		} catch (ScriptException | FileNotFoundException | NoSuchMethodException e) {
-			throw new DungeonGenerateException(e.getLocalizedMessage());
 		}
 		
+	}
+	
+	/**
+	 * ブロック単位での検索処理を行います。
+	 * @param loc 検索を行う位置情報
+	 */
+	public void searchGenerateLocation(DungeonLocation loc) {
+		
+		Dungeon[] dungeons = ResourceDungeons.getInstance().getDungeonManager().getDungeons();
+		Random random = new Random(
+			loc.getWorld().getSeed() * loc.getBlockX() * loc.getBlockY() * loc.getBlockZ());
+		
+		for (Dungeon dungeon : dungeons) {
+			
+			// 現在の位置情報から生成可能なオプションを検索します。
+			List<GenerateOption> options = filterOptions(dungeon, loc);
+			
+			// 該当するオプションがない場合は次へ
+			if (options.isEmpty())
+				continue;
+			
+			// 複数のオプションが該当した場合ランダムからオプションを選びます。
+			Collections.shuffle(options, random);
+			
+			// 生成可能なダンジョンであればクラスに保管します。
+			DungeonStorage storage = new DungeonStorage();
+			storage.dungeon = dungeon;
+			storage.option = options.get(0);
+			storage.loc = loc;
+			this.gen_dungeons.add(storage);
+			
+		}
+		
+	}
+	
+	private List<GenerateOption> filterOptions(Dungeon dungeon, DungeonLocation loc) {
+		
+		// 返し値用の変数を宣言
+		List<GenerateOption> result = new ArrayList<GenerateOption>();
+		
+		// ダンジョンが持つ生成オプション一覧をループで取得
+		for (GenerateOption option : dungeon.getGenerates()) {
+			
+			// 位置情報から条件と一致するか比較します。
+			if (option.isMatchOptions(loc)) {
+				result.add(option);
+			}
+			
+		}
+		
+		return result;
+		
+	}
+	
+	public void generate() throws DungeonGenerateException {
+		
+		// 生成可能なダンジョンがない場合は処理をしない
+		if (gen_dungeons.isEmpty())
+			return;
+		
+		// 生成可能なダンジョン一覧をシャッフルします。
+		Collections.shuffle(gen_dungeons);
+		
+		// シャッフルしたリストから先頭を取得します。
+		DungeonStorage storage = gen_dungeons.get(0);
+		DungeonLocation loc = storage.loc;
+		GenerateOption option = storage.option;
+		
+		// ワールドseed値 * x * y * z の値からランダムを生成
+		Random random = new Random(
+				loc.getWorld().getSeed() * loc.getBlockX() * loc.getBlockY() * loc.getBlockZ());
+		
+		// 確率判定を行い実行するかの確認をします。
+		if (random.nextDouble() > option.getPercent()) {
+			return;
+		}
+		
+		// 取得した情報からスクリプトを実行します。
+		ScriptExecutor script = new JavaScriptExecutor(storage.dungeon);
+		script.init();
+		script.execute(loc, option.getFunction());
+		
+		ResourceDungeons.getLogger().info("[gen] generated " + storage.dungeon.getID() + " where loc: " + loc);
+		
+	}
+	
+	/**
+	 * クラスのインスタンスを返します。
+	 * @return インスタンス
+	 */
+	public static DungeonGenerate getInstance() {
+		return instance;
 	}
 	
 }
