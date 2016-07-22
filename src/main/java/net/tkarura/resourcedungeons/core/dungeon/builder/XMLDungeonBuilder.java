@@ -110,61 +110,49 @@ public class XMLDungeonBuilder implements DungeonBuilder {
 			
 			// <author> タグであれば製作者を設定
 			if (node.getNodeName().equalsIgnoreCase("author")) {
-				
-				UserData user = new UserData(node.getTextContent());
-				
-				if (node.getAttributes().getNamedItem("name") != null) {
-					user.setAttribute("name", node.getAttributes().getNamedItem("name").getNodeValue());
-				}
-				
-				if (node.getAttributes().getNamedItem("contribution") != null) {
-					user.setAttribute("contribution",
-							node.getAttributes().getNamedItem("contribution").getNodeValue());
-				}
-				
-				this.dungeon.addAuthor(user);
-				
+				this.dungeon.addAuthor(registerUser(node));
 			}
 			
 			// <contributor> タグであれば貢献者を設定
 			if (node.getNodeName().equalsIgnoreCase("contributor")) {
-				
-				UserData user = new UserData(node.getTextContent());
-				
-				if (node.getAttributes().getNamedItem("name") != null) {
-					user.setAttribute("name", node.getAttributes().getNamedItem("name").getNodeValue());
-				}
-				
-				if (node.getAttributes().getNamedItem("contribution") != null) {
-					user.setAttribute("contribution",
-							node.getAttributes().getNamedItem("contribution").getNodeValue());
-				}
-				
-				this.dungeon.addContributor(user);
+				this.dungeon.addContributor(registerUser(node));
 			}
 			
 			// <script> タグであればスクリプト情報を追加
 			if (node.getNodeName().equalsIgnoreCase("script")) {
-				
-				try {
-					this.dungeon.addScript(registorScript(node));
-				} catch (DungeonLoadException e) {
-				}
-				
+				this.dungeon.addScript(registorScript(node));
 			}
 			
 			// <generate> タグであれば生成設定を追加
 			if (node.getNodeName().equalsIgnoreCase("generate")) {
-				
 				this.dungeon.addGenerate(registorGenerate(node));
-				
 			}
 			
 		}
 		
 	}
 	
-	private DungeonScript registorScript(Node node) throws DungeonLoadException {
+	private UserData registerUser(Node node) {
+		
+		// UUIDを指定
+		UserData user = new UserData(node.getTextContent());
+		
+		// ユーザ名を設定
+		if (node.getAttributes().getNamedItem("name") != null) {
+			user.setAttribute("name", node.getAttributes().getNamedItem("name").getNodeValue());
+		}
+		
+		// 貢献内容を設定
+		if (node.getAttributes().getNamedItem("contribution") != null) {
+			user.setAttribute("contribution",
+					node.getAttributes().getNamedItem("contribution").getNodeValue());
+		}
+		
+		return user;
+		
+	}
+	
+	private DungeonScript registorScript(Node node) {
 		
 		DungeonScript script;
 		
@@ -208,13 +196,23 @@ public class XMLDungeonBuilder implements DungeonBuilder {
 		
 		// タグにfunction属性が含まれているかを確認
 		if (node.getAttributes().getNamedItem("function") == null)
-			throw new DungeonLoadException();
+			throw new DungeonLoadException("generate tag atributte 'function' is not found.");
 		
+		// 呼び出し関数名設定
 		String function = node.getAttributes().getNamedItem("function").getNodeValue();
 		double percent = 0.0d;
 		
+		// 生成率設定
 		try {
+			
+			// 文字の正規表現を確認
 			percent = Double.valueOf(node.getAttributes().getNamedItem("percent").getNodeValue());
+			
+			// 1.0の範囲内を確認
+			if (percent > 1.0) {
+				throw new NumberFormatException("generate tag atributte percent num range 1.0 over.");
+			}
+			
 		} catch (NumberFormatException e) {
 			percent = 0.0d;
 		}
@@ -227,73 +225,108 @@ public class XMLDungeonBuilder implements DungeonBuilder {
 			
 			Node generate_node = generate_nodes.item(j);
 			
+			// <height> 条件に含める高さを追加します。
+			if (generate_node.getNodeName().equalsIgnoreCase("height")) {
+				registerHeight(generate_node, option);
+			}
+			
 			// <location> 条件に含める位置情報を追加します。
 			if (generate_node.getNodeName().equalsIgnoreCase("location")) {
-				
-				String[] nums = generate_node.getTextContent().split("\\,");
-				
-				int x;
-				int y;
-				int z;
-				
-				// 不正な文字列が含まれた場合値を全て0に設定
-				try {
-					x = Integer.valueOf(nums[0].trim());
-					y = Integer.valueOf(nums[1].trim());
-					z = Integer.valueOf(nums[2].trim());
-				} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-					x = 0;
-					y = 0;
-					z = 0;
-				}
-				
-				option.addLocation(new DungeonLocation(x, y, z));
-				
+				option.addLocation(registerLocation(generate_node));
 			}
 			
 			// <include> 条件に含める情報を追加します。
 			if (generate_node.getNodeName().equalsIgnoreCase("include")) {
-				
-				// 情報の種類を確認
-				if (generate_node.getAttributes().getNamedItem("type") != null) {
-					
-					if (generate_node.getAttributes().getNamedItem("type").getNodeValue().equalsIgnoreCase("block")) {
-						
-						option.addBlock(generate_node.getTextContent());
-						
-					}
-					
-					if (generate_node.getAttributes().getNamedItem("type").getNodeValue().equalsIgnoreCase("biome")) {
-						
-						option.addBiome(generate_node.getTextContent());
-						
-					}
-				}
+				registerInclude(generate_node, option);
 			}
 			
 			// <ignore> 条件から除外する情報を指定します。
 			if (generate_node.getNodeName().equalsIgnoreCase("ignore")) {
-				
-				// 情報の種類を確認
-				if (generate_node.getAttributes().getNamedItem("type") != null) {
-					
-					if (generate_node.getAttributes().getNamedItem("type").getNodeValue().equalsIgnoreCase("block")) {
-						
-						option.removeBlock(generate_node.getTextContent());
-						
-					}
-					
-					if (generate_node.getAttributes().getNamedItem("type").getNodeValue().equalsIgnoreCase("biome")) {
-						
-						option.removeBiome(generate_node.getTextContent());
-						
-					}
-				}
+				registerIgnore(generate_node, option);
 			}
 		}
 		
 		return option;
 		
+	}
+	
+	private void registerHeight(Node node, GenerateOption option) {
+		
+		int min;
+		int max;
+		
+		try {
+			min = new Integer(node.getAttributes().getNamedItem("min").getTextContent().trim());
+			max = new Integer(node.getAttributes().getNamedItem("max").getTextContent().trim());
+		} catch (NumberFormatException e) {
+			return;
+		}
+		
+		if (min > max) {
+			return;
+		}
+		
+		option.addHeight(min, max);
+	}
+	
+	private DungeonLocation registerLocation(Node node) {
+		
+		String[] nums = node.getTextContent().split("\\,");
+		
+		int x;
+		int y;
+		int z;
+		
+		// 不正な文字列が含まれた場合値を全て0に設定
+		try {
+			x = Integer.valueOf(nums[0].trim());
+			y = Integer.valueOf(nums[1].trim());
+			z = Integer.valueOf(nums[2].trim());
+		} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+			x = 0;
+			y = 0;
+			z = 0;
+		}
+		
+		return new DungeonLocation(x, y, z);
+	}
+	
+	private void registerInclude(Node node, GenerateOption option) {
+		
+		// 情報の種類を確認
+		if (node.getAttributes().getNamedItem("type") != null) {
+			
+			if (node.getAttributes().getNamedItem("type").getNodeValue().equalsIgnoreCase("block")) {
+				
+				option.addBlock(node.getTextContent());
+				
+			}
+			
+			if (node.getAttributes().getNamedItem("type").getNodeValue().equalsIgnoreCase("biome")) {
+				
+				option.addBiome(node.getTextContent());
+				
+			}
+		}
+	}
+	
+	private void registerIgnore(Node node, GenerateOption option) {
+		
+		// 情報の種類を確認
+		if (node.getAttributes().getNamedItem("type") != null) {
+			
+			if (node.getAttributes().getNamedItem("type").getNodeValue().equalsIgnoreCase("block")) {
+				
+				option.removeBlock(node.getTextContent());
+				
+			}
+			
+			if (node.getAttributes().getNamedItem("type").getNodeValue().equalsIgnoreCase("biome")) {
+				
+				option.removeBiome(node.getTextContent());
+				
+			}
+		}
 	}
 	
 	@Override
