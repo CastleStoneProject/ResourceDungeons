@@ -10,6 +10,11 @@ import net.tkarura.resourcedungeons.core.server.DungeonLocation;
 public interface DungeonBlock {
 	
 	/**
+	 * ブロックを配置します。
+	 */
+	public void setBlock(boolean applyPhysics);
+	
+	/**
 	 * ブロックIDを返します。
 	 * @return ブロックID
 	 */
