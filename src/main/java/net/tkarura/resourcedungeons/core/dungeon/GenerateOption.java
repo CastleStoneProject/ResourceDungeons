@@ -22,6 +22,7 @@ public class GenerateOption {
 	
 	private final String function;
 	private final double percent;
+	private final List<Integer> height = new ArrayList<Integer>();
 	private final List<DungeonLocation> locs = new ArrayList<DungeonLocation>();
 	private final List<String> blocks = new ArrayList<String>();
 	private final List<String> biomes = new ArrayList<String>();
@@ -34,9 +35,25 @@ public class GenerateOption {
 		this(function, 0.0d);
 	}
 	
+	/**
+	 * 条件が一致した時に呼び出される関数名と生成確率を指定して生成
+	 * @param function 関数
+	 * @param percent 確率
+	 */
 	public GenerateOption(String function, double percent) {
 		this.function = function;
 		this.percent = percent;
+	}
+	
+	/**
+	 * 条件に含める高さを追加します。
+	 * @param min 最小座標
+	 * @param max 最大座標
+	 */
+	public void addHeight(int min, int max) {
+		for (int i = min; i < max; i++) {
+			this.height.add(i);
+		}
 	}
 	
 	/**
@@ -80,6 +97,11 @@ public class GenerateOption {
 		this.biomes.remove(biome_id);
 	}
 	
+	/**
+	 * 位置情報からクラスが持つ条件が一致するかを確認します。
+	 * @param loc 位置情報
+	 * @return 条件が一致した場合trueを返します。
+	 */
 	public boolean isMatchOptions(DungeonLocation loc) {
 		
 		DungeonLocation ll;
@@ -99,11 +121,19 @@ public class GenerateOption {
 	
 	private boolean isMatchOption(DungeonLocation loc) {
 		
+		// 高さ情報の比較
+		if (!this.height.isEmpty()) {
+			if (!this.height.contains(loc.getBlockY()))
+				return false;
+		}
+		
+		// バイオーム条件の比較
 		if (!this.biomes.contains(
 				loc.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ())))
 			return false;
 		
-		if (!this.biomes.contains(
+		// ブロック条件の比較
+		if (!this.blocks.contains(
 				loc.getWorld().getBlockID(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())))
 			return false;
 		
@@ -118,6 +148,10 @@ public class GenerateOption {
 		return this.function;
 	}
 	
+	/**
+	 * 生成確率を返します。
+	 * @return 生成確率
+	 */
 	public double getPercent() {
 		return this.percent;
 	}
@@ -146,11 +180,11 @@ public class GenerateOption {
 	public List<String> getBiomes() {
 		return new ArrayList<String>(this.biomes);
 	}
-	
+
 	@Override
 	public String toString() {
-		return "GenerateOption [" + (locs != null ? "locs=" + locs + ", " : "")
-				+ (blocks != null ? "blocks=" + blocks + ", " : "") + (biomes != null ? "biomes=" + biomes : "") + "]";
+		return "GenerateOption [function=" + function + ", percent=" + percent + ", locs=" + locs + ", blocks=" + blocks
+				+ ", biomes=" + biomes + "]";
 	}
 	
 }
