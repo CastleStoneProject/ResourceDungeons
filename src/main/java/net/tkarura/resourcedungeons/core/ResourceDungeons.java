@@ -1,10 +1,14 @@
 package net.tkarura.resourcedungeons.core;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
+
 import net.tkarura.resourcedungeons.core.command.CommandManager;
-import net.tkarura.resourcedungeons.core.server.DungeonServer;
 
 /**
  * ResourceDungeonsの本体 ResourceDungeonsに関わるクラスの初期化とクラスの管理を行います。
@@ -19,6 +23,8 @@ import net.tkarura.resourcedungeons.core.server.DungeonServer;
  */
 public final class ResourceDungeons {
 	
+	public final static String VERSION = "Alpha-1.0.0";
+	
 	// instance.
 	private final static ResourceDungeons instance = new ResourceDungeons();
 	
@@ -28,68 +34,68 @@ public final class ResourceDungeons {
 	// logger.
 	private Logger log = Logger.getLogger("ResourceDungeons");
 	
-	// Directors
-	private File directory = new File("");
-	private File dungeon_dir = new File(directory, "Dungeons");
-	private File script_dir = new File(directory, "scripts");
+	// Setting
+	private SettingManager setting = SettingManager.getInstance();
 	
 	// Commands
 	private CommandManager commands = new CommandManager();
-	
-	// Server Bridge
-	private DungeonServer server;
 	
 	// Contractor.
 	private ResourceDungeons() {}
 	
 	/**
-	 * ResourceDungeonsが使用するディレクトリの設定をします。
-	 * {@link #init()}の実行前に指定してください。
-	 * @param dir 設定するディレクトリ
-	 */
-	public void setDirectory(String dir) {
-		this.directory = new File(dir);
-		this.dungeon_dir = new File(directory, "Dungeons");
-		this.script_dir = new File(directory, "scripts");
-	}
-	
-	/**
-	 * 処理を受け渡す中間クラスを設定します。
-	 * @param server サーバー情報
-	 */
-	public void setServer(DungeonServer server) {
-		this.server = server;
-	}
-	
-	/**
-	 * 初期化を行います。
-	 * @throws NullPointerException 
-	 * 初期化を行う前に{@link #setServer(DungeonServer)}でサーバー情報を設定せずに実行もしくは
+	 * ResourceDungeonsの初期化を行います。
+	 * <b><u>ResourceDungeonsに関わるあらゆる処理は全てこのメソッドの後に定義してください。</u></b>
 	 * nullを設定した状態で呼び出した場合
 	 */
 	public void init() {
 		
-		if (server == null)
-			throw new NullPointerException("DungeonServer is null. please call method setServer(DungeonServer)");
+		log.info("Start Initialize."); // 初期化開始時の通知
 		
-		// 初期化開始の通知
-		log.info("Initialize ResourceDungeons.");
+		// 設定構成を初期化
+		setting.init();
+		log.info("initialize Settings.");
 		
-		// フォルダーの生成
-		if (!directory.exists()) {
-			directory.mkdirs();
-		}
+		// 設定構成を読み込み
+		setting.load();
+		log.info("Loading Settings.");
 		
-		// ダンジョンフォルダーの生成
-		if (!dungeon_dir.exists()) {
-			dungeon_dir.mkdirs();
-		}
+		// Configの情報からディレクトリを生成
+		setting.getSettingDirectory().mkdirs();
+		setting.getDungeonsDirectory().mkdirs();
+		setting.getScriptsDirectory().mkdirs();
 		
 		// DungeonManagerを初期化
 		dungeons.init();
+		log.info("Initialize DungeonManager.");
 		
-		// 初期化終了の通知
-		log.info("Complate Initialize.");
+		// Dungeonの読み込み
+		dungeons.load(SettingManager.getInstance().getDungeonsDirectory());
+		log.info("Loading DungeonManager.");
+		
+		log.info("Complate Initialize."); // 初期化終了の通知
+		
+	}
+	
+	/**
+	 * 現在の設定を保管します。
+	 */
+	public void save() {
+		
+		try {
+			
+			// 設定構成の保管
+			setting.save();
+			
+		} catch (TransformerException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -102,24 +108,15 @@ public final class ResourceDungeons {
 	}
 	
 	/**
-	 * サーバー中間クラスを返します。
-	 * @return サーバー中間クラス
-	 * @throws NullPointerException 
-	 * 初期化を行う前に{@link #setServer(DungeonServer)}でサーバー情報を設定せずに実行もしくは
-	 * nullを設定した状態で呼び出した場合
-	 */
-	public static DungeonServer getServer() {
-		if (instance.server == null)
-			throw new NullPointerException("DungeonServer is null. please call method setServer(DungeonServer)");
-		return instance.server;
-	}
-
-	/**
 	 * ログクラスを返します。
 	 * @return Loggerクラス
 	 */
 	public static Logger getLogger() {
 		return instance.log;
+	}
+	
+	public static SettingManager getSetting() {
+		return instance.setting;
 	}
 	
 	/**
@@ -128,30 +125,6 @@ public final class ResourceDungeons {
 	 */
 	public DungeonManager getDungeonManager() {
 		return this.dungeons;
-	}
-	
-	/**
-	 * ResourceDungeonsのディレクトリを返します。
-	 * @return ディレクトリ情報
-	 */
-	public File getDirectory() {
-		return this.directory;
-	}
-	
-	/**
-	 * ダンジョン情報を格納するディレクトリを返します。
-	 * @return ディレクトリ情報
-	 */
-	public File getDungeonsDirectory() {
-		return this.dungeon_dir;
-	}
-	
-	/**
-	 * スクリプト情報を格納するディレクトリを返します。
-	 * @return ディレクトリ情報
-	 */
-	public File getScriptsDirectory() {
-		return this.script_dir;
 	}
 	
 	public CommandManager getCommands() {

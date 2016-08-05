@@ -9,7 +9,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import net.tkarura.resourcedungeons.core.ResourceDungeons;
+import net.tkarura.resourcedungeons.core.SettingManager;
 import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonScript;
 import net.tkarura.resourcedungeons.core.exception.DungeonGenerateException;
@@ -36,6 +36,9 @@ import net.tkarura.resourcedungeons.core.util.FileHandler;
  */
 public class JavaScriptExecutor implements ScriptExecutor {
 	
+	// JavaScriptの読み込みに使用するClassLoader
+	private ClassLoader loader = null;
+	
 	// 実行に使用するスクリプト
 	private ScriptEngine engine = null;
 	
@@ -51,6 +54,15 @@ public class JavaScriptExecutor implements ScriptExecutor {
 	}
 	
 	/**
+	 * {@link ScriptEngineManager}のコンストラクタに使用するクラスローダーを設定します。
+	 * 設定を行わずに{@link #init()}を呼び出す場合{@link ClassLoader}は<code>null</code>になります。
+	 * @param loader
+	 */
+	public void setClassLoader(ClassLoader loader) {
+		this.loader = loader;
+	}
+	
+	/**
 	 * 実行前に必要な情報を初期化します。
 	 * @throws FileNotFoundException
 	 * @throws ScriptException
@@ -59,10 +71,10 @@ public class JavaScriptExecutor implements ScriptExecutor {
 	public void init() throws DungeonGenerateException {
 		
 		// スクリプトディレクトリを呼び出します。
-		File script_dir = ResourceDungeons.getInstance().getScriptsDirectory();
+		File script_dir = SettingManager.getInstance().getScriptsDirectory();
 		
 		// javascriptを呼び出します。
-		this.engine = new ScriptEngineManager().getEngineByName("javascript");
+		this.engine = new ScriptEngineManager(loader).getEngineByName("javascript");
 		
 		try {
 			
@@ -157,7 +169,7 @@ public class JavaScriptExecutor implements ScriptExecutor {
 			
 			Invocable invocable = (Invocable) engine;
 			
-			// 非推奨クラスだが理由を元にサポートされます。
+			// 非推奨クラスですが理由を元にサポートされます。
 			invocable.invokeFunction(function_name, new ScriptHandle(dungeon, loc));
 			
 		} catch (ScriptException | FileNotFoundException | NoSuchMethodException e) {

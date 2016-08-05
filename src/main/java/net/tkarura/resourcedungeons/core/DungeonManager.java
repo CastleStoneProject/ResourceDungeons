@@ -34,17 +34,20 @@ public final class DungeonManager {
 	 */
 	public void init() {
 		
+		// ダンジョン情報を全て削除します。
+		this.dungeons.clear();
+		
+	}
+	
+	public void load(File dir) {
+		
 		// 必要なクラスの宣言
-		File dungeons_dir = ResourceDungeons.getInstance().getDungeonsDirectory();
 		File hedder;
 		DungeonBuilder builder;
 		Dungeon dungeon;
 		
-		// ダンジョン情報を全て削除します。
-		this.dungeons.clear();
-		
 		// Dungeonsディレクトリを検索します。
-		for (File dungeon_dir : dungeons_dir.listFiles(FileHandler.FOLDER_FILTER)) {
+		for (File dungeon_dir : dir.listFiles(FileHandler.FOLDER_FILTER)) {
 			hedder = new File(dungeon_dir, "dungeon.xml");
 			
 			// 該当のファイルがあるかを確認します。
