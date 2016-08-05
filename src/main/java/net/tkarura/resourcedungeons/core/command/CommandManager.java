@@ -31,6 +31,7 @@ public class CommandManager {
 		registerInternalCommand(new InfoCommand());
 		registerInternalCommand(new ReloadCommand());
 		registerInternalCommand(new GenerateCommand());
+		registerInternalCommand(new SetCommand());
 	}
 	
 	/**
