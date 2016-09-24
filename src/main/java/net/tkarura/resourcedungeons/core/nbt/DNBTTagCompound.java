@@ -126,6 +126,15 @@ public class DNBTTagCompound extends DNBTBase {
 	}
 	
 	/**
+	 * 構成情報を含めます。
+	 * @param key 鍵
+	 * @param nbt 値
+	 */
+	public void setCompound(String key, DNBTTagCompound nbt) {
+	    set(key, nbt);
+	}
+	
+	/**
 	 * 鍵を指定してタグ情報を取得します。
 	 * @param key 鍵
 	 * @return 値
