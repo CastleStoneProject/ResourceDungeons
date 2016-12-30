@@ -37,7 +37,7 @@ public final class DungeonManager {
      * {@link DungeonManager}を生成します。
      */
     public DungeonManager() {
-
+	this.init();
     }
 
     /**
