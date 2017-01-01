@@ -1,7 +1,6 @@
 package net.tkarura.resourcedungeons.core.generate;
 
 import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
-import net.tkarura.resourcedungeons.core.server.DungeonServer;
 import net.tkarura.resourcedungeons.core.server.DungeonWorld;
 
 /**
@@ -17,12 +16,6 @@ public interface GenerateHandle {
      * @return ダンジョン情報
      */
     public Dungeon getDungeon();
-    
-    /**
-     * 動作しているサーバのクラスを返します。
-     * @return サーバ情報
-     */
-    public DungeonServer getServer();
     
     /**
      * 生成を行うワールド情報を返します。
