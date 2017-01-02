@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core;
+package net.tkarura.resourcedungeons.core.dungeon;
 
 import java.io.File;
 import java.util.HashMap;
@@ -7,8 +7,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
 
-import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
-import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
+import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
 import net.tkarura.resourcedungeons.core.loader.FileDungeonLoader;
 import net.tkarura.resourcedungeons.core.loader.handle.LoadLogHandle;

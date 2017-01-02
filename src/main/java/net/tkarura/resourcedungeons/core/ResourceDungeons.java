@@ -3,6 +3,7 @@ package net.tkarura.resourcedungeons.core;
 import java.io.File;
 import java.util.logging.Logger;
 
+import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.loader.XMLDungeonLoader;
 
 /**
