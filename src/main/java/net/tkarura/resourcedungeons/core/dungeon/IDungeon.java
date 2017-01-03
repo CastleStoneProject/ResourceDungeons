@@ -1,10 +1,11 @@
 package net.tkarura.resourcedungeons.core.dungeon;
 
+import java.io.File;
 import java.util.List;
 
-import net.tkarura.resourcedungeons.core.script.IDungeonScript;
-
 public interface IDungeon {
+    
+    public File getDirectory();
     
     public String getId();
     
@@ -19,7 +20,5 @@ public interface IDungeon {
     public List<DungeonUser> getAuthors();
     
     public List<DungeonUser> getContributors();
-    
-    public List<IDungeonScript> getScripts();
     
 }

@@ -1,6 +1,5 @@
 package net.tkarura.resourcedungeons.core.loader;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -19,9 +18,6 @@ import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonUser;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
-import net.tkarura.resourcedungeons.core.script.FileDungeonScript;
-import net.tkarura.resourcedungeons.core.script.IDungeonScript;
-import net.tkarura.resourcedungeons.core.script.TextDungeonScript;
 
 public class XMLDungeonLoader extends FileDungeonLoader {
 
@@ -46,6 +42,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 	    // ダンジョン情報の生成
 	    this.dungeon = new Dungeon(node_dungeon.getAttributes().getNamedItem("id").getNodeValue());
 	    this.dungeon.setSupport(node_dungeon.getAttributes().getNamedItem("support").getNodeValue());
+	    this.dungeon.setDirectory(dir);
 
 	    loadParameters(node_dungeon);
 
@@ -168,16 +165,6 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 
 	    }
 	    
-	    // <script>の解析と読み取り
-	    if (chiled.getNodeName().equalsIgnoreCase("script")) {
-		
-		if (validateScriptNode(chiled)) {
-		
-		    this.dungeon.addScript(loadScript(chiled));
-		
-		}
-		
-	    }
 	}
 
     }
@@ -249,62 +236,4 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 	return user;
     }
 
-    private boolean validateScriptNode(Node node) {
-	
-	Node attribute;
-	
-	for (int i = 0; i < node.getAttributes().getLength(); i++) {
-	    
-	    attribute = node.getAttributes().item(i);
-	    
-	    if (attribute.getNodeName().equalsIgnoreCase("type")) {
-		continue;
-	    }
-	    
-	    if (attribute.getNodeName().equalsIgnoreCase("src")) {
-		continue;
-	    }
-
-	    this.logs.add(Level.WARNING, "<" + node.getNodeName() + "> value of " + attribute.getNodeName() + " is not used.");
-
-	}
-	
-	if (node.getAttributes().getNamedItem("type") == null) {
-	    
-	    this.logs.add(Level.WARNING, "<" + node.getNodeName() + "> declare type implicitly. Please explicitly declare.");
-	    
-	}
-	
-	if (node.getAttributes().getNamedItem("src") != null) {
-	    
-	    String src = node.getAttributes().getNamedItem("src").getNodeValue();
-	    File src_dir = new File(this.dir, src);
-	    
-	    if (!src_dir.exists()) {
-		this.logs.add(Level.WARNING, "<" + node.getNodeName() + "> file not found. " + src_dir.getPath());
-	    }
-	    
-	}
-	
-	return true;
-    }
-    
-    private IDungeonScript loadScript(Node node) {
-	
-	IDungeonScript script;
-	
-	if (node.getAttributes().getNamedItem("src") != null) {
-	
-	    script = new FileDungeonScript(new File(this.dir, node.getAttributes().getNamedItem("src").getNodeValue()));
-	    
-	} else {
-	    
-	    script = new TextDungeonScript(node.getTextContent());
-	    
-	}
-	
-	
-	return script;
-    }
-    
 }

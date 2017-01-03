@@ -1,5 +1,9 @@
 package net.tkarura.resourcedungeons.core.generate;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -8,7 +12,6 @@ import javax.script.ScriptException;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptException;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptRunException;
-import net.tkarura.resourcedungeons.core.script.IDungeonScript;
 
 /**
  * ダンジョンの生成を行うクラスです。 生成に使用するスクリプトを呼び出す処理の定義やスクリプト言語を指定する場合はこちらで指定してください。
@@ -26,6 +29,8 @@ public class DungeonGenerator {
      * 使用するスクリプト言語のデフォルト状態を表します。
      */
     public final static String DEFAULT_SCRIPT_NAME = "javascript";
+    
+    public final static String[] DEFAULT_SCRIPT_FILE_EXTENDS = {"js"};
 
     /**
      * 呼び出し先の関数のデフォルト状態を表します。
@@ -36,6 +41,7 @@ public class DungeonGenerator {
 
     private ClassLoader class_loader = DEFAULT_CLASS_LOADER;
     private String engine_name = DEFAULT_SCRIPT_NAME;
+    private String[] script_file_extends = DEFAULT_SCRIPT_FILE_EXTENDS;
     private String main_function_name = DEFAULT_MAIN_FUNCTION_NAME;
 
     private ScriptEngineManager manager;
@@ -91,23 +97,49 @@ public class DungeonGenerator {
 	this.manager = new ScriptEngineManager(this.class_loader);
 	this.engine = this.manager.getEngineByName(this.engine_name);
 
-	// ダンジョン情報に定義されたスクリプト情報を読み込みます。
-	for (IDungeonScript script : this.dungeon.getScripts()) {
-	    script.run(this.engine);
-	}
+	// 定義ファイルのディレクトリにあるjsファイルを読み込み
+	this.readFile(this.dungeon.getDirectory());
+	
+    }
+    
+    private void readFile(File dir) throws DungeonScriptException {
 
+	// ディレクトリであるかの判別
+	if (dir.isDirectory()) {
+
+	    // ディレクトリ以下のファイルを検索
+	    for (File dir_ : dir.listFiles()) {
+		readFile(dir_);
+	    }
+
+	} else if (dir.isFile()) {
+
+	    // スクリプトファイルの識別
+	    if (!isScriptFile(dir)) {
+		return;
+	    }
+
+	    // エンジンにスクリプトファイルを解析させます。
+	    try {
+		this.engine.eval(new FileReader(dir));
+	    } catch (FileNotFoundException | ScriptException e) {
+		throw new DungeonScriptException(e.getLocalizedMessage());
+	    }
+
+	}
     }
 
-    /**
-     * スクリプト情報を読み込みます。
-     * 
-     * @param script
-     *            スクリプト情報
-     * @throws DungeonScriptException
-     *             読み込み中にエラーが発生した場合
-     */
-    public void loadScript(IDungeonScript script) throws DungeonScriptException {
-	script.run(this.engine);
+    private boolean isScriptFile(File file) {
+	
+	// 登録された拡張子から判別させます。
+	for (String extend : this.script_file_extends) {
+	    if (file.getName().endsWith(extend)) {
+		return true;
+	    }
+	}
+	
+	// 該当のファイルでなければ
+	return false;
     }
 
     /**

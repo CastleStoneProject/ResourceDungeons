@@ -1,26 +1,29 @@
 package net.tkarura.resourcedungeons.core.dungeon;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
-import net.tkarura.resourcedungeons.core.script.IDungeonScript;
-
 public class Dungeon implements IDungeon {
     
     protected final String id;
+    protected File dir;
     protected String support = "1.0.0";
     protected String name = "N/A";
     protected String version = "N/A";
     protected String discription = "N/A";
     protected List<DungeonUser> authors = new ArrayList<DungeonUser>();
     protected List<DungeonUser> contributors = new ArrayList<DungeonUser>();
-    protected List<IDungeonScript> scripts = new ArrayList<IDungeonScript>();
     
     public Dungeon(String id) {
 	Validate.notNull(id, "id is null.");
 	this.id = id;
+    }
+    
+    public void setDirectory(File dir) {
+	this.dir = dir;
     }
     
     public void setSupport(String support) {
@@ -47,8 +50,9 @@ public class Dungeon implements IDungeon {
 	this.contributors.add(user);
     }
     
-    public void addScript(IDungeonScript script) {
-	this.scripts.add(script);
+    @Override
+    public File getDirectory() {
+	return this.dir;
     }
     
     @Override
@@ -84,24 +88,6 @@ public class Dungeon implements IDungeon {
     @Override
     public List<DungeonUser> getContributors() {
 	return new ArrayList<DungeonUser>(this.contributors);
-    }
-    
-    @Override
-    public List<IDungeonScript> getScripts() {
-	return new ArrayList<IDungeonScript>(this.scripts);
-    }
-
-    /* (非 Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "Dungeon [" + (id != null ? "id=" + id + ", " : "") + "support=" + support + ", "
-		+ (name != null ? "name=" + name + ", " : "") + (version != null ? "version=" + version + ", " : "")
-		+ (discription != null ? "discription=" + discription + ", " : "")
-		+ (authors != null ? "authors=" + authors + ", " : "")
-		+ (contributors != null ? "contributors=" + contributors + ", " : "")
-		+ (scripts != null ? "scripts=" + scripts : "") + "]";
     }
     
 }
