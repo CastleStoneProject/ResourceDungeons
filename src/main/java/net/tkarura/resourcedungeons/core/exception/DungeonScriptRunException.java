@@ -1,7 +1,6 @@
 package net.tkarura.resourcedungeons.core.exception;
 
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
-import net.tkarura.resourcedungeons.core.script.IDungeonScript;
 
 public class DungeonScriptRunException extends DungeonScriptException {
 
@@ -17,10 +16,6 @@ public class DungeonScriptRunException extends DungeonScriptException {
     
     public DungeonScriptRunException(String message, IDungeon dungeon) {
 	super(message, dungeon);
-    }
-    
-    public DungeonScriptRunException(String message, IDungeon dungeon, IDungeonScript script) {
-	super(message, dungeon, script);
     }
     
 }
