@@ -29,8 +29,6 @@ public class DungeonGenerator {
      * 使用するスクリプト言語のデフォルト状態を表します。
      */
     public final static String DEFAULT_SCRIPT_NAME = "javascript";
-    
-    public final static String[] DEFAULT_SCRIPT_FILE_EXTENDS = {"js"};
 
     /**
      * 呼び出し先の関数のデフォルト状態を表します。
@@ -41,7 +39,6 @@ public class DungeonGenerator {
 
     private ClassLoader class_loader = DEFAULT_CLASS_LOADER;
     private String engine_name = DEFAULT_SCRIPT_NAME;
-    private String[] script_file_extends = DEFAULT_SCRIPT_FILE_EXTENDS;
     private String main_function_name = DEFAULT_MAIN_FUNCTION_NAME;
 
     private ScriptEngineManager manager;
@@ -132,7 +129,7 @@ public class DungeonGenerator {
     private boolean isScriptFile(File file) {
 	
 	// 登録された拡張子から判別させます。
-	for (String extend : this.script_file_extends) {
+	for (String extend : this.engine.getFactory().getExtensions()) {
 	    if (file.getName().endsWith(extend)) {
 		return true;
 	    }
