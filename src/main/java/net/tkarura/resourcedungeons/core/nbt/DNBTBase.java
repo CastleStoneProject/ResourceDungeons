@@ -42,7 +42,6 @@ public abstract class DNBTBase {
 	 * @param id タグID
 	 * @return 該当の空のタグ情報 もし該当しないIDを指定した場合nullが返されます。
 	 */
-	@SuppressWarnings("deprecation")
 	protected static DNBTBase createTag(byte id) {
 		switch (id) {
 		case TAG_END:
