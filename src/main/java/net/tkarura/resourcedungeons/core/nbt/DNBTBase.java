@@ -7,6 +7,21 @@ package net.tkarura.resourcedungeons.core.nbt;
  */
 public abstract class DNBTBase {
 	
+	public final static String[] TAG_TYPE_NAMES = {
+		"END", 		// 0
+		"BYTE", 	// 1
+		"SHORT", 	// 2
+		"INT", 		// 3
+		"LONG", 	// 4
+		"FLOAT", 	// 5
+		"DOUBLE", 	// 6
+		"BYTE_ARRAY", 	// 7
+		"STRING", 	// 8
+		"LIST", 	// 9
+		"COMPOUND", 	// 10
+		"INT_ARRAY", 	// 11
+	}; 
+	
 	public final static byte TAG_END = 0;
 	public final static byte TAG_BYTE = 1;
 	public final static byte TAG_SHORT = 2;
