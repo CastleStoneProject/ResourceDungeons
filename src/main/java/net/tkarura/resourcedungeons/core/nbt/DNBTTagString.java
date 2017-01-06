@@ -25,7 +25,7 @@ public class DNBTTagString extends DNBTBase {
 	}
 	
 	@Override
-	public Object getValue() {
+	public String getValue() {
 		return this.value;
 	}
 	
