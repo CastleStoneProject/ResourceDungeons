@@ -25,7 +25,7 @@ public class DNBTTagDouble extends DNBTNumber {
 	}
 	
 	@Override
-	public Number getValue() {
+	public Double getValue() {
 		return this.value;
 	}
 	

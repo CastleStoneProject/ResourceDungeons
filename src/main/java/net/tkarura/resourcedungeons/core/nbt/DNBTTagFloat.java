@@ -25,7 +25,7 @@ public class DNBTTagFloat extends DNBTNumber {
 	}
 	
 	@Override
-	public Number getValue() {
+	public Float getValue() {
 		return this.value;
 	}
 	
