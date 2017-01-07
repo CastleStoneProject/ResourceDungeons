@@ -12,20 +12,20 @@ import net.tkarura.resourcedungeons.core.server.DungeonWorld;
  * 
  * @author the_karura
  */
-public class GenerateHandle {
+public final class GenerateHandle {
     
     /**
      * この値はscript制御側へ受け渡たさないでください。
      * 重大なセキュリティ違反を起こす元になります。
      */
-    protected final ResourceDungeons core = ResourceDungeons.getInstance();
-
-    protected final UUID uuid;
-    protected final IDungeon dungeon;
-    protected final DungeonWorld world;
-    protected int genX = 0;
-    protected int genY = 0;
-    protected int genZ = 0;
+    private final ResourceDungeons core = ResourceDungeons.getInstance();
+    
+    private final UUID uuid;
+    private final IDungeon dungeon;
+    private final DungeonWorld world;
+    private int genX = 0;
+    private int genY = 0;
+    private int genZ = 0;
     
     /**
      * ダンジョン情報と生成するワールド情報を指定して生成します。
