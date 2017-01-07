@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.generate;
+package net.tkarura.resourcedungeons.core.generate.handle;
 
 import java.util.UUID;
 
