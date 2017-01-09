@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.generate;
+package net.tkarura.resourcedungeons.core.script;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,11 +14,12 @@ import net.tkarura.resourcedungeons.core.exception.DungeonScriptException;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptRunException;
 
 /**
- * ダンジョンの生成を行うクラスです。 生成に使用するスクリプトを呼び出す処理の定義やスクリプト言語を指定する場合はこちらで指定してください。
+ * スクリプト制御を管理するクラスです。 
+ * 生成に使用するスクリプトを呼び出す処理の定義やスクリプト言語を指定する場合はこちらで指定してください。
  * 
  * @author the_karura
  */
-public class DungeonGenerator {
+public class DungeonScriptManager {
 
     /**
      * スクリプト呼び出しに使用されるクラスローダのデフォルト状態を表します。
@@ -50,7 +51,7 @@ public class DungeonGenerator {
      * @param dungeon
      *            ダンジョン情報
      */
-    public DungeonGenerator(IDungeon dungeon) {
+    public DungeonScriptManager(IDungeon dungeon) {
 	this.dungeon = dungeon;
     }
 
@@ -146,8 +147,8 @@ public class DungeonGenerator {
      *             関数呼び出しがサポートされていないスクリプト言語が選択されていた場合
      *             実行中にエラーが起きた場合
      */
-    public void callMainFunction(GenerateHandle handle) throws DungeonScriptException {
-	this.callFunction(this.main_function_name, handle);
+    public void callMainFunction(GenerateInstance instance, String[] args) throws DungeonScriptException {
+	this.callFunction(this.main_function_name, instance, args);
     }
 
     /**
@@ -173,17 +174,15 @@ public class DungeonGenerator {
 	try {
 
 	    ((Invocable) engine).invokeFunction(function_name, args);
+	    
+	} catch (Exception e) {
 
-	} catch (NoSuchMethodException e) {
-
-	    // 呼び出し先の関数が無い場合に発生する例外をラップします。
-	    throw new DungeonScriptException(e.getLocalizedMessage());
-
-	} catch (ScriptException e) {
-
-	    // スクリプト実行中における汎用的な例外をラップします。
+	    // デバッグ用
+	    e.printStackTrace();
+	    
+	    // 呼び出し元へ返す例外メッセージ
 	    throw new DungeonScriptRunException(e.getLocalizedMessage());
-
+	    
 	}
 
     }

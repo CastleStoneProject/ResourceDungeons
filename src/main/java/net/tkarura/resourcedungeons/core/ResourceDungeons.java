@@ -5,6 +5,9 @@ import java.util.logging.Logger;
 
 import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.loader.XMLDungeonLoader;
+import net.tkarura.resourcedungeons.core.script.handle.GenerateHandle;
+import net.tkarura.resourcedungeons.core.script.handle.HandleManager;
+import net.tkarura.resourcedungeons.core.script.handle.SchematicHandle;
 
 /**
  * ResourceDungeonsの本体 ResourceDungeonsに関わるクラスの初期化とクラスの管理を行います。
@@ -30,12 +33,13 @@ public final class ResourceDungeons {
     // instance.
     private final static ResourceDungeons instance = new ResourceDungeons();
 
-    // dungeon directory;
+    // dungeon directory.
     private File dungeons_dir = new File("Dungeons");
     
-    // DungeonManager.
+    // Managers
     private final DungeonManager dungeons = new DungeonManager();
-
+    private final HandleManager handles = new HandleManager();
+    
     // Contractor.
     private ResourceDungeons() {}
     
@@ -64,6 +68,11 @@ public final class ResourceDungeons {
 	// Dungeonの読み込み
 	this.dungeons.loadDungeons(this.dungeons_dir);
 	
+	this.handles.init();
+	
+	this.handles.registerHandle(new GenerateHandle(null));
+	this.handles.registerHandle(new SchematicHandle(null));
+	
 	LOG.info("Loading DungeonManager.");
 	
 	if (this.dungeons.isEmpty()) {
@@ -91,5 +100,9 @@ public final class ResourceDungeons {
     public DungeonManager getDungeonManager() {
 	return this.dungeons;
     }
-
+    
+    public HandleManager getHandleManager() {
+	return this.handles;
+    }
+    
 }
