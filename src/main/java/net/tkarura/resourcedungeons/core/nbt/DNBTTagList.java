@@ -149,7 +149,7 @@ public class DNBTTagList extends DNBTBase {
 	 */
 	public DNBTTagCompound getNBTTagCompound(int index) {
 		try {
-			return (DNBTTagCompound) this.value.get(index).getValue();
+			return (DNBTTagCompound) this.value.get(index);
 		} catch (ClassCastException e) {
 			return new DNBTTagCompound();
 		}

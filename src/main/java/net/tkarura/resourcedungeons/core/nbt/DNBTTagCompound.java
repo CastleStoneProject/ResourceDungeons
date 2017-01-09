@@ -254,7 +254,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 */
 	public DNBTTagList getList(String key) {
 		try {
-			return this.value.containsKey(key) ? (DNBTTagList) this.value.get(key).getValue() : new DNBTTagList();
+			return this.value.containsKey(key) ? (DNBTTagList) this.value.get(key) : new DNBTTagList();
 		} catch (ClassCastException e) {
 			return new DNBTTagList();
 		}
@@ -267,7 +267,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 */
 	public DNBTTagCompound getCompound(String key) {
 		try {
-			return this.value.containsKey(key) ? (DNBTTagCompound) this.value.get(key).getValue() : new DNBTTagCompound();
+			return this.value.containsKey(key) ? (DNBTTagCompound) this.value.get(key) : new DNBTTagCompound();
 		} catch (ClassCastException e) {
 			return new DNBTTagCompound();
 		}
