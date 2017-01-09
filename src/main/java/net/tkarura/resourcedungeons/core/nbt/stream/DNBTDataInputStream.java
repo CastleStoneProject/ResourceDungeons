@@ -26,13 +26,18 @@ import net.tkarura.resourcedungeons.core.nbt.DNBTTagString;
  * 
  * @author the_karura
  */
-public class DNBTInputStream implements Closeable {
+public class DNBTDataInputStream implements Closeable {
     
     // バイナリ読み取り用のストリーム
     protected DataInputStream stream;
     protected DNBTTagCompound compound;
 
-    public DNBTInputStream(InputStream stream) throws IOException {
+    /**
+     * ストリームを指定してクラスを生成します。
+     * @param stream ストリームクラス
+     * @throws IOException 入力中に不正が起きた場合及び例外及び解析中に起きる例外
+     */
+    public DNBTDataInputStream(InputStream stream) throws IOException {
 	this.stream = new DataInputStream(new DataInputStream(new BufferedInputStream(new GZIPInputStream(stream))));
 	this.compound = read();
     }
@@ -197,6 +202,10 @@ public class DNBTInputStream implements Closeable {
 	return array;
     }
     
+    /**
+     * ストリームの入力結果を返します。
+     * @return ストリームの入力結果の{@link DNBTTagCompound}
+     */
     public DNBTTagCompound getCompound() {
 	return this.compound;
     }
