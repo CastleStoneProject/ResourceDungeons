@@ -1,6 +1,6 @@
 package net.tkarura.resourcedungeons.core.server;
 
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagCompound;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
 
 /**
  * ワールド操作を行う中間クラスです。
@@ -90,7 +90,7 @@ public interface DungeonWorld {
      * @param z z座標
      * @return 指定した座標にあるブロックのデータ値
      */
-    public byte getData(int x, int y, int z);
+    public byte getBlockData(int x, int y, int z);
     
     /**
      * ワールドのSeed値を取得します。

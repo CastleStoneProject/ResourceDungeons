@@ -5,19 +5,18 @@ import java.util.logging.Logger;
 
 import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.loader.XMLDungeonLoader;
-import net.tkarura.resourcedungeons.core.script.handle.GenerateHandle;
-import net.tkarura.resourcedungeons.core.script.handle.HandleManager;
-import net.tkarura.resourcedungeons.core.script.handle.SchematicHandle;
+import net.tkarura.resourcedungeons.core.session.SessionManager;
+import net.tkarura.resourcedungeons.core.session.SetBlockSession;
 
 /**
  * ResourceDungeonsの本体 ResourceDungeonsに関わるクラスの初期化とクラスの管理を行います。
  * 
- * <p>
- * クラスを使用する際は以下に注意してください。
+ * このクラスで提供される機能は以下の通りです。
  * <ul>
- * <li>クラスの呼び出しには{@link #getInstance()}を使用してください。
- * <li>クラス情報の初期化には{@link #init()}を呼び出してください。
- * <li>初期化する前に設定をしたい場合は{@link #init}を呼び出す前に行ってください。
+ * <li>DungeonManagerの管理</li>
+ * <li>XML読み込みのサポート</li>
+ * <li>SessionManagerの管理</li>
+ * <li>幾つかのセッション機能をサポート</li>
  * </ul>
  * 
  * @author the_karura
@@ -27,24 +26,24 @@ public final class ResourceDungeons {
     // version
     public final static String VERSION = "Alpha-1.0.0";
 
-    // logger.
-    public final static Logger LOG = Logger.getLogger("ResourceDungeons");
-
-    // instance.
-    private final static ResourceDungeons instance = new ResourceDungeons();
-
     // dungeon directory.
     private File dungeons_dir = new File("Dungeons");
     
+    // logger
+    private Logger log = Logger.getLogger("ResouceDungeons");
+    
     // Managers
     private final DungeonManager dungeons = new DungeonManager();
-    private final HandleManager handles = new HandleManager();
+    private final SessionManager sessions = new SessionManager();
     
-    // Contractor.
-    private ResourceDungeons() {}
+    public ResourceDungeons() {}
     
     public void setDungeonDirectory(File dir) {
 	this.dungeons_dir = dir;
+    }
+    
+    public void setLogger(Logger log) {
+	this.log = log;
     }
     
     /**
@@ -54,12 +53,15 @@ public final class ResourceDungeons {
      */
     public void init() {
 
-	LOG.info("Start Initialize."); // 初期化開始時の通知
+	log.info("Start Initialize."); // 初期化開始時の通知
 
+	// このクラスのLoggerを設定
+	this.dungeons.setLogger(this.log);
+	
 	// DungeonManagerを初期化
 	this.dungeons.init();
 	
-	LOG.info("Initialize DungeonManager.");
+	log.info("Initialize DungeonManager."); // DungeonManagerの初期化を通知
 
 	// xmlローダーを登録
 	String[] xml_extends = {"xml"};
@@ -67,31 +69,28 @@ public final class ResourceDungeons {
 	
 	// Dungeonの読み込み
 	this.dungeons.loadDungeons(this.dungeons_dir);
-	
-	this.handles.init();
-	
-	this.handles.registerHandle(new GenerateHandle(null));
-	this.handles.registerHandle(new SchematicHandle(null));
-	
-	LOG.info("Loading DungeonManager.");
-	
+
+	// ダンジョンが一つも読み込まれていない場合に通知
 	if (this.dungeons.isEmpty()) {
-	    LOG.warning("not dungeon load.");
+	    log.warning("not dungeon load.");
 	}
 
-	LOG.info("Complate Initialize."); // 初期化終了の通知
+	log.info("Loading DungeonManager."); // DungeonManagerの初期化が終了したら通知
+
+	// SessionManagerを初期化
+	this.sessions.init();
+	
+	log.info("Initialize SessionManager."); // SessionManagerの初期化開始を通知
+	
+	// サポートするSessionを登録
+	this.sessions.registerSession(new SetBlockSession());
+	
+	log.info("Loading SessionManager."); // SessionManagerの初期化が終了したら通知
+	
+	log.info("Complate Initialize."); // 初期化終了の通知
 
     }
 
-    /**
-     * クラスインスタンスを返します。
-     * 
-     * @return instance
-     */
-    public static ResourceDungeons getInstance() {
-	return instance;
-    }
-    
     /**
      * Dungeon管理クラスを返します。
      * 
@@ -101,8 +100,8 @@ public final class ResourceDungeons {
 	return this.dungeons;
     }
     
-    public HandleManager getHandleManager() {
-	return this.handles;
+    public SessionManager getSessionManager() {
+	return this.sessions;
     }
     
 }

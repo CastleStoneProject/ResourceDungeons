@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
 
-import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
 import net.tkarura.resourcedungeons.core.loader.FileDungeonLoader;
 import net.tkarura.resourcedungeons.core.loader.handle.LoadLogHandle;
@@ -19,9 +18,8 @@ import net.tkarura.resourcedungeons.core.loader.handle.LoadLogHandleList;
  * @author the_karura
  */
 public final class DungeonManager {
-
-    // ログ情報
-    private final static Logger LOG = ResourceDungeons.LOG;
+    
+    private Logger log = Logger.getLogger("ResourceDungeons");
 
     // ダンジョン管理情報
     private Map<String, IDungeon> dungeons = new HashMap<String, IDungeon>();
@@ -37,6 +35,10 @@ public final class DungeonManager {
      */
     public DungeonManager() {
 	this.init();
+    }
+    
+    public void setLogger(Logger log) {
+	this.log = log;
     }
 
     /**
@@ -174,14 +176,14 @@ public final class DungeonManager {
 		// ログがある場合はログ案内を通知します。
 		if (!list.getLogs().isEmpty()) {
 
-		    LOG.info("dungeon validate logs. dir : \"" + file.getPath() + "\"");
+		    log.info("dungeon validate logs. dir : \"" + file.getPath() + "\"");
 
 		}
 
 		// ログ情報を出力します。
 		for (LoadLogHandle handle : list.getLogs()) {
 
-		    LOG.log(handle.getLevel(), handle.getMessage());
+		    log.log(handle.getLevel(), handle.getMessage());
 
 		}
 	    }

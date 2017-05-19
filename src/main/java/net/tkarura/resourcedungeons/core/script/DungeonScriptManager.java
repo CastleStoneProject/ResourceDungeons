@@ -9,7 +9,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptException;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptRunException;
 
@@ -36,7 +35,7 @@ public class DungeonScriptManager {
      */
     public final static String DEFAULT_MAIN_FUNCTION_NAME = "main";
 
-    private final IDungeon dungeon;
+    private GenerateHandle handle;
 
     private ClassLoader class_loader = DEFAULT_CLASS_LOADER;
     private String engine_name = DEFAULT_SCRIPT_NAME;
@@ -44,15 +43,15 @@ public class DungeonScriptManager {
 
     private ScriptEngineManager manager;
     private ScriptEngine engine;
-
+    
     /**
      * ダンジョン情報を指定して生成します。
      * 
      * @param dungeon
      *            ダンジョン情報
      */
-    public DungeonScriptManager(IDungeon dungeon) {
-	this.dungeon = dungeon;
+    public DungeonScriptManager(GenerateHandle handle) {
+	this.handle = handle;
     }
 
     /**
@@ -95,8 +94,31 @@ public class DungeonScriptManager {
 	this.manager = new ScriptEngineManager(this.class_loader);
 	this.engine = this.manager.getEngineByName(this.engine_name);
 
+	// 関数呼び出しがサポートされているかを確認します。
+	if (!(engine instanceof Invocable)) {
+	    throw new DungeonScriptRunException("Engine not supporting function processing.");
+	}
+
 	// 定義ファイルのディレクトリにあるjsファイルを読み込み
-	this.readFile(this.dungeon.getDirectory());
+	this.readFile(this.handle.getDungeon().getDirectory());
+	
+	// スクリプト側へ渡す処理を設定します。
+	Invocable inv = (Invocable) this.engine;
+	
+	try {
+	    
+	    // Jarファイルに格納したDungeonScriptAPIを取得します。
+	    this.readInJarFile();
+	    
+	    // APIにハンドルを渡します。
+	    inv.invokeMethod(this.engine.get("DungeonScriptAPI"), "SetHandle", this.handle);
+	    
+	} catch (NoSuchMethodException | ScriptException e) {
+	    
+	    throw new DungeonScriptException(e.getLocalizedMessage());
+	    
+	}
+	
 	
     }
     
@@ -136,8 +158,17 @@ public class DungeonScriptManager {
 	    }
 	}
 	
-	// 該当のファイルでなければ
+	// 該当のファイルでなければ falseにして返します。
 	return false;
+    }
+    
+    private void readInJarFile() throws ScriptException {
+	
+	this.engine.eval("var DungeonScriptAPI = {};"
+		 + "DungeonScriptAPI.handle = 0;"
+		 + "DungeonScriptAPI.SetHandle = function(_handle) { DungeonScriptAPI.handle = _handle; };"
+		 + "");
+	
     }
 
     /**
@@ -147,8 +178,8 @@ public class DungeonScriptManager {
      *             関数呼び出しがサポートされていないスクリプト言語が選択されていた場合
      *             実行中にエラーが起きた場合
      */
-    public void callMainFunction(GenerateInstance instance, String[] args) throws DungeonScriptException {
-	this.callFunction(this.main_function_name, instance, args);
+    public void callMainFunction() throws DungeonScriptException {
+	this.callFunction(this.main_function_name);
     }
 
     /**
@@ -164,12 +195,6 @@ public class DungeonScriptManager {
      */
     public void callFunction(String function_name, Object... args) throws DungeonScriptException {
 
-	// 関数呼び出しがサポートされていないスクリプト言語が選択されていた場合例外を発生させます。
-	// 標準のJavaScriptはサポートされています。
-	if (!(engine instanceof Invocable)) {
-	    throw new DungeonScriptRunException("Engine not supporting function processing.");
-	}
-
 	// 実行中の処理
 	try {
 
@@ -184,7 +209,11 @@ public class DungeonScriptManager {
 	    throw new DungeonScriptRunException(e.getLocalizedMessage());
 	    
 	}
-
+	
     }
-
+    
+    public GenerateHandle getHandler() {
+	return this.handle;
+    }
+    
 }
