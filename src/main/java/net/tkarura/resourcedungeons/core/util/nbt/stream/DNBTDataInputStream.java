@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.nbt.stream;
+package net.tkarura.resourcedungeons.core.util.nbt.stream;
 
 import java.io.BufferedInputStream;
 import java.io.Closeable;
@@ -7,19 +7,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
-import net.tkarura.resourcedungeons.core.nbt.DNBTBase;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagByte;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagByteArray;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagCompound;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagDouble;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagEnd;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagFloat;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagInt;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagIntArray;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagList;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagLong;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagShort;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagString;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTBase;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagByte;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagByteArray;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagDouble;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagEnd;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagFloat;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagInt;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagIntArray;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagList;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagLong;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagShort;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagString;
 
 /**
  * バイナリデータからNBTタグへ変換を行うクラスです。

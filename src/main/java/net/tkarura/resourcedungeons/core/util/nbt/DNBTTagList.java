@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.nbt;
+package net.tkarura.resourcedungeons.core.util.nbt;
 
 import java.util.ArrayList;
 import java.util.List;

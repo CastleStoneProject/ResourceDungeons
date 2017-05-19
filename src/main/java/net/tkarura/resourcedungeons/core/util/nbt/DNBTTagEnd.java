@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.nbt;
+package net.tkarura.resourcedungeons.core.util.nbt;
 
 /**
  * NBTTagの終端を表すタグです。

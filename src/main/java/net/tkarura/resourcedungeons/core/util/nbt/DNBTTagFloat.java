@@ -1,48 +1,47 @@
-package net.tkarura.resourcedungeons.core.nbt;
+package net.tkarura.resourcedungeons.core.util.nbt;
 
 /**
- * short型のタグ情報を表すクラス
+ * float型のタグ情報を表すクラスです。
  * @author the_karura
  */
-public class DNBTTagShort extends DNBTNumber {
+public class DNBTTagFloat extends DNBTNumber {
 	
 	// タグの値
-	private short value;
+	private float value;
 	
 	/**
 	 * 中身の情報を0にして生成します。
-	 * @param value 値
 	 */
-	public DNBTTagShort() {
-		this((short) 0);
+	public DNBTTagFloat() {
+		this(0F);
 	}
 	
 	/**
 	 * 中身の情報を指定して生成します。
 	 * @param value 値
 	 */
-	public DNBTTagShort(short value) {
+	public DNBTTagFloat(float value) {
 		this.value = value;
 	}
 	
 	@Override
-	public Short getValue() {
+	public Float getValue() {
 		return this.value;
 	}
 	
 	@Override
 	public byte getTypeId() {
-		return (byte) 2;
+		return 5;
 	}
 	
 	@Override
 	public DNBTBase clone() {
-		return new DNBTTagShort(this.value);
+		return new DNBTTagFloat(this.value);
 	}
 	
 	@Override
 	public String toString() {
-		return this.value + "S";
+		return this.value + "F";
 	}
 	
 }

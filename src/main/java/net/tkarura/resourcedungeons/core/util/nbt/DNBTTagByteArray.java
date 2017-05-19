@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.nbt;
+package net.tkarura.resourcedungeons.core.util.nbt;
 
 /**
  * byte型配列のタグ情報を表すクラスです。

@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.nbt;
+package net.tkarura.resourcedungeons.core.util.nbt;
 
 /**
  * NBTTagに関するクラスの根幹部分を表すクラスです。

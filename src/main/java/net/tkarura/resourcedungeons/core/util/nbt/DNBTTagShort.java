@@ -1,47 +1,48 @@
-package net.tkarura.resourcedungeons.core.nbt;
+package net.tkarura.resourcedungeons.core.util.nbt;
 
 /**
- * int型のタグ情報を表すクラスです。
+ * short型のタグ情報を表すクラス
  * @author the_karura
  */
-public class DNBTTagInt extends DNBTNumber {
+public class DNBTTagShort extends DNBTNumber {
 	
 	// タグの値
-	private int value;
+	private short value;
 	
 	/**
 	 * 中身の情報を0にして生成します。
+	 * @param value 値
 	 */
-	public DNBTTagInt() {
-		this(0);
+	public DNBTTagShort() {
+		this((short) 0);
 	}
 	
 	/**
 	 * 中身の情報を指定して生成します。
 	 * @param value 値
 	 */
-	public DNBTTagInt(int value) {
+	public DNBTTagShort(short value) {
 		this.value = value;
 	}
 	
 	@Override
-	public Integer getValue() {
+	public Short getValue() {
 		return this.value;
 	}
 	
 	@Override
 	public byte getTypeId() {
-		return (byte) 3;
+		return (byte) 2;
 	}
 	
 	@Override
 	public DNBTBase clone() {
-		return new DNBTTagInt(this.value);
+		return new DNBTTagShort(this.value);
 	}
 	
 	@Override
 	public String toString() {
-		return this.value + "";
+		return this.value + "S";
 	}
 	
 }

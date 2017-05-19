@@ -1,4 +1,4 @@
-package net.tkarura.resourcedungeons.core.nbt;
+package net.tkarura.resourcedungeons.core.util.nbt;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -132,6 +132,14 @@ public class DNBTTagCompound extends DNBTBase {
 	 */
 	public void setCompound(String key, DNBTTagCompound nbt) {
 	    set(key, nbt);
+	}
+	
+	public void remove(String key) {
+	    this.value.remove(key);
+	}
+	
+	public boolean isEmpty() {
+	    return this.value.isEmpty();
 	}
 	
 	/**

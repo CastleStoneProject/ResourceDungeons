@@ -1,47 +1,47 @@
-package net.tkarura.resourcedungeons.core.nbt;
+package net.tkarura.resourcedungeons.core.util.nbt;
 
 /**
- * double型のタグ情報を表すクラスです。
+ * long型のタグ情報を表すクラス
  * @author the_karura
  */
-public class DNBTTagDouble extends DNBTNumber {
+public class DNBTTagLong extends DNBTNumber {
 	
 	// タグの値
-	private double value;
+	private long value;
 	
 	/**
 	 * 中身の情報を0にして生成します。
 	 */
-	public DNBTTagDouble() {
-		this(0D);
+	public DNBTTagLong() {
+		this(0L);
 	}
 	
 	/**
 	 * 中身の情報を指定して生成します。
 	 * @param value 値
 	 */
-	public DNBTTagDouble(double value) {
+	public DNBTTagLong(long value) {
 		this.value = value;
 	}
 	
 	@Override
-	public Double getValue() {
+	public Long getValue() {
 		return this.value;
 	}
 	
 	@Override
 	public byte getTypeId() {
-		return 6;
+		return 4;
 	}
 	
 	@Override
 	public DNBTBase clone() {
-		return new DNBTTagDouble(this.value);
+		return new DNBTTagLong(this.value);
 	}
 	
 	@Override
 	public String toString() {
-		return this.value + "D";
+		return this.value + "L";
 	}
 	
 }
