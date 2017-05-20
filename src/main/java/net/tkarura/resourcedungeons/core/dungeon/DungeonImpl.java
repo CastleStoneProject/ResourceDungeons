@@ -11,7 +11,7 @@ import org.apache.commons.lang3.Validate;
  * 
  * @author the_karura
  */
-public class Dungeon implements IDungeon {
+public class DungeonImpl implements IDungeon {
     
     protected final String id;
     protected File dir;
@@ -27,7 +27,7 @@ public class Dungeon implements IDungeon {
      * ダンジョンIDは他のIDと被らない文字列を指定する必要があります。
      * @param id ダンジョンID
      */
-    public Dungeon(String id) {
+    public DungeonImpl(String id) {
 	Validate.notNull(id, "id is null.");
 	this.id = id;
     }
