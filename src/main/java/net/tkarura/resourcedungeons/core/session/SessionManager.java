@@ -18,7 +18,7 @@ public final class SessionManager {
 	
 	// SessionHandleアノテーションの有無チェック
 	if (handle == null) {
-	    throw new IllegalArgumentException("アノテーションがないん！");
+	    throw new IllegalArgumentException("Class Annotation Not Found. : " + session.getClass().toString());
 	}
 	
 	// 名前を取得
@@ -26,7 +26,7 @@ public final class SessionManager {
 	
 	// 名前の衝突確認
 	if (this.sessions.containsKey(name)) {
-	    throw new IllegalArgumentException("同じ名前が登録されとるのね！");
+	    throw new IllegalArgumentException("already registered. : " + session.getClass().getName());
 	}
 	
 	// 登録

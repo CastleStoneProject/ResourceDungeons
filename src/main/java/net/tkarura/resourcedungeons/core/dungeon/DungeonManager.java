@@ -197,7 +197,7 @@ public final class DungeonManager {
      * @param dungeon
      *            登録するダンジョン情報
      * @throws IllegalArgumentException
-     *             nullの値を引数にした場合 {@link Dungeon#getID()}が返す値が既に登録された情報と一致する場合
+     *             nullの値を引数にした場合 {@link DungeonImpl#getID()}が返す値が既に登録された情報と一致する場合
      */
     public void registerDungeon(IDungeon dungeon) {
 

@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagCompound;
-import net.tkarura.resourcedungeons.core.nbt.DNBTTagList;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
+import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagList;
 
 /**
  * Schematicフォーマットの構造を解析するクラスです。

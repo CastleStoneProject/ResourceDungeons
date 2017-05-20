@@ -14,7 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import net.tkarura.resourcedungeons.core.dungeon.Dungeon;
+import net.tkarura.resourcedungeons.core.dungeon.DungeonImpl;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonUser;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
@@ -40,7 +40,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 	    validateDungeonNode(node_dungeon);
 
 	    // ダンジョン情報の生成
-	    this.dungeon = new Dungeon(node_dungeon.getAttributes().getNamedItem("id").getNodeValue());
+	    this.dungeon = new DungeonImpl(node_dungeon.getAttributes().getNamedItem("id").getNodeValue());
 	    this.dungeon.setSupport(node_dungeon.getAttributes().getNamedItem("support").getNodeValue());
 	    this.dungeon.setDirectory(dir);
 

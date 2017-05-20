@@ -3,6 +3,10 @@ package net.tkarura.resourcedungeons.core;
 import java.io.File;
 import java.util.logging.Logger;
 
+import net.tkarura.resourcedungeons.core.command.CommandManager;
+import net.tkarura.resourcedungeons.core.command.DungeonGenerateCommand;
+import net.tkarura.resourcedungeons.core.command.DungeonHelpCommand;
+import net.tkarura.resourcedungeons.core.command.DungeonListCommand;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.loader.XMLDungeonLoader;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
@@ -35,6 +39,11 @@ public final class ResourceDungeons {
     // Managers
     private final DungeonManager dungeons = new DungeonManager();
     private final SessionManager sessions = new SessionManager();
+    private final CommandManager commands = new CommandManager();
+    
+    private DungeonHelpCommand help_command;
+    private DungeonListCommand list_command;
+    private DungeonGenerateCommand generate_command;
     
     public ResourceDungeons() {}
     
@@ -53,16 +62,12 @@ public final class ResourceDungeons {
      */
     public void init() {
 
-	log.info("Start Initialize."); // 初期化開始時の通知
-
 	// このクラスのLoggerを設定
 	this.dungeons.setLogger(this.log);
 	
 	// DungeonManagerを初期化
 	this.dungeons.init();
 	
-	log.info("Initialize DungeonManager."); // DungeonManagerの初期化を通知
-
 	// xmlローダーを登録
 	String[] xml_extends = {"xml"};
 	this.dungeons.addFileDungeonLoader(new XMLDungeonLoader(), xml_extends);
@@ -75,20 +80,23 @@ public final class ResourceDungeons {
 	    log.warning("not dungeon load.");
 	}
 
-	log.info("Loading DungeonManager."); // DungeonManagerの初期化が終了したら通知
-
 	// SessionManagerを初期化
 	this.sessions.init();
-	
-	log.info("Initialize SessionManager."); // SessionManagerの初期化開始を通知
 	
 	// サポートするSessionを登録
 	this.sessions.registerSession(new SetBlockSession());
 	
-	log.info("Loading SessionManager."); // SessionManagerの初期化が終了したら通知
+	// CommandManagerを初期化
+	this.commands.init();
 	
-	log.info("Complate Initialize."); // 初期化終了の通知
-
+	// サポートするコマンドを登録
+	this.commands.register(this.help_command);
+	this.list_command.setDungeonManager(this.dungeons);
+	this.commands.register(this.list_command);
+	this.commands.register(this.generate_command);
+	this.generate_command.setDungeonManager(this.dungeons);
+	this.generate_command.setSessionManager(this.sessions);
+	
     }
 
     /**
@@ -102,6 +110,10 @@ public final class ResourceDungeons {
     
     public SessionManager getSessionManager() {
 	return this.sessions;
+    }
+    
+    public CommandManager getCommandManager() {
+	return this.commands;
     }
     
 }
