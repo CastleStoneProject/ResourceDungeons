@@ -17,12 +17,14 @@ public abstract class DungeonCommand {
 	// コンソールでの実行を許可しない場合
 	// コンソールからの実行であるかを判定します
 	if (this.player_only && sender.getUUID() == null) {
+	    sender.sendMessage("Player Only.");
 	    return;
 	}
 
 	// コマンドに権限が設定されている場合
 	// 送信者が必要な権限を所持しているかを判定します
-	if (permission != null && sender.hasPermission(permission)) {
+	if (permission != null && !sender.hasPermission(permission)) {
+	    sender.sendMessage("I do not have permission.");
 	    return;
 	}
 
