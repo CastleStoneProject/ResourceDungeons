@@ -41,9 +41,9 @@ public final class ResourceDungeons {
     private final SessionManager sessions = new SessionManager();
     private final CommandManager commands = new CommandManager();
     
-    private DungeonHelpCommand help_command;
-    private DungeonListCommand list_command;
-    private DungeonGenerateCommand generate_command;
+    private DungeonHelpCommand help_command = new DungeonHelpCommand();
+    private DungeonListCommand list_command = new DungeonListCommand();
+    private DungeonGenerateCommand generate_command = new DungeonGenerateCommand();
     
     public ResourceDungeons() {}
     
