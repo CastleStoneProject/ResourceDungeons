@@ -21,6 +21,7 @@ public class DungeonImpl implements IDungeon {
     protected String discription = "N/A";
     protected List<DungeonUser> authors = new ArrayList<DungeonUser>();
     protected List<DungeonUser> contributors = new ArrayList<DungeonUser>();
+    protected List<DungeonGenerateOption> generate_options = new ArrayList<DungeonGenerateOption>();
     
     /**
      * ダンジョンIDを指定して生成します。
@@ -88,6 +89,14 @@ public class DungeonImpl implements IDungeon {
 	this.contributors.add(user);
     }
     
+    /**
+     * ダンジョンの自動生成を行う構成を追加します。
+     * @param option 追加する構成
+     */
+    public void addGenerateOption(DungeonGenerateOption option) {
+	this.generate_options.add(option);
+    }
+    
     @Override
     public File getDirectory() {
 	return this.dir;
@@ -126,6 +135,11 @@ public class DungeonImpl implements IDungeon {
     @Override
     public List<DungeonUser> getContributors() {
 	return new ArrayList<DungeonUser>(this.contributors);
+    }
+    
+    @Override
+    public List<DungeonGenerateOption> getGenerateOptions() {
+	return new ArrayList<DungeonGenerateOption>(this.generate_options);
     }
     
 }

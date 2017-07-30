@@ -58,4 +58,6 @@ public interface IDungeon {
      */
     public List<DungeonUser> getContributors();
     
+    public List<DungeonGenerateOption> getGenerateOptions();
+    
 }
