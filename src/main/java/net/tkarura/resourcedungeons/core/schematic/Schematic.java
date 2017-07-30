@@ -1,5 +1,8 @@
 package net.tkarura.resourcedungeons.core.schematic;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +11,7 @@ import org.apache.commons.lang3.Validate;
 
 import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
 import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagList;
+import net.tkarura.resourcedungeons.core.util.nbt.stream.DNBTDataInputStream;
 
 /**
  * Schematicフォーマットの構造を解析するクラスです。
@@ -192,6 +196,26 @@ public class Schematic {
 	} catch (IndexOutOfBoundsException e) {
 	    return null;
 	}
+    }
+
+	/**
+	 * ファイル情報からSchematic情報を生成します。
+	 * @param file schematic形式のバイナリファイル
+	 * @return Schematic情報
+	 * @throws IOException 不正なファイルの場合
+	 */
+	public static Schematic loadSchematic(File file) throws IOException {
+	
+	Schematic schematic;
+	DNBTTagCompound nbt;
+	
+	DNBTDataInputStream datainput = new DNBTDataInputStream(new FileInputStream(file));
+	nbt = datainput.getCompound();
+	datainput.close();
+	
+	schematic = new Schematic(nbt);
+	
+	return schematic;
     }
 
     /* (非 Javadoc)
