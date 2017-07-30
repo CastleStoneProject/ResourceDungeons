@@ -21,219 +21,219 @@ import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
 
 public class XMLDungeonLoader extends FileDungeonLoader {
 
-    @Override
-    public IDungeon loadDungeon(InputStream is) throws DungeonLoadException {
+	@Override
+	public IDungeon loadDungeon(InputStream is) throws DungeonLoadException {
 
-	DocumentBuilderFactory factory;
-	DocumentBuilder builder;
-	Document document;
+		DocumentBuilderFactory factory;
+		DocumentBuilder builder;
+		Document document;
 
-	try {
+		try {
 
-	    // XML解析のパーサーを取得
-	    factory = DocumentBuilderFactory.newInstance();
-	    builder = factory.newDocumentBuilder();
-	    document = builder.parse(is);
-	    Node node_dungeon = getDungeonNode(document.getChildNodes());
-	    
-	    // dungeonタグのエラーチェック
-	    validateDungeonNode(node_dungeon);
+			// XML解析のパーサーを取得
+			factory = DocumentBuilderFactory.newInstance();
+			builder = factory.newDocumentBuilder();
+			document = builder.parse(is);
+			Node node_dungeon = getDungeonNode(document.getChildNodes());
 
-	    // ダンジョン情報の生成
-	    this.dungeon = new DungeonImpl(node_dungeon.getAttributes().getNamedItem("id").getNodeValue());
-	    this.dungeon.setSupport(node_dungeon.getAttributes().getNamedItem("support").getNodeValue());
-	    this.dungeon.setDirectory(dir);
+			// dungeonタグのエラーチェック
+			validateDungeonNode(node_dungeon);
 
-	    loadParameters(node_dungeon);
+			// ダンジョン情報の生成
+			this.dungeon = new DungeonImpl(node_dungeon.getAttributes().getNamedItem("id").getNodeValue());
+			this.dungeon.setSupport(node_dungeon.getAttributes().getNamedItem("support").getNodeValue());
+			this.dungeon.setDirectory(dir);
 
-	} catch (SAXException | IOException | ParserConfigurationException e) {
+			loadParameters(node_dungeon);
 
-	    throw new DungeonLoadException(e.getMessage());
+		} catch (SAXException | IOException | ParserConfigurationException e) {
 
-	}
-
-	return this.dungeon;
-    }
-    
-    private Node getDungeonNode(NodeList list) throws DungeonLoadException {
-	
-	Node node;
-	
-	for (int i = 0; i < list.getLength(); i++) {
-	    
-	    node = list.item(i);
-	    
-	    if (node.getNodeName() != null && node.getNodeName().equalsIgnoreCase("dungeon")) {
-		
-		return node;
-		
-	    }
-	    
-	}
-	
-	return null;
-    }
-
-    private void validateDungeonNode(Node node) throws DungeonLoadException {
-
-	if (node != null) {
-	    
-	    if (!node.getNodeName().equals("dungeon")) {
-		this.logs.add(Level.SEVERE, "NotFound dungeon Tag.");
-	    }
-	    
-	    if (node.getAttributes().getNamedItem("id") == null) {
-		this.logs.add(Level.SEVERE, "NotFound dungeon id Attribute.");
-	    }
-	    
-	    if (node.getAttributes().getNamedItem("support") == null) {
-		this.logs.add(Level.SEVERE, "NotFound dungeon support Attribute.");
-	    }
-	    
-	} else {
-	    
-	    this.logs.add(Level.SEVERE, "Not Found Dungeon Tag.");
-	    
-	}
-
-	if (this.logs.isErrorLog()) {
-	    throw new DungeonLoadException();
-	}
-
-    }
-
-    private void loadParameters(Node node) {
-
-	Node chiled;
-
-	for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-
-	    chiled = node.getChildNodes().item(i);
-
-	    // <name>の解析と読み取り
-	    if (chiled.getNodeName().equalsIgnoreCase("name")) {
-
-		if (validateNotUseAttribute(chiled)) {
-
-		    this.dungeon.setName(chiled.getTextContent());
+			throw new DungeonLoadException(e.getMessage());
 
 		}
 
-	    }
+		return this.dungeon;
+	}
 
-	    // <version>の解析と読み取り
-	    if (chiled.getNodeName().equalsIgnoreCase("version")) {
+	private Node getDungeonNode(NodeList list) throws DungeonLoadException {
 
-		if (validateNotUseAttribute(chiled)) {
+		Node node;
 
-		    this.dungeon.setVersion(chiled.getTextContent());
+		for (int i = 0; i < list.getLength(); i++) {
+
+			node = list.item(i);
+
+			if (node.getNodeName() != null && node.getNodeName().equalsIgnoreCase("dungeon")) {
+
+				return node;
+
+			}
 
 		}
 
-	    }
+		return null;
+	}
 
-	    // <discription>の解析と読み取り
-	    if (chiled.getNodeName().equalsIgnoreCase("discription")) {
+	private void validateDungeonNode(Node node) throws DungeonLoadException {
 
-		if (validateNotUseAttribute(chiled)) {
+		if (node != null) {
 
-		    this.dungeon.setDiscription(chiled.getTextContent());
+			if (!node.getNodeName().equals("dungeon")) {
+				this.logs.add(Level.SEVERE, "NotFound dungeon Tag.");
+			}
+
+			if (node.getAttributes().getNamedItem("id") == null) {
+				this.logs.add(Level.SEVERE, "NotFound dungeon id Attribute.");
+			}
+
+			if (node.getAttributes().getNamedItem("support") == null) {
+				this.logs.add(Level.SEVERE, "NotFound dungeon support Attribute.");
+			}
+
+		} else {
+
+			this.logs.add(Level.SEVERE, "Not Found Dungeon Tag.");
 
 		}
 
-	    }
+		if (this.logs.isErrorLog()) {
+			throw new DungeonLoadException();
+		}
 
-	    // <author>の解析と読み取り
-	    if (chiled.getNodeName().equalsIgnoreCase("author")) {
+	}
 
-		if (validateUserNode(chiled)) {
+	private void loadParameters(Node node) {
 
-		    this.dungeon.addAuthor(loadUser(chiled));
+		Node chiled;
+
+		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+
+			chiled = node.getChildNodes().item(i);
+
+			// <name>の解析と読み取り
+			if (chiled.getNodeName().equalsIgnoreCase("name")) {
+
+				if (validateNotUseAttribute(chiled)) {
+
+					this.dungeon.setName(chiled.getTextContent());
+
+				}
+
+			}
+
+			// <version>の解析と読み取り
+			if (chiled.getNodeName().equalsIgnoreCase("version")) {
+
+				if (validateNotUseAttribute(chiled)) {
+
+					this.dungeon.setVersion(chiled.getTextContent());
+
+				}
+
+			}
+
+			// <discription>の解析と読み取り
+			if (chiled.getNodeName().equalsIgnoreCase("discription")) {
+
+				if (validateNotUseAttribute(chiled)) {
+
+					this.dungeon.setDiscription(chiled.getTextContent());
+
+				}
+
+			}
+
+			// <author>の解析と読み取り
+			if (chiled.getNodeName().equalsIgnoreCase("author")) {
+
+				if (validateUserNode(chiled)) {
+
+					this.dungeon.addAuthor(loadUser(chiled));
+
+				}
+
+			}
+
+			// <contributor>の解析と読み取り
+			if (chiled.getNodeName().equalsIgnoreCase("contributor")) {
+
+				if (validateUserNode(chiled)) {
+
+					this.dungeon.addContributor(loadUser(chiled));
+
+				}
+
+			}
 
 		}
 
-	    }
+	}
 
-	    // <contributor>の解析と読み取り
-	    if (chiled.getNodeName().equalsIgnoreCase("contributor")) {
+	private boolean validateNotUseAttribute(Node node) {
 
-		if (validateUserNode(chiled)) {
+		// タグにある属性のチェックを行います。
+		// 使用していない属性名があれば注意項目に追加します。
+		Node attribute;
 
-		    this.dungeon.addContributor(loadUser(chiled));
+		for (int i = 0; i < node.getAttributes().getLength(); i++) {
+
+			attribute = node.getAttributes().item(i);
+
+			this.logs.add(Level.WARNING, node.getNodeName() + " value of " + attribute.getNodeName() + " is not used.");
 
 		}
 
-	    }
-	    
+		return true;
 	}
 
-    }
+	private boolean validateUserNode(Node node) {
 
-    private boolean validateNotUseAttribute(Node node) {
+		String uuid_string = node.getTextContent();
 
-	// タグにある属性のチェックを行います。
-	// 使用していない属性名があれば注意項目に追加します。
-	Node attribute;
+		Node attribute;
 
-	for (int i = 0; i < node.getAttributes().getLength(); i++) {
+		for (int i = 0; i < node.getAttributes().getLength(); i++) {
 
-	    attribute = node.getAttributes().item(i);
+			attribute = node.getAttributes().item(i);
 
-	    this.logs.add(Level.WARNING, node.getNodeName() + " value of " + attribute.getNodeName() + " is not used.");
+			if (attribute.getNodeName().equalsIgnoreCase("name")) {
+				continue;
+			}
 
+			if (attribute.getNodeName().equalsIgnoreCase("contribution")) {
+				continue;
+			}
+
+			this.logs.add(Level.WARNING, "<" + node.getNodeName() + "> value of " + attribute.getNodeName() + " is not used.");
+
+		}
+
+		try {
+
+			// uuidに有効な文字列かを確認します。
+			UUID.fromString(uuid_string);
+
+		} catch (IllegalArgumentException e) {
+			this.logs.add(Level.SEVERE, "<" + node.getNodeName() + "> " + e.getLocalizedMessage());
+			return false;
+		}
+
+		return true;
 	}
 
-	return true;
-    }
+	private DungeonUser loadUser(Node node) {
 
-    private boolean validateUserNode(Node node) {
+		DungeonUser user = new DungeonUser(UUID.fromString(node.getTextContent()));
 
-	String uuid_string = node.getTextContent();
+		if (node.getAttributes().getNamedItem("name") != null) {
+			user.setParameter("name", node.getAttributes().getNamedItem("name").getNodeValue());
+		}
 
-	Node attribute;
+		if (node.getAttributes().getNamedItem("contribution") != null) {
+			user.setParameter("contribution", node.getAttributes().getNamedItem("contribution").getNodeValue());
+		}
 
-	for (int i = 0; i < node.getAttributes().getLength(); i++) {
-
-	    attribute = node.getAttributes().item(i);
-
-	    if (attribute.getNodeName().equalsIgnoreCase("name")) {
-		continue;
-	    }
-
-	    if (attribute.getNodeName().equalsIgnoreCase("contribution")) {
-		continue;
-	    }
-
-	    this.logs.add(Level.WARNING, "<" + node.getNodeName() + "> value of " + attribute.getNodeName() + " is not used.");
-
+		return user;
 	}
-
-	try {
-
-	    // uuidに有効な文字列かを確認します。
-	    UUID.fromString(uuid_string);
-
-	} catch (IllegalArgumentException e) {
-	    this.logs.add(Level.SEVERE, "<" + node.getNodeName() + "> " + e.getLocalizedMessage());
-	    return false;
-	}
-
-	return true;
-    }
-    
-    private DungeonUser loadUser(Node node) {
-	
-	DungeonUser user = new DungeonUser(UUID.fromString(node.getTextContent()));
-	
-	if (node.getAttributes().getNamedItem("name") != null) {
-	    user.setParameter("name", node.getAttributes().getNamedItem("name").getNodeValue());
-	}
-	
-	if (node.getAttributes().getNamedItem("contribution") != null) {
-	    user.setParameter("contribution", node.getAttributes().getNamedItem("contribution").getNodeValue());
-	}
-	
-	return user;
-    }
 
 }

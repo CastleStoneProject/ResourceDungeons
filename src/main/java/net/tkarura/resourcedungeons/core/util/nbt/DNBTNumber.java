@@ -6,8 +6,8 @@ package net.tkarura.resourcedungeons.core.util.nbt;
  * @author the_karura
  */
 public abstract class DNBTNumber extends DNBTBase {
-	
+
 	@Override
 	public abstract Number getValue();
-	
+
 }

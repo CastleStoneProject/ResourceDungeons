@@ -25,5 +25,5 @@ public class DNBTTagEnd extends DNBTBase {
 	public DNBTBase clone() {
 		return new DNBTTagEnd();
 	}
-	
+
 }

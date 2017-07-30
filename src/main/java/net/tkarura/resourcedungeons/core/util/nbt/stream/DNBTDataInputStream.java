@@ -214,5 +214,5 @@ public class DNBTDataInputStream implements Closeable {
     public void close() throws IOException {
 	this.stream.close();
     }
-    
+
 }

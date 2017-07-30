@@ -32,29 +32,30 @@ public final class ResourceDungeons {
 
     // dungeon directory.
     private File dungeons_dir = new File("Dungeons");
-    
+
     // logger
     private Logger log = Logger.getLogger("ResouceDungeons");
-    
+
     // Managers
     private final DungeonManager dungeons = new DungeonManager();
     private final SessionManager sessions = new SessionManager();
     private final CommandManager commands = new CommandManager();
-    
+
     private DungeonHelpCommand help_command = new DungeonHelpCommand();
     private DungeonListCommand list_command = new DungeonListCommand();
     private DungeonGenerateCommand generate_command = new DungeonGenerateCommand();
-    
-    public ResourceDungeons() {}
-    
+
+    public ResourceDungeons() {
+    }
+
     public void setDungeonDirectory(File dir) {
-	this.dungeons_dir = dir;
+        this.dungeons_dir = dir;
     }
-    
+
     public void setLogger(Logger log) {
-	this.log = log;
+        this.log = log;
     }
-    
+
     /**
      * ResourceDungeonsの初期化を行います。
      * <b><u>ResourceDungeonsに関わるあらゆる処理は全てこのメソッドの後に定義してください。</u></b>
@@ -62,58 +63,58 @@ public final class ResourceDungeons {
      */
     public void init() {
 
-	// このクラスのLoggerを設定
-	this.dungeons.setLogger(this.log);
-	
-	// DungeonManagerを初期化
-	this.dungeons.init();
-	
-	// xmlローダーを登録
-	String[] xml_extends = {"xml"};
-	this.dungeons.addFileDungeonLoader(new XMLDungeonLoader(), xml_extends);
-	
-	// Dungeonの読み込み
-	this.dungeons.loadDungeons(this.dungeons_dir);
+        // このクラスのLoggerを設定
+        this.dungeons.setLogger(this.log);
 
-	// ダンジョンが一つも読み込まれていない場合に通知
-	if (this.dungeons.isEmpty()) {
-	    log.warning("not dungeon load.");
-	}
+        // DungeonManagerを初期化
+        this.dungeons.init();
 
-	// SessionManagerを初期化
-	this.sessions.init();
-	
-	// サポートするSessionを登録
-	this.sessions.registerSession(new SetBlockSession());
-	
-	// CommandManagerを初期化
-	this.commands.init();
-	
-	// サポートするコマンドを登録
-	this.commands.register(this.help_command);
-	this.list_command.setDungeonManager(this.dungeons);
-	this.commands.register(this.list_command);
-	this.commands.register(this.generate_command);
-	this.generate_command.setDungeonManager(this.dungeons);
-	this.generate_command.setSessionManager(this.sessions);
-	
+        // xmlローダーを登録
+        String[] xml_extends = {"xml"};
+        this.dungeons.addFileDungeonLoader(new XMLDungeonLoader(), xml_extends);
+
+        // Dungeonの読み込み
+        this.dungeons.loadDungeons(this.dungeons_dir);
+
+        // ダンジョンが一つも読み込まれていない場合に通知
+        if (this.dungeons.isEmpty()) {
+            log.warning("not dungeon load.");
+        }
+
+        // SessionManagerを初期化
+        this.sessions.init();
+
+        // サポートするSessionを登録
+        this.sessions.registerSession(new SetBlockSession());
+
+        // CommandManagerを初期化
+        this.commands.init();
+
+        // サポートするコマンドを登録
+        this.commands.register(this.help_command);
+        this.list_command.setDungeonManager(this.dungeons);
+        this.commands.register(this.list_command);
+        this.commands.register(this.generate_command);
+        this.generate_command.setDungeonManager(this.dungeons);
+        this.generate_command.setSessionManager(this.sessions);
+
     }
 
     /**
      * Dungeon管理クラスを返します。
-     * 
+     *
      * @return DungeonManagerクラス
      */
     public DungeonManager getDungeonManager() {
-	return this.dungeons;
+        return this.dungeons;
     }
-    
+
     public SessionManager getSessionManager() {
-	return this.sessions;
+        return this.sessions;
     }
-    
+
     public CommandManager getCommandManager() {
-	return this.commands;
+        return this.commands;
     }
-    
+
 }

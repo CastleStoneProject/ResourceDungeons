@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface SessionHandle {
-    
+
     public String name();
-    
+
 }

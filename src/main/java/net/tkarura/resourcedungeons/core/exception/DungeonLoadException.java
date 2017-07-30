@@ -7,19 +7,19 @@ public class DungeonLoadException extends DungeonException {
     private static final long serialVersionUID = 1L;
 
     public DungeonLoadException() {
-	super();
+        super();
     }
 
     public DungeonLoadException(String message) {
-	super(message);
+        super(message);
     }
 
     public DungeonLoadException(IDungeon dungeon) {
-	super();
+        super();
     }
 
     public DungeonLoadException(String message, IDungeon dungeon) {
-	super(message);
+        super(message);
     }
-    
+
 }

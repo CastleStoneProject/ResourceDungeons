@@ -1,6 +1,7 @@
 package net.tkarura.resourcedungeons.core.dungeon;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -134,8 +135,6 @@ public final class DungeonManager {
      * 読み込み時に呼び出されるローダはファイル拡張子により識別されます。
      * 
      * @param file
-     * @throws IllegalAugmentException
-     *             nullの値を引数にした場合
      */
     public void loadDungeon(File file) {
 
@@ -197,7 +196,6 @@ public final class DungeonManager {
      * @param dungeon
      *            登録するダンジョン情報
      * @throws IllegalArgumentException
-     *             nullの値を引数にした場合 {@link DungeonImpl#getID()}が返す値が既に登録された情報と一致する場合
      */
     public void registerDungeon(IDungeon dungeon) {
 
@@ -244,10 +242,10 @@ public final class DungeonManager {
     /**
      * 登録されたダンジョン情報一覧を返します。
      * 
-     * @return 登録に使用したID及び登録されたダンジョンのMAP情報
+     * @return 登録されたダンジョン一覧情報
      */
-    public Map<String, IDungeon> getDungeons() {
-	return new HashMap<String, IDungeon>(this.dungeons);
+    public Collection<IDungeon> getDungeons() {
+    	return this.dungeons.values();
     }
 
     /**

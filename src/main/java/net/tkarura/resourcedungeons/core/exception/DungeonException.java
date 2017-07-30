@@ -5,29 +5,29 @@ import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 public class DungeonException extends Exception {
 
     private static final long serialVersionUID = 1L;
-    
+
     protected IDungeon dungeon = null;
-    
+
     public DungeonException() {
-	super();
+        super();
     }
-    
+
     public DungeonException(String message) {
-	super(message);
+        super(message);
     }
-    
+
     public DungeonException(IDungeon dungeon) {
-	super();
-	this.dungeon = dungeon;
+        super();
+        this.dungeon = dungeon;
     }
-    
+
     public DungeonException(String message, IDungeon dungeon) {
-	super(message);
-	this.dungeon = dungeon;
+        super(message);
+        this.dungeon = dungeon;
     }
-    
+
     public IDungeon getDungeon() {
-	return this.dungeon;
+        return this.dungeon;
     }
-    
+
 }

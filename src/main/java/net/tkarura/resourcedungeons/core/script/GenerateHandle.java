@@ -21,66 +21,66 @@ public final class GenerateHandle {
     private int base_x = 0;
     private int base_y = 0;
     private int base_z = 0;
-    
+
     public GenerateHandle(IDungeon dungeon, DungeonWorld world, SessionManager sessions) {
-	this.dungeon = dungeon;
-	this.world = world;
-	this.sessions = sessions;
+        this.dungeon = dungeon;
+        this.world = world;
+        this.sessions = sessions;
     }
-    
+
     public void push() {
-	this.queue.push(register);
-	this.register = new DNBTTagCompound();
+        this.queue.push(register);
+        this.register = new DNBTTagCompound();
     }
-    
+
     public void runSessions() {
-	
-	SessionManager sessions = this.sessions;
-	
-	DNBTTagCompound nbt;
-	
-	while ((nbt = this.queue.pollLast()) != null) {
-	    
-	    Session session = sessions.getSession(nbt.getString("session"));
-	    
-	    session.run(this, nbt);
-	
-	}
-	
+
+        SessionManager sessions = this.sessions;
+
+        DNBTTagCompound nbt;
+
+        while ((nbt = this.queue.pollLast()) != null) {
+
+            Session session = sessions.getSession(nbt.getString("session"));
+
+            session.run(this, nbt);
+
+        }
+
     }
-    
+
     public void setBaseLoc(int x, int y, int z) {
-	this.base_x = x;
-	this.base_y = y;
-	this.base_z = z;
+        this.base_x = x;
+        this.base_y = y;
+        this.base_z = z;
     }
-    
+
     public UUID getUUID() {
-	return this.uuid;
+        return this.uuid;
     }
-    
+
     public IDungeon getDungeon() {
-	return this.dungeon;
+        return this.dungeon;
     }
-    
+
     public DungeonWorld getWorld() {
-	return this.world;
+        return this.world;
     }
-    
+
     public DNBTTagCompound getRegister() {
-	return this.register;
+        return this.register;
     }
-    
+
     public int getBaseX() {
-	return this.base_x;
+        return this.base_x;
     }
-    
+
     public int getBaseY() {
-	return this.base_y;
+        return this.base_y;
     }
-    
+
     public int getBaseZ() {
-	return this.base_z;
+        return this.base_z;
     }
-    
+
 }

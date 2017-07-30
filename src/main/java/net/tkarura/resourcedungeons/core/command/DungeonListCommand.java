@@ -24,7 +24,7 @@ public class DungeonListCommand extends DungeonCommand {
 	
 	int count = 0;
 	
-	Collection<IDungeon> dungeons = this.dungeon_manager.getDungeons().values();
+	Collection<IDungeon> dungeons = this.dungeon_manager.getDungeons();
 	
 	if (dungeons.isEmpty()) {
 	    sender.sendMessage("dungeon is not loaded.");

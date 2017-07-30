@@ -4,38 +4,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class SessionManager {
-    
-    private final Map<String, Session> sessions = new HashMap<String, Session>();
-    
-    public void init() {
-	this.sessions.clear();
-    }
-    
-    public void registerSession(Session session) {
-	
-	// ハンドル取得
-	SessionHandle handle = session.getClass().getAnnotation(SessionHandle.class);
-	
-	// SessionHandleアノテーションの有無チェック
-	if (handle == null) {
-	    throw new IllegalArgumentException("Class Annotation Not Found. : " + session.getClass().toString());
+
+	private final Map<String, Session> sessions = new HashMap<String, Session>();
+
+	public void init() {
+		this.sessions.clear();
 	}
-	
-	// 名前を取得
-	String name = handle.name();
-	
-	// 名前の衝突確認
-	if (this.sessions.containsKey(name)) {
-	    throw new IllegalArgumentException("already registered. : " + session.getClass().getName());
+
+	public void registerSession(Session session) {
+
+		// ハンドル取得
+		SessionHandle handle = session.getClass().getAnnotation(SessionHandle.class);
+
+		// SessionHandleアノテーションの有無チェック
+		if (handle == null) {
+			throw new IllegalArgumentException("Class Annotation Not Found. : " + session.getClass().toString());
+		}
+
+		// 名前を取得
+		String name = handle.name();
+
+		// 名前の衝突確認
+		if (this.sessions.containsKey(name)) {
+			throw new IllegalArgumentException("already registered. : " + session.getClass().getName());
+		}
+
+		// 登録
+		this.sessions.put(name, session);
+
 	}
-	
-	// 登録
-	this.sessions.put(name, session);
-	
-    }
-    
-    public Session getSession(String session_name) {
-	return this.sessions.get(session_name);
-    }
-    
+
+	public Session getSession(String session_name) {
+		return this.sessions.get(session_name);
+	}
+
 }
