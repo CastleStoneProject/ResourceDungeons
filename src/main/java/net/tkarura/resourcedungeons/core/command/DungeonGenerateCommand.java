@@ -65,6 +65,8 @@ public class DungeonGenerateCommand extends DungeonCommand {
 	    generate.runScript();
 	    generate.callMainFunction();
 	    
+	    handle.runSessions();
+	    
 	    // 生成完了の通知
 	    sender.sendMessage("Dungeon Generate Complate.");
 	
