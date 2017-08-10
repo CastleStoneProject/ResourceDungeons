@@ -50,7 +50,7 @@ public interface IDungeon {
      *
      * @return 説明
      */
-    public String getDiscription();
+    public String getDescription();
 
     /**
      * ダンジョンの作成に関わった製作者のユーザ情報一覧を返します。

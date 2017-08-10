@@ -18,7 +18,7 @@ public class DungeonImpl implements IDungeon {
     protected String support = "1.0.0";
     protected String name = "N/A";
     protected String version = "N/A";
-    protected String discription = "N/A";
+    protected String description = "N/A";
     protected List<DungeonUser> authors = new ArrayList<DungeonUser>();
     protected List<DungeonUser> contributors = new ArrayList<DungeonUser>();
     protected List<DungeonGenerateOption> generate_options = new ArrayList<DungeonGenerateOption>();
@@ -76,7 +76,7 @@ public class DungeonImpl implements IDungeon {
      * @param discription ダンジョンの説明
      */
     public void setDiscription(String discription) {
-        this.discription = discription;
+        this.description = discription;
     }
 
     /**
@@ -132,8 +132,8 @@ public class DungeonImpl implements IDungeon {
     }
 
     @Override
-    public String getDiscription() {
-        return this.discription;
+    public String getDescription() {
+        return this.description;
     }
 
     @Override
