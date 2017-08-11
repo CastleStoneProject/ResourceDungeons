@@ -2,6 +2,7 @@ package net.tkarura.resourcedungeons.core.generate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.tkarura.resourcedungeons.core.dungeon.DungeonGenerateOption;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
@@ -16,6 +17,9 @@ public class DungeonGenerateCheck {
     // 検索するダンジョン一覧を格納したマネージャークラス
     private DungeonManager manager;
 
+    // 乱数生成器
+    private Random random;
+
     // 検索基点座標
     private int base_x = 0;
     private int base_y = 0;
@@ -24,10 +28,10 @@ public class DungeonGenerateCheck {
     // 検索範囲
     private int width = 0;
     private int height = 0;
-    private int length = 0;
+    private int depth = 0;
 
     // 検索結果を格納するクラス
-    private List<CheckPoint> list = new ArrayList<>();
+    private List<DungeonCheckPoint> list = new ArrayList<>();
 
     /**
      * 検索する範囲を指定して生成します。
@@ -37,15 +41,15 @@ public class DungeonGenerateCheck {
      * @param base_z 検索基点z
      * @param width  横幅の検索範囲
      * @param height 高さの検索範囲
-     * @param length
+     * @param depth  奥行きの検査範囲
      */
-    public DungeonGenerateCheck(int base_x, int base_y, int base_z, int width, int height, int length) {
+    public DungeonGenerateCheck(int base_x, int base_y, int base_z, int width, int height, int depth) {
         this.base_x = base_x;
         this.base_y = base_y;
         this.base_z = base_z;
         this.width = width;
         this.height = height;
-        this.length = length;
+        this.depth = depth;
     }
 
     /**
@@ -64,6 +68,7 @@ public class DungeonGenerateCheck {
      */
     public void setWorld(DungeonWorld world) {
         this.world = world;
+        this.random = new Random(world.getSeed() * (base_x + base_y + base_z));
     }
 
     /**
@@ -75,7 +80,7 @@ public class DungeonGenerateCheck {
 
             for (int y = 0; y < height; y++) {
 
-                for (int z = 0; z < length; z++) {
+                for (int z = 0; z < depth; z++) {
 
                     // ブロック単位での検索を始めます。
                     this.search(base_x + x, base_y + y, base_z + z);
@@ -101,15 +106,14 @@ public class DungeonGenerateCheck {
 
             if (option != null) {
 
+                // 確率から実際に配置するかどうかを判定
+                if (option.getPercent() < random.nextFloat()) {
+                    continue;
+                }
+
                 // 検索結果が一致した場合
                 // チェックポイントを作成してリストに追加します。
-                CheckPoint point = new CheckPoint();
-                point.dungeon = dungeon;
-                point.option = option;
-                point.x = x;
-                point.y = y;
-                point.z = z;
-                this.list.add(point);
+                list.add(new DungeonCheckPoint(x, y, z, dungeon, option));
 
             }
 
@@ -130,13 +134,8 @@ public class DungeonGenerateCheck {
 
         for (DungeonGenerateOption option : dungeon.getGenerateOptions()) {
 
-            // バイオーム検索
-            if (!checkBiome(option.getBiomes(), x, y, z)) {
-                continue;
-            }
-
-            // ブロック検索
-            if (!checkBlock(option.getBlocks(), x, y, z)) {
+            // チェック処理
+            if (!option.checkGenerate(world, x, y, z)) {
                 continue;
             }
 
@@ -150,44 +149,12 @@ public class DungeonGenerateCheck {
 
     }
 
-    private boolean checkBiome(String[] biomes, int x, int y, int z) {
-
-        for (String biome : biomes) {
-//            if (this.world.getBiome(x, z)) {
-//                return true;
-//            }
-        }
-
-        return false;
-    }
-
-    private boolean checkBlock(String[] blocks, int x, int y, int z) {
-
-        for (String block : blocks) {
-            if (this.world.getBlockId(x, y, z).equalsIgnoreCase(block)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
-     * 検索結果の情報を格納する内部クラスです。
+     * 検索結果を返します。
+     * @return 検索結果
      */
-    private class CheckPoint {
-
-        // 生成位置
-        int x;
-        int y;
-        int z;
-
-        // 生成可能なダンジョン
-        IDungeon dungeon;
-
-        // 適用されたオプション
-        DungeonGenerateOption option;
-
+    public List<DungeonCheckPoint> getCheckPoints() {
+        return this.list;
     }
 
 }
