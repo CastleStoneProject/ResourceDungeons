@@ -82,6 +82,15 @@ public interface DungeonWorld {
     public void setTileEntityFromNBT(DNBTTagCompound nbt, int x, int y, int z);
 
     /**
+     * 指定した座標のバイオームを変更します。
+     *
+     * @param biome 変更するバイオーム
+     * @param x     x座標
+     * @param z     y座標
+     */
+    public void setBiome(String biome, int x, int z);
+
+    /**
      * 指定した座標にあるブロックのRegistry IDを取得します。
      *
      * @param x x座標
@@ -100,6 +109,15 @@ public interface DungeonWorld {
      * @return 指定した座標にあるブロックのデータ値
      */
     public byte getBlockData(int x, int y, int z);
+
+    /**
+     * 指定した座標にあるバイオーム情報を取得します。
+     *
+     * @param x x座標
+     * @param z y座標
+     * @return バイオーム名
+     */
+    public String getBiome(int x, int z);
 
     /**
      * ワールドのSeed値を取得します。
