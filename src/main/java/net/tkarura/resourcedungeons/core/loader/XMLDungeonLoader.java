@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.tkarura.resourcedungeons.core.dungeon.DungeonGenerateOption;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -109,9 +110,10 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
 
 			chiled = node.getChildNodes().item(i);
+			String node_name = chiled.getNodeName();
 
 			// <name>の解析と読み取り
-			if (chiled.getNodeName().equalsIgnoreCase("name")) {
+			if (node_name.equalsIgnoreCase("name")) {
 
 				if (validateNotUseAttribute(chiled)) {
 
@@ -122,7 +124,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 			}
 
 			// <version>の解析と読み取り
-			if (chiled.getNodeName().equalsIgnoreCase("version")) {
+			if (node_name.equalsIgnoreCase("version")) {
 
 				if (validateNotUseAttribute(chiled)) {
 
@@ -132,8 +134,8 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 
 			}
 
-			// <discription>の解析と読み取り
-			if (chiled.getNodeName().equalsIgnoreCase("discription")) {
+			// <description>の解析と読み取り
+			if (node_name.equalsIgnoreCase("description")) {
 
 				if (validateNotUseAttribute(chiled)) {
 
@@ -144,7 +146,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 			}
 
 			// <author>の解析と読み取り
-			if (chiled.getNodeName().equalsIgnoreCase("author")) {
+			if (node_name.equalsIgnoreCase("author")) {
 
 				if (validateUserNode(chiled)) {
 
@@ -155,11 +157,22 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 			}
 
 			// <contributor>の解析と読み取り
-			if (chiled.getNodeName().equalsIgnoreCase("contributor")) {
+			if (node_name.equalsIgnoreCase("contributor")) {
 
 				if (validateUserNode(chiled)) {
 
 					this.dungeon.addContributor(loadUser(chiled));
+
+				}
+
+			}
+
+			// <generate>の解析と読み取り
+			if (node_name.equalsIgnoreCase("generate")) {
+
+				if (validateGenerateNode(chiled)) {
+
+				    this.dungeon.addGenerateOption(loadGenerate(chiled));
 
 				}
 
@@ -221,6 +234,21 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 		return true;
 	}
 
+	private boolean validateGenerateNode(Node node) {
+
+	    if (node.getAttributes().getNamedItem("function") == null) {
+	        logs.add(Level.SEVERE, "Not Found Function Attribute.");
+	        return false;
+        }
+
+        if (node.getAttributes().getNamedItem("percent") == null) {
+	        logs.add(Level.WARNING, "Not Found Percent Attribute. default value setting. "
+					+ DungeonGenerateOption.DEFAULT_PERCENT);
+        }
+
+		return true;
+	}
+
 	private DungeonUser loadUser(Node node) {
 
 		DungeonUser user = new DungeonUser(UUID.fromString(node.getTextContent()));
@@ -235,5 +263,23 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 
 		return user;
 	}
+
+	private DungeonGenerateOption loadGenerate(Node node) {
+
+	    DungeonGenerateOption option = new DungeonGenerateOption(node.getAttributes().getNamedItem("function").getNodeValue());
+	    Node attribute = node.getAttributes().getNamedItem("percent");
+
+	    try {
+
+	        if (attribute != null) {
+                option.setPercent(new Float(attribute.getNodeValue()));
+            }
+
+        } catch (NumberFormatException e) {
+            logs.add(Level.SEVERE, "Format Error <generate> tag attribute percent value.");
+        }
+
+	    return option;
+    }
 
 }
