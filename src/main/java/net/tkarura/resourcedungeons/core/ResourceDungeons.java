@@ -63,6 +63,8 @@ public final class ResourceDungeons {
      */
     public void init() {
 
+        log.info("Start Resource Dungeons Initialize.");
+
         // このクラスのLoggerを設定
         this.dungeons.setLogger(this.log);
 
@@ -78,7 +80,7 @@ public final class ResourceDungeons {
 
         // ダンジョンが一つも読み込まれていない場合に通知
         if (this.dungeons.isEmpty()) {
-            log.warning("not dungeon load.");
+            log.warning("not dungeon loaded.");
         }
 
         // SessionManagerを初期化
@@ -97,6 +99,8 @@ public final class ResourceDungeons {
         this.commands.register(this.generate_command);
         this.generate_command.setDungeonManager(this.dungeons);
         this.generate_command.setSessionManager(this.sessions);
+
+        log.info("End Resource Dungeons Initialized.");
 
     }
 
