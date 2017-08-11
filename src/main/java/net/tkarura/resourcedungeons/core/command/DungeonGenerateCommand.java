@@ -10,8 +10,8 @@ import net.tkarura.resourcedungeons.core.session.SessionManager;
 
 public class DungeonGenerateCommand extends DungeonCommand {
 
-	private DungeonManager dungeon_manager;
-	private SessionManager session_manager;
+	protected DungeonManager dungeon_manager;
+	protected SessionManager session_manager;
 
 	public DungeonGenerateCommand() {
 		super("generate");
@@ -56,19 +56,13 @@ public class DungeonGenerateCommand extends DungeonCommand {
 		handle.setBaseLoc(x, y, z);
 
 		// ダンジョン生成器の生成
-		DungeonScriptManager generate = new DungeonScriptManager(handle);
-		generate.setScriptClassLoader(null);
+		DungeonScriptManager script = new DungeonScriptManager(handle);
+		script.setScriptClassLoader(null);
 
 		try {
 
-			// スクリプトの実行
-			generate.runScript();
-			generate.callMainFunction();
-
-			handle.runSessions();
-
-			// 生成完了の通知
-			sender.sendMessage("Dungeon Generate Complate.");
+			// 生成処理
+			generate(sender, handle, script);
 
 		} catch (DungeonScriptException e) {
 
@@ -77,6 +71,20 @@ public class DungeonGenerateCommand extends DungeonCommand {
 			sender.sendMessage("Dungeon Generate Faild. reason: " + e.getLocalizedMessage());
 		}
 
+
+	}
+
+	public void generate(DungeonCommandSender sender, GenerateHandle handle, DungeonScriptManager script) throws DungeonScriptException {
+
+		// スクリプトの実行
+		script.runScript();
+		script.callMainFunction();
+
+		// スクリプト結果の消化
+		handle.runSessions();
+
+		// 生成完了の通知
+		sender.sendMessage("Dungeon Generate Complate.");
 
 	}
 
