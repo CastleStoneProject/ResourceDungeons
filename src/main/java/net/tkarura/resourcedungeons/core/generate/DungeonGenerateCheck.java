@@ -7,12 +7,12 @@ import java.util.Random;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonGenerateOption;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
-import net.tkarura.resourcedungeons.core.server.DungeonWorld;
+import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 
 public class DungeonGenerateCheck {
 
     // 検索するワールド情報
-    private DungeonWorld world;
+    private IDungeonWorld world;
 
     // 検索するダンジョン一覧を格納したマネージャークラス
     private DungeonManager manager;
@@ -66,7 +66,7 @@ public class DungeonGenerateCheck {
      *
      * @param world ワールド情報
      */
-    public void setWorld(DungeonWorld world) {
+    public void setWorld(IDungeonWorld world) {
         this.world = world;
         this.random = new Random(world.getSeed() * (base_x + base_y + base_z));
     }

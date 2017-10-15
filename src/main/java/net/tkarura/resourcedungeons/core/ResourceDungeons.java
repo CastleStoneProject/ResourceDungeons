@@ -11,6 +11,7 @@ import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.loader.XMLDungeonLoader;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
 import net.tkarura.resourcedungeons.core.session.SetBlockSession;
+import net.tkarura.resourcedungeons.core.session.SetSchematicSession;
 
 /**
  * ResourceDungeonsの本体 ResourceDungeonsに関わるクラスの初期化とクラスの管理を行います。
@@ -88,6 +89,7 @@ public final class ResourceDungeons {
 
         // サポートするSessionを登録
         this.sessions.registerSession(new SetBlockSession());
+        this.sessions.registerSession(new SetSchematicSession());
 
         // CommandManagerを初期化
         this.commands.init();
@@ -105,7 +107,7 @@ public final class ResourceDungeons {
     }
 
     /**
-     * Dungeon管理クラスを返します。
+     * ダンジョン情報を格納するマネージャーを返します。
      *
      * @return DungeonManagerクラス
      */
@@ -113,10 +115,20 @@ public final class ResourceDungeons {
         return this.dungeons;
     }
 
+    /**
+     * スクリプトから処理を行わせる処理を格納するマネージャーを返します。
+     *
+     * @return SessionManagerクラス
+     */
     public SessionManager getSessionManager() {
         return this.sessions;
     }
 
+    /**
+     * コマンド情報を格納するマネージャーを返します。
+     *
+     * @return CommandManagerクラス
+     */
     public CommandManager getCommandManager() {
         return this.commands;
     }

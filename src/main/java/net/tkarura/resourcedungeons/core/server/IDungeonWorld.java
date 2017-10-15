@@ -7,7 +7,7 @@ import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
  * 
  * @author the_karura
  */
-public interface DungeonWorld {
+public interface IDungeonWorld {
 
     /**
      * EntityIDを指定した座標にspawnさせます。

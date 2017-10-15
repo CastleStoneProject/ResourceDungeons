@@ -1,6 +1,6 @@
 package net.tkarura.resourcedungeons.core.dungeon;
 
-import net.tkarura.resourcedungeons.core.server.DungeonWorld;
+import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class DungeonGenerateOption {
         this.blocks.add(new BlockOption(block_id, x, y, z));
     }
 
-    public boolean checkGenerate(DungeonWorld world, int x, int y, int z) {
+    public boolean checkGenerate(IDungeonWorld world, int x, int y, int z) {
 
         if (!this.biomes.contains(world.getBiome(x, z))) {
             return false;

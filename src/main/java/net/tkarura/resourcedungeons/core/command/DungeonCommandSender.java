@@ -2,7 +2,7 @@ package net.tkarura.resourcedungeons.core.command;
 
 import java.util.UUID;
 
-import net.tkarura.resourcedungeons.core.server.DungeonWorld;
+import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 
 public interface DungeonCommandSender {
 
@@ -16,7 +16,7 @@ public interface DungeonCommandSender {
 
     public boolean hasPermission(String permission);
 
-    public DungeonWorld getWorld();
+    public IDungeonWorld getWorld();
 
     public int getX();
 

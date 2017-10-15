@@ -5,20 +5,21 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
-import net.tkarura.resourcedungeons.core.server.DungeonWorld;
-import net.tkarura.resourcedungeons.core.session.Session;
+import net.tkarura.resourcedungeons.core.exception.DungeonSessionException;
+import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
+import net.tkarura.resourcedungeons.core.session.ISession;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
 import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
 
 /**
  * スクリプト実行結果を格納する為のクラスです。
- * スクリプト側から参照されるクラスな為{@link ScriptParameter}とは別で分けてます。
+ * スクリプト側から参照されるクラスな為{@link DungeonScriptParameter}とは別で分けてます。
  */
 public final class GenerateHandle {
 
     private final UUID uuid = UUID.randomUUID();                // この実行結果のIDです。
     private IDungeon dungeon;                                   // ダンジョン情報
-    private DungeonWorld world;                                 // ワールド情報
+    private IDungeonWorld world;                                // ワールド情報
     private SessionManager sessions;                            // 命令一覧情報
     private Deque<DNBTTagCompound> queue = new LinkedList<>();  // 実際に実行させる為の情報
     private DNBTTagCompound register = new DNBTTagCompound();   // スクリプトで取り扱う情報
@@ -32,7 +33,7 @@ public final class GenerateHandle {
      * @param world ワールド情報
      * @param sessions 実行する命令情報
      */
-    public GenerateHandle(IDungeon dungeon, DungeonWorld world, SessionManager sessions) {
+    protected GenerateHandle(IDungeon dungeon, IDungeonWorld world, SessionManager sessions) {
         this.dungeon = dungeon;
         this.world = world;
         this.sessions = sessions;
@@ -58,13 +59,25 @@ public final class GenerateHandle {
         while ((nbt = this.queue.pollLast()) != null) {
 
             // セッション情報を取得
-            Session session = sessions.getSession(nbt.getString("session"));
+            ISession session = sessions.getSession(nbt.getString("session"));
 
-            // 有効なセッション情報
+            // 有効なセッション情報な場合は処理
             if (session != null) {
-                session.run(this, nbt);
+                runSession(session, nbt);
             }
 
+        }
+
+    }
+
+    private void runSession(ISession session, DNBTTagCompound nbt) {
+
+        try {
+
+            session.run(this, nbt);
+
+        } catch (DungeonSessionException e) {
+            e.printStackTrace();
         }
 
     }
@@ -101,7 +114,7 @@ public final class GenerateHandle {
      * ワールド情報を取得します。
      * @return ワールド情報
      */
-    public DungeonWorld getWorld() {
+    public IDungeonWorld getWorld() {
         return this.world;
     }
 

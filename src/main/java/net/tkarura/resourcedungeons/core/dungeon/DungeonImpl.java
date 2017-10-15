@@ -22,6 +22,7 @@ public class DungeonImpl implements IDungeon {
     protected List<DungeonUser> authors = new ArrayList<DungeonUser>();
     protected List<DungeonUser> contributors = new ArrayList<DungeonUser>();
     protected List<DungeonGenerateOption> generate_options = new ArrayList<DungeonGenerateOption>();
+    protected List<IDungeonScript> scripts = new ArrayList<IDungeonScript>();
 
     /**
      * ダンジョンIDを指定して生成します。
@@ -106,6 +107,10 @@ public class DungeonImpl implements IDungeon {
         this.generate_options.add(option);
     }
 
+    public void addScript(IDungeonScript script) {
+        this.scripts.add(script);
+    }
+
     @Override
     public File getDirectory() {
         return this.dir;
@@ -149,6 +154,11 @@ public class DungeonImpl implements IDungeon {
     @Override
     public List<DungeonGenerateOption> getGenerateOptions() {
         return new ArrayList<DungeonGenerateOption>(this.generate_options);
+    }
+
+    @Override
+    public List<IDungeonScript> getScripts() {
+        return new ArrayList<IDungeonScript>(this.scripts);
     }
 
 }

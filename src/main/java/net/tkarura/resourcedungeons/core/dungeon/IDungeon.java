@@ -68,4 +68,6 @@ public interface IDungeon {
 
     public List<DungeonGenerateOption> getGenerateOptions();
 
+    public List<IDungeonScript> getScripts();
+
 }

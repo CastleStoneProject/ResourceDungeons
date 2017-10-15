@@ -5,13 +5,13 @@ import java.util.Map;
 
 public final class SessionManager {
 
-	private final Map<String, Session> sessions = new HashMap<String, Session>();
+	private final Map<String, ISession> sessions = new HashMap<String, ISession>();
 
 	public void init() {
 		this.sessions.clear();
 	}
 
-	public void registerSession(Session session) {
+	public void registerSession(ISession session) {
 
 		// ハンドル取得
 		SessionHandle handle = session.getClass().getAnnotation(SessionHandle.class);
@@ -34,7 +34,7 @@ public final class SessionManager {
 
 	}
 
-	public Session getSession(String session_name) {
+	public ISession getSession(String session_name) {
 		return this.sessions.get(session_name);
 	}
 
