@@ -46,8 +46,10 @@ public final class DungeonScriptEngine {
             throw new DungeonScriptRunException("Engine not supporting function processing.");
         }
 
+        // ダンジョン情報を取得
         IDungeon dungeon = param.getDungeon();
 
+        // ダンジョン情報に格納されたスクリプト情報を読み込み
         for (IDungeonScript script : dungeon.getScripts()) {
 
             try {
