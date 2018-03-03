@@ -13,7 +13,6 @@ public abstract class FileDungeonLoader implements DungeonLoader {
 
     protected File file;
     protected File dir;
-    protected DungeonImpl dungeon;
     protected final LoadLogHandleList logs = new LoadLogHandleList();
 
     public IDungeon loadFileDungeon(File file) throws DungeonLoadException {
