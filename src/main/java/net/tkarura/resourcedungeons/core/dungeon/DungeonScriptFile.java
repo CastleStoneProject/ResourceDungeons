@@ -23,4 +23,11 @@ public class DungeonScriptFile implements IDungeonScript {
         return new FileReader(file);
     }
 
+    @Override
+    public String toString() {
+        return "DungeonScriptFile{" +
+                "file=" + file +
+                '}';
+    }
+
 }

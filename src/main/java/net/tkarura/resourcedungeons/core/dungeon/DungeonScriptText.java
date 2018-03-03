@@ -22,4 +22,11 @@ public class DungeonScriptText implements IDungeonScript {
         return new StringReader(text);
     }
 
+    @Override
+    public String toString() {
+        return "DungeonScriptText{" +
+                "text='" + text + '\'' +
+                '}';
+    }
+
 }

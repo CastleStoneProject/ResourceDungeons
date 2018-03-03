@@ -104,6 +104,28 @@ public class DungeonGenerateOption {
             this.z = z;
         }
 
+        @Override
+        public String toString() {
+            return "BlockOption{" +
+                    "block_id='" + block_id + '\'' +
+                    ", x=" + x +
+                    ", y=" + y +
+                    ", z=" + z +
+                    '}';
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "DungeonGenerateOption{" +
+                "function_name='" + function_name + '\'' +
+                ", percent=" + percent +
+                ", default_biomes_flag=" + default_biomes_flag +
+                ", default_blocks_flag=" + default_blocks_flag +
+                ", biomes=" + biomes +
+                ", blocks=" + blocks +
+                '}';
     }
 
 }
