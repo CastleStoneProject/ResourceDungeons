@@ -60,7 +60,7 @@ public final class ResourceDungeons {
     /**
      * ResourceDungeonsの初期化を行います。
      * <b><u>ResourceDungeonsに関わるあらゆる処理は全てこのメソッドの後に定義してください。</u></b>
-     * nullを設定した状態で呼び出した場合
+     * nullを設定した状態で呼び出した場合 {@link NullPointerException} が発生する恐れがあります。
      */
     public void init() {
 
