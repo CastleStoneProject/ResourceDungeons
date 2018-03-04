@@ -80,12 +80,7 @@ public class DungeonGenerateCommand extends DungeonCommand {
 	    // スクリプトを実行します。
 	    script.runScript();
 	    script.callMainFunction();
-
-        // ハンドル情報を取得します。
-        GenerateHandle handle = script.getHandler();
-
-		// スクリプト結果の消化
-		handle.runSessions();
+	    script.runSessions();
 
 		// 生成完了の通知
 		sender.sendMessage("Dungeon Generate Complate.");

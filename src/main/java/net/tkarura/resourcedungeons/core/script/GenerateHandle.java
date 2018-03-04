@@ -44,13 +44,17 @@ public final class GenerateHandle {
      */
     public void push() {
         this.queue.push(register);
+    }
+
+    public void clean() {
         this.register = new DNBTTagCompound();
     }
 
     /**
      * スクリプトから得た情報を元に実際に実行を行う情報です。
+     * Scriptからの実行がされないようにprotectedで防止してます。
      */
-    public void runSessions() {
+    protected void runSessions() {
 
         SessionManager sessions = this.sessions;
         DNBTTagCompound nbt;

@@ -17,12 +17,11 @@ public final class DungeonScriptParameter {
 
     public final static ClassLoader DEFAULT_CLASS_LOADER = Thread.currentThread().getContextClassLoader();
     public final static String DEFAULT_SCRIPT_NAME = "javascript";
-    public final static String DEFAULT_MAIN_FUNCTION_NAME = "main";
-    public final static String ZIPFILE_ENCORD = "UTF-8";
+    public final static String DEFAULT_MAIN_FUNCTION_NAME = "generate";
 
-    private ClassLoader class_loader = DEFAULT_CLASS_LOADER;            // スクリプト呼び出しに使用するクラスローダー
-    private String engine_name = DEFAULT_SCRIPT_NAME;                    // スクリプトの種類
-    private String main_function_name = DEFAULT_MAIN_FUNCTION_NAME;    // 最初に呼び出される関数名
+    private ClassLoader class_loader = DEFAULT_CLASS_LOADER; // スクリプト呼び出しに使用するクラスローダー
+    private String engine_name = DEFAULT_SCRIPT_NAME; // スクリプトの種類
+    private String main_function_name = DEFAULT_MAIN_FUNCTION_NAME; // 最初に呼び出される関数名
 
     private IDungeon dungeon;
     private IDungeonWorld world;

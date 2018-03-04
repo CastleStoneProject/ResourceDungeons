@@ -9,7 +9,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * 一つのスクリプト動作を表すクラスです。
@@ -45,6 +45,13 @@ public final class DungeonScriptEngine {
         if (!(engine instanceof Invocable)) {
             throw new DungeonScriptRunException("Engine not supporting function processing.");
         }
+
+        ClassLoader loader = this.param.getUseClassLoader();
+        DungeonScriptAPI dsa = new DungeonScriptAPI(loader != null ? loader : ClassLoader.getSystemClassLoader());
+        dsa.load();
+        dsa.loadScripts(this.engine);
+
+        handle.setBaseLoc(param.getBaseX(), param.getBaseY(), param.getBaseZ());
 
         // ダンジョン情報を取得
         IDungeon dungeon = param.getDungeon();
@@ -99,12 +106,8 @@ public final class DungeonScriptEngine {
 
     }
 
-    /**
-     * マネージャーに登録されたハンドル情報を返します。
-     * @return ハンドル情報
-     */
-    public GenerateHandle getHandler() {
-        return this.handle;
+    public void runSessions() {
+        this.handle.runSessions();
     }
 
 }
