@@ -1,11 +1,15 @@
 package net.tkarura.resourcedungeons.core.dungeon;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.Validate;
 
 import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
@@ -82,52 +86,65 @@ public final class DungeonManager {
 
 		Validate.notNull(dir, "dir is null.");
 
-		// ディレクトリを読み込める深さを記録
-		int depth = 0;
+		// 存在しない場合
+		if (!dir.exists()) {
+		    log.warning("directory not found. : " + dir.getName());
+		    return;
+        }
 
-		// 再帰処理でディレクトリを読み込みます。
-		load(dir, depth);
+        // ファイルの場合
+        if (!dir.isDirectory()) {
+		    log.warning(dir.getName() + " is not directory.");
+		    return;
+        }
 
-	}
-
-	/**
-	 * {@link #loadDungeons(File)}の再帰処理用メソッド
-	 *
-	 * @param dir
-	 *            ファイル情報
-	 * @param depth
-	 *            読み込んでるディレクトリの深さ
-	 */
-	private void load(File dir, int depth) {
-
-		if (dir.isDirectory() && !(depth >= depth_limit)) {
-
-			// 再帰回数のカウントをあげます。
-			depth++;
-
-			// ディレクトリ内のファイルおよびフォルダーを検索します。
-			for (File dir_ : dir.listFiles()) {
-
-				// 再帰的にディレクトリに検索をかけます。
-				load(dir_, depth);
-
-			}
-
-			// 再帰回数のカウントをさげます。
-			depth--;
-
-		} else {
-
-			// ファイルであればダンジョン読み込み処理へ
-			if (dir.isFile() && dir.canRead() && isDungeonHeaderFile(dir)) {
-
-				loadDungeon(dir);
-
-			}
-
-		}
+		loadFolders(dir);
 
 	}
+
+	private void loadFolders(File dirs) {
+
+	    for (File dir : dirs.listFiles((FileFilter) FileFilterUtils.directoryFileFilter())) {
+	        loadDungeonFolders(dir);
+        }
+
+    }
+
+    private void loadDungeonFolders(File dirs) {
+
+	    FileFilter fileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+
+                if (!pathname.isFile()) {
+                    return false;
+                }
+
+                String file_name = pathname.getName();
+
+                int index = file_name.lastIndexOf('.');
+
+                if (index == -1) {
+                    return false;
+                }
+
+                String name = file_name.substring(0, index);
+
+                if (!name.equalsIgnoreCase("dungeon")) {
+                    return false;
+                }
+
+                return true;
+            }
+        };
+
+	    for (File dir : dirs.listFiles((FileFilter) FileFilterUtils.directoryFileFilter())) {
+	        for (File file : dir.listFiles(fileFilter)) {
+	            loadDungeon(file);
+            }
+        }
+
+    }
 
 	/**
 	 * ダンジョンの定義ファイルであるかの判定を行います。
@@ -169,9 +186,12 @@ public final class DungeonManager {
 
 			}
 
-		} catch (DungeonLoadException e) {
+		} catch (DungeonLoadException | IllegalArgumentException e) {
 
-		} catch (IllegalArgumentException e) {
+		    if (loader != null) {
+                LoadLogHandleList list = loader.getLogHandleList();
+                list.add(Level.SEVERE, e.getLocalizedMessage());
+            }
 
 		} finally {
 
@@ -213,7 +233,7 @@ public final class DungeonManager {
 
 		// HashMapに格納された情報と被っていないかを確認します。
 		if (isDungeon(dungeon.getId()))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Double definition. id : " + dungeon.getId());
 
 		// ダンジョン情報を登録
 		this.dungeons.put(dungeon.getId(), dungeon);
