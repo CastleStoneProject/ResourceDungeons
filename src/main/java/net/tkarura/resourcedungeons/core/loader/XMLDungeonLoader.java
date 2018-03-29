@@ -16,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import com.sun.org.apache.xerces.internal.dom.ChildNode;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.NodeType;
 import net.tkarura.resourcedungeons.core.dungeon.*;
+import net.tkarura.resourcedungeons.core.util.DOMUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -127,7 +128,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 
 			Node child = children.item(i);
 
-			if (!isMatchNode(child, node_name)) {
+			if (!DOMUtils.isMatchNodeName(child, node_name)) {
 				continue;
 			}
 
@@ -147,7 +148,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 
 			Node child = children.item(i);
 
-			if (!isMatchNode(child, node_name)) {
+			if (!DOMUtils.isMatchNodeName(child, node_name)) {
 				continue;
 			}
 
@@ -184,7 +185,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 
 			Node child = children.item(i);
 
-			if (!isMatchNode(child, node_name)) {
+			if (!DOMUtils.isMatchNodeName(child, node_name)) {
 				continue;
 			}
 
@@ -247,12 +248,12 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 
 			Node child = children.item(i);
 
-			if (!isMatchNode(child, node_name)) {
+			if (!DOMUtils.isMatchNodeName(child, node_name)) {
 				continue;
 			}
 
 			String function_name = child.getAttributes().getNamedItem("function").getTextContent();
-			float percent = toAttributeFloat(child, "parcent", 0.00005f);
+			float percent = DOMUtils.toFloatAttribute(child, "parcent", 0.00005f);
 			DungeonGenerateOption option = new DungeonGenerateOption(function_name);
 			option.setPercent(percent);
 
@@ -262,17 +263,15 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 
 				Node child_ = children_.item(j);
 
-				if (isMatchNode(child_, "biome")) {
+				if (DOMUtils.isMatchNodeName(child_, "biome")) {
 					option.includeBiome(child_.getTextContent());
 				}
 
-				if (isMatchNode(child_, "block")) {
+				if (DOMUtils.isMatchNodeName(child_, "block")) {
 
-					int x, y, z;
-
-					x = toAttributeInt(child_,"x", 0);
-                    y = toAttributeInt(child_,"y", 0);
-                    z = toAttributeInt(child_,"z", 0);
+					int x = DOMUtils.toIntAttribute(child_,"x", 0);
+                    int y = DOMUtils.toIntAttribute(child_,"y", 0);
+                    int z = DOMUtils.toIntAttribute(child_,"z", 0);
 
                     option.includeBlock(child_.getTextContent(), x, y, z);
 				}
@@ -284,23 +283,6 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 		}
 
 		return list;
-	}
-
-	private String getNodeTextContent(Node node, String attribute_name) {
-	    Node attribute = node.getAttributes().getNamedItem(attribute_name);
-	    return attribute != null ? attribute.getTextContent() : null;
-    }
-
-	private float toAttributeFloat(Node node, String attribute_name, float def) {
-	    return NumberUtils.toFloat(getNodeContent(node, attribute_name).trim(), def);
-    }
-
-	private int toAttributeInt(Node node, String attribute_name, int def) {
-        return NumberUtils.toInt(getNodeContent(node, attribute_name).trim(), def);
-    }
-
-	private boolean isMatchNode(Node node, String node_name) {
-	    return node.getNodeName().equalsIgnoreCase(node_name);
 	}
 
 }
