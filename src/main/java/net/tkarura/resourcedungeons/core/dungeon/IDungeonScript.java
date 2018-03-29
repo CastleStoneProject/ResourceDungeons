@@ -10,4 +10,6 @@ public interface IDungeonScript {
 
     public Reader getReader() throws IOException;
 
+    public String getLocation();
+
 }

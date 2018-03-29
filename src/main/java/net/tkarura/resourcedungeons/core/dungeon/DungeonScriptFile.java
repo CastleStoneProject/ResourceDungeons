@@ -12,15 +12,18 @@ public class DungeonScriptFile implements IDungeonScript {
     private File file;
 
     public DungeonScriptFile(File file) {
+        Validate.notNull(file, "file can not be null.");
         this.file = file;
     }
 
     @Override
     public Reader getReader() throws IOException {
-
-        Validate.notNull(file, "file is null.");
-
         return new FileReader(file);
+    }
+
+    @Override
+    public String getLocation() {
+        return file.getName();
     }
 
     @Override
