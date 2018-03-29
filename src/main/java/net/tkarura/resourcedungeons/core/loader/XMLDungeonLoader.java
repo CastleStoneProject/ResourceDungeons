@@ -226,6 +226,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
                 }
 
                 script = new DungeonScriptText(script_text.toString());
+			    ((DungeonScriptText) script).setLocation(this.file.getName());
 
 			}
 
