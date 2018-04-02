@@ -4,7 +4,7 @@ import net.tkarura.resourcedungeons.core.ResourceDungeons;
 
 public class DungeonHelpCommand extends DungeonCommand {
 
-	private final static String WEB_SITE_URL = "https://tkarura.net/resourcedungeons/wiki";
+	private final static String WEB_SITE_URL = "https://rd.tkarura.net/";
 
 	public DungeonHelpCommand() {
 		super("help");
