@@ -73,6 +73,14 @@ public final class DOMUtils {
        return node.getNodeName().equals(node_name);
     }
 
+    public static String getAttributeTextContent(Node node, String attiribute_name) {
+        Node attr = node.getAttributes().getNamedItem(attiribute_name);
+        if (attr != null) {
+            return attr.getTextContent();
+        }
+        return "";
+    }
+
     // TextContent
 
     public static byte toByteTextContent(Node node, String node_name) {
@@ -130,7 +138,7 @@ public final class DOMUtils {
     }
 
     public static byte toByteAttribute(Node node, String node_name, byte def) {
-        return NumberUtils.toByte(getNodeTextContent(node, node_name).trim(), def);
+        return NumberUtils.toByte(getAttributeTextContent(node, node_name).trim(), def);
     }
 
     public static short toShortAttribute(Node node, String node_name) {
@@ -138,7 +146,7 @@ public final class DOMUtils {
     }
 
     public static short toShortAttribute(Node node, String node_name, short def) {
-        return NumberUtils.toShort(getNodeTextContent(node, node_name).trim(), def);
+        return NumberUtils.toShort(getAttributeTextContent(node, node_name).trim(), def);
     }
 
     public static int toIntAttribute(Node node, String node_name) {
@@ -146,7 +154,7 @@ public final class DOMUtils {
     }
 
     public static int toIntAttribute(Node node, String node_name, int def) {
-        return NumberUtils.toInt(getNodeTextContent(node, node_name).trim(), def);
+        return NumberUtils.toInt(getAttributeTextContent(node, node_name).trim(), def);
     }
 
     public static long toLongAttribute(Node node, String node_name) {
@@ -154,7 +162,7 @@ public final class DOMUtils {
     }
 
     public static long toLongAttribute(Node node, String node_name, long def) {
-        return NumberUtils.toLong(getNodeTextContent(node, node_name).trim(),  def);
+        return NumberUtils.toLong(getAttributeTextContent(node, node_name).trim(),  def);
     }
 
     public static float toFloatAttribute(Node node, String node_name) {
@@ -162,7 +170,7 @@ public final class DOMUtils {
     }
 
     public static float toFloatAttribute(Node node, String node_name, float def) {
-        return NumberUtils.toFloat(getNodeTextContent(node, node_name).trim(), def);
+        return NumberUtils.toFloat(getAttributeTextContent(node, node_name).trim(), def);
     }
 
     public static double toDoubleAttribute(Node node, String node_name) {
@@ -170,7 +178,7 @@ public final class DOMUtils {
     }
 
     public static double toDoubleAttribute(Node node, String node_name, double def) {
-        return NumberUtils.toDouble(getNodeTextContent(node, node_name).trim(), def);
+        return NumberUtils.toDouble(getAttributeTextContent(node, node_name).trim(), def);
     }
 
 
