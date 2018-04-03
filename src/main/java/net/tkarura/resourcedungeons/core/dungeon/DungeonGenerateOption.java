@@ -7,10 +7,10 @@ import java.util.List;
 
 public class DungeonGenerateOption {
 
-    public final static float DEFAULT_PERCENT = 0.0001f;
+    public final static double DEFAULT_PERCENT = 0.001d;
 
     private final String function_name;
-    private float percent = DungeonGenerateOption.DEFAULT_PERCENT;
+    private double percent = DEFAULT_PERCENT;
 
     private static List<String> default_biomes = new ArrayList<>();
     static {
@@ -41,7 +41,7 @@ public class DungeonGenerateOption {
         this.blocks = new ArrayList<>(default_blocks);
     }
 
-    public void setPercent(float percent) {
+    public void setPercent(double percent) {
         this.percent = percent;
     }
 
@@ -83,7 +83,7 @@ public class DungeonGenerateOption {
         return this.function_name;
     }
 
-    public float getPercent() { return this.percent; }
+    public double getPercent() { return this.percent; }
 
     public String[] getBiomes() {
         return this.biomes.toArray(new String[0]);
