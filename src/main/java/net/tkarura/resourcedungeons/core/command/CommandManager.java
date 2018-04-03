@@ -19,4 +19,8 @@ public class CommandManager {
         return this.commands.get(name);
     }
 
+    public DungeonCommand[] getCommands() {
+        return commands.values().toArray(new DungeonCommand[0]);
+    }
+
 }
