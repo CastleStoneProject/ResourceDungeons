@@ -5,7 +5,6 @@ import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptException;
 import net.tkarura.resourcedungeons.core.script.DungeonScriptEngine;
 import net.tkarura.resourcedungeons.core.script.DungeonScriptParameter;
-import net.tkarura.resourcedungeons.core.script.GenerateHandle;
 import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
 
@@ -17,6 +16,7 @@ public class DungeonGenerateCommand extends DungeonCommand {
 	public DungeonGenerateCommand() {
 		super("generate");
 		this.permission = "ResourceDungeons.Command.Generate";
+		this.description = "その場にダンジョンを生成します。";
 		this.player_only = true;
 	}
 
@@ -52,13 +52,8 @@ public class DungeonGenerateCommand extends DungeonCommand {
 		int y = sender.getY();
 		int z = sender.getZ();
 
-		// ダンジョン生成器の生成
-		DungeonScriptParameter param = new DungeonScriptParameter(dungeon, world, session_manager);
-		param.setScriptClassLoader(null);
-		param.setBaseLoc(x, y, z);
-
 		// スクリプト実行処理の生成
-        DungeonScriptEngine script = new DungeonScriptEngine(param);
+        DungeonScriptEngine script = new DungeonScriptEngine(createParameter(dungeon, world, x, y, z));
 
 		try {
 
@@ -75,16 +70,25 @@ public class DungeonGenerateCommand extends DungeonCommand {
 
 	}
 
-	public void generate(DungeonCommandSender sender, DungeonScriptEngine script) throws DungeonScriptException {
+	protected void generate(DungeonCommandSender sender, DungeonScriptEngine script) throws DungeonScriptException {
 
 	    // スクリプトを実行します。
-	    script.runScript();
+	    script.loadScripts();
 	    script.callMainFunction();
 	    script.runSessions();
 
 		// 生成完了の通知
 		sender.sendMessage("Dungeon Generate Complate.");
 
+	}
+
+	protected DungeonScriptParameter createParameter(IDungeon dungeon, IDungeonWorld world, int x, int y, int z) {
+
+		DungeonScriptParameter param = new DungeonScriptParameter(dungeon, world, session_manager);
+		param.setScriptClassLoader(null);
+		param.setBaseLoc(x, y, z);
+
+		return param;
 	}
 
 }
