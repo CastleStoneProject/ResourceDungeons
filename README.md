@@ -28,3 +28,5 @@ ResourceDungeonsの基本的な機能を行う部分を基本部実行環境に�
 [the_karura](https://github.com/thekarura)
 
 This software includes the work that is distributed in the Apache License 2.0
+
+(C) 2014-2018 CastleStoneProject
