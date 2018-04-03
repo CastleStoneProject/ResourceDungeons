@@ -1,15 +1,18 @@
 package net.tkarura.resourcedungeons.core.script;
 
+import jdk.nashorn.api.scripting.NashornScriptEngine;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeonScript;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptException;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptRunException;
+import org.apache.commons.lang3.Validate;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 import java.io.*;
+import java.security.Policy;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 一つのスクリプト動作を表すクラスです。
@@ -18,7 +21,6 @@ public final class DungeonScriptEngine {
 
     private DungeonScriptParameter param;       // スクリプト引数情報
     private GenerateHandle handle;              // ハンドル情報 スクリプト実行結果もこのクラス内に格納されます。
-    private ScriptEngineManager engine_manager; // スクリプトエンジンのマネージャー
     private ScriptEngine engine;                // スクリプト処理に使用するクラス
 
     /**
@@ -27,11 +29,19 @@ public final class DungeonScriptEngine {
      * @param param スクリプト引数
      */
     public DungeonScriptEngine(DungeonScriptParameter param) {
+        Validate.notNull(param, "param can not be null.");
         this.param = param;
         this.handle = new GenerateHandle(param.getDungeon(), param.getWorld(), param.getSessions());
+        setupScriptEngine();
+    }
 
-        this.engine_manager = new ScriptEngineManager(param.getUseClassLoader());
-        this.engine = engine_manager.getEngineByName(param.getEngineName());
+    private void setupScriptEngine() {
+
+        // Java呼び出しを禁止した状態のエンジンを生成
+        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+        ScriptEngine engine = factory.getScriptEngine("--no-java");
+        this.engine = engine;
+
     }
 
     /**
@@ -39,7 +49,7 @@ public final class DungeonScriptEngine {
      *
      * @throws DungeonScriptException
      */
-    public void runScript() throws DungeonScriptException {
+    public void loadScripts() throws DungeonScriptException {
 
         // 関数呼び出しがサポートされているかを確認します。
         if (!(engine instanceof Invocable)) {
@@ -60,8 +70,8 @@ public final class DungeonScriptEngine {
         for (IDungeonScript script : dungeon.getScripts()) {
 
             try {
-                this.engine.eval(script.getReader());
-            } catch (ScriptException | IOException e) {
+                script.read(engine);
+            } catch (IOException | ScriptException e) {
                 e.printStackTrace();
             }
 
@@ -94,10 +104,12 @@ public final class DungeonScriptEngine {
 
             ((Invocable) engine).invokeFunction(function_name, handle, args);
 
-        } catch (Exception e) {
+        } catch (NoSuchMethodException e) {
 
-            // デバッグ用
-            e.printStackTrace();
+            // 呼び出し先の関数が見つからない場合
+            throw new DungeonScriptException("No Such Function. " + function_name);
+
+        } catch (ScriptException e) {
 
             // 呼び出し元へ返す例外メッセージ
             throw new DungeonScriptRunException(e.getLocalizedMessage());
@@ -106,8 +118,15 @@ public final class DungeonScriptEngine {
 
     }
 
+    /**
+     * スクリプトエンジンの実行結果から格納されたセッション情報を全て実行します。
+     */
     public void runSessions() {
         this.handle.runSessions();
+    }
+
+    public GenerateHandle getHandle() {
+        return this.handle;
     }
 
 }

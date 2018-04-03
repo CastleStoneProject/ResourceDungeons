@@ -3,10 +3,7 @@ package net.tkarura.resourcedungeons.core.script;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.lang3.Validate;
 
 /**
  * スクリプト動作を管理するマネージャークラスです。
@@ -32,6 +29,9 @@ public final class DungeonScriptParameter {
     private int z = 0;
 
     public DungeonScriptParameter(IDungeon dungeon, IDungeonWorld world, SessionManager sessions) {
+        Validate.notNull(dungeon, "dungeon can not be null.");
+        Validate.notNull(world, "world can not be null.");
+        Validate.notNull(sessions, "sessions, can not be null.");
         this.dungeon = dungeon;
         this.world = world;
         this.sessions = sessions;

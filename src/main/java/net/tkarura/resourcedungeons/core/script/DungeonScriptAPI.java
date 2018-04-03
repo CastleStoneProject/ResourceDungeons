@@ -1,5 +1,6 @@
 package net.tkarura.resourcedungeons.core.script;
 
+import net.tkarura.resourcedungeons.core.util.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -40,12 +41,10 @@ public final class DungeonScriptAPI {
                 throw new FileNotFoundException(scripts_file + " is Not Found.");
             }
 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(is);
-            Node scripts_node = getNodeByName(doc, "scripts");
+            Document document = DOMUtils.readDocument(is);
+            Node scripts_node = getNodeByName(document, "scripts");
 
-            this.loadScriptsNode(getNodeByName(scripts_node, "includes"));
+            this.loadScriptsNode(DOMUtils.getNameToFirstNode(scripts_node, "includes"));
 
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
@@ -89,24 +88,28 @@ public final class DungeonScriptAPI {
     public void loadScripts(ScriptEngine engine) {
 
         for (String src : script_srcs) {
-            loadScript(engine, src);
+
+            try {
+
+                loadScript(engine, src);
+
+            } catch (FileNotFoundException | ScriptException e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
 
-    private void loadScript(ScriptEngine engine, String src) {
+    private void loadScript(ScriptEngine engine, String src) throws FileNotFoundException, ScriptException {
 
-        InputStream is = loader.getSystemResourceAsStream(src);
+        InputStream is = loader.getResourceAsStream(src);
 
         if (is == null) {
-            return;
+            throw new FileNotFoundException("File Not Found : " + src);
         }
 
-        try {
-            engine.eval(new InputStreamReader(is));
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        }
+        engine.eval(new InputStreamReader(is));
 
     }
 
