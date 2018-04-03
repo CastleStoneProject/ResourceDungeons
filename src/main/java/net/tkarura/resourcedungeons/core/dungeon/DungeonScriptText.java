@@ -2,14 +2,12 @@ package net.tkarura.resourcedungeons.core.dungeon;
 
 import org.apache.commons.lang3.Validate;
 
-import java.io.File;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 
 public class DungeonScriptText implements IDungeonScript {
 
-    private String location;
     private String text;
 
     public DungeonScriptText(String text) {
@@ -17,18 +15,14 @@ public class DungeonScriptText implements IDungeonScript {
         this.text = text;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     @Override
-    public Reader getReader() throws IOException {
-        return new StringReader(text);
+    public void read(ScriptEngine engine) throws ScriptException {
+        engine.eval(text);
     }
 
     @Override
     public String getLocation() {
-        return location != null ? location : "unknown location.";
+        return "<text>";
     }
 
     @Override

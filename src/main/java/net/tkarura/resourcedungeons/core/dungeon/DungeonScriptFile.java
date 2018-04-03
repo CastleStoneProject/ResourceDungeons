@@ -2,10 +2,9 @@ package net.tkarura.resourcedungeons.core.dungeon;
 
 import org.apache.commons.lang3.Validate;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
+import java.io.*;
 
 public class DungeonScriptFile implements IDungeonScript {
 
@@ -17,13 +16,13 @@ public class DungeonScriptFile implements IDungeonScript {
     }
 
     @Override
-    public Reader getReader() throws IOException {
-        return new FileReader(file);
+    public void read(ScriptEngine engine) throws IOException, ScriptException {
+        engine.eval(new FileReader(file));
     }
 
     @Override
     public String getLocation() {
-        return file.getName();
+        return this.file.getName();
     }
 
     @Override
