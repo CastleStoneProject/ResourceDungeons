@@ -1,9 +1,7 @@
 package net.tkarura.resourcedungeons.core.loader;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,15 +9,9 @@ import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import com.sun.org.apache.xerces.internal.dom.ChildNode;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.NodeType;
 import net.tkarura.resourcedungeons.core.dungeon.*;
 import net.tkarura.resourcedungeons.core.util.DOMUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
 
@@ -32,16 +24,16 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 		DocumentBuilder builder;
 		Document document;
 
-		DungeonImpl dungeon = null;
+		DungeonImpl dungeon;
 
-		String id = "";
-		String support = "";
-		String description = "";
-		String name = "";
-		String version = "";
-		List<DungeonUser> users = new ArrayList<>();
-		List<IDungeonScript> scripts = new ArrayList<>();
-		List<DungeonGenerateOption> options = new ArrayList<>();
+		String id;
+		String support;
+		String description;
+		String name;
+		String version;
+		List<DungeonUser> users;
+		List<IDungeonScript> scripts;
+		List<DungeonGenerateOption> options;
 
 		try {
 
@@ -226,7 +218,6 @@ public class XMLDungeonLoader extends FileDungeonLoader {
                 }
 
                 script = new DungeonScriptText(script_text.toString());
-			    ((DungeonScriptText) script).setLocation(this.file.getName());
 
 			}
 
@@ -254,7 +245,7 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 			}
 
 			String function_name = child.getAttributes().getNamedItem("function").getTextContent();
-			float percent = DOMUtils.toFloatAttribute(child, "parcent", 0.00005f);
+			double percent = DOMUtils.toDoubleAttribute(child, "percent", DungeonGenerateOption.DEFAULT_PERCENT);
 			DungeonGenerateOption option = new DungeonGenerateOption(function_name);
 			option.setPercent(percent);
 
