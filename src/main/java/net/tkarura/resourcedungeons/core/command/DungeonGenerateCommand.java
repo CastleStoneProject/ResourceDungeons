@@ -4,7 +4,6 @@ import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptException;
 import net.tkarura.resourcedungeons.core.script.DungeonScriptEngine;
-import net.tkarura.resourcedungeons.core.script.DungeonScriptParameter;
 import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
 
@@ -53,7 +52,10 @@ public class DungeonGenerateCommand extends DungeonCommand {
 		int z = sender.getZ();
 
 		// スクリプト実行処理の生成
-        DungeonScriptEngine script = new DungeonScriptEngine(createParameter(dungeon, world, x, y, z));
+        DungeonScriptEngine script = new DungeonScriptEngine(dungeon);
+        script.setWorld(world);
+        script.setSessionManager(session_manager);
+        script.setBaseLocation(x, y, z);
 
 		try {
 
@@ -67,7 +69,6 @@ public class DungeonGenerateCommand extends DungeonCommand {
 			sender.sendMessage("Dungeon Generate Faild. reason: " + e.getLocalizedMessage());
 		}
 
-
 	}
 
 	protected void generate(DungeonCommandSender sender, DungeonScriptEngine script) throws DungeonScriptException {
@@ -80,15 +81,6 @@ public class DungeonGenerateCommand extends DungeonCommand {
 		// 生成完了の通知
 		sender.sendMessage("Dungeon Generate Complate.");
 
-	}
-
-	protected DungeonScriptParameter createParameter(IDungeon dungeon, IDungeonWorld world, int x, int y, int z) {
-
-		DungeonScriptParameter param = new DungeonScriptParameter(dungeon, world, session_manager);
-		param.setScriptClassLoader(null);
-		param.setBaseLoc(x, y, z);
-
-		return param;
 	}
 
 }

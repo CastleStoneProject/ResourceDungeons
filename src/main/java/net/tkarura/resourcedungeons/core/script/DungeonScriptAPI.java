@@ -11,20 +11,18 @@ import javax.script.ScriptException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarFile;
 
 public final class DungeonScriptAPI {
 
-    private ClassLoader loader;
+    private JarFile file;
     private List<String> script_srcs = new ArrayList<>();
 
-    public DungeonScriptAPI(ClassLoader loader) {
-        this.loader = loader;
+    public DungeonScriptAPI(File file) throws IOException {
+        this.file = new JarFile(file);
     }
 
     public void load() {
@@ -35,7 +33,7 @@ public final class DungeonScriptAPI {
 
         try {
 
-            InputStream is = loader.getResourceAsStream(scripts_file);
+            InputStream is = file.getInputStream(file.getEntry(scripts_file));
 
             if (is == null) {
                 throw new FileNotFoundException(scripts_file + " is Not Found.");
@@ -93,7 +91,7 @@ public final class DungeonScriptAPI {
 
                 loadScript(engine, src);
 
-            } catch (FileNotFoundException | ScriptException e) {
+            } catch (IOException | ScriptException e) {
                 e.printStackTrace();
             }
 
@@ -101,9 +99,9 @@ public final class DungeonScriptAPI {
 
     }
 
-    private void loadScript(ScriptEngine engine, String src) throws FileNotFoundException, ScriptException {
+    private void loadScript(ScriptEngine engine, String src) throws IOException, ScriptException {
 
-        InputStream is = loader.getResourceAsStream(src);
+        InputStream is = file.getInputStream(file.getEntry(src));
 
         if (is == null) {
             throw new FileNotFoundException("File Not Found : " + src);
