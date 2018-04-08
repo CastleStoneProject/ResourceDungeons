@@ -71,8 +71,7 @@ public final class ResourceDungeons {
         this.dungeons.init();
 
         // xmlローダーを登録
-        String[] xml_extends = {"xml"};
-        this.dungeons.addFileDungeonLoader(new XMLDungeonLoader(), xml_extends);
+        this.dungeons.addFileDungeonLoader(new XMLDungeonLoader(), "xml");
 
         // Dungeonの読み込み
         this.dungeons.loadDungeons(this.dungeons_dir);

@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import net.tkarura.resourcedungeons.core.dungeon.*;
 import net.tkarura.resourcedungeons.core.util.DOMUtils;
+import net.tkarura.resourcedungeons.core.util.FileUtil;
 import org.w3c.dom.*;
 
 import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
@@ -187,16 +188,21 @@ public class XMLDungeonLoader extends FileDungeonLoader {
 			if (attribute.getNamedItem("src") != null) {
 
 			    File src_dir = new File(dir, attribute.getNamedItem("src").getTextContent());
+			    String src_dir_name = FileUtil.getAbsolutePathName(src_dir);
 
                 if (!src_dir.exists()) {
-			        logs.add(Level.WARNING, "存在しないファイルを指定しています。");
+			        logs.add(Level.WARNING, "存在しないファイルを指定しています。 : " + src_dir_name);
                 }
 
                 if (src_dir.isDirectory()) {
-                    logs.add(Level.WARNING, "ディレクトリを指定しています。");
+                    logs.add(Level.WARNING, "ディレクトリを指定しています。 : " + src_dir_name);
                 }
 
-				script = new DungeonScriptFile(src_dir);
+                if (FileUtil.isDirectoryInPath(this.dir, src_dir)) {
+					script = new DungeonScriptFile(src_dir);
+				} else {
+                	logs.add(Level.SEVERE, "ダンジョンディレクトリ外の指定は出来ません。 : " + src_dir_name);
+				}
 
 			} else {
 

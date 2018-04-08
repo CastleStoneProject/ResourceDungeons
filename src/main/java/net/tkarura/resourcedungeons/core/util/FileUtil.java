@@ -12,11 +12,23 @@ public final class FileUtil {
 
     public static boolean isDirectoryInPath(File p, File d) {
         try {
-            Path p_ = Paths.get(p.getPath()).toRealPath(LinkOption.NOFOLLOW_LINKS);
-            Path d_ = Paths.get(d.getPath()).toRealPath(LinkOption.NOFOLLOW_LINKS);
+            Path p_ = getAbsolutePath(p);
+            Path d_ = getAbsolutePath(d);
             return d_.toString().startsWith(p_.toString());
         } catch (NullPointerException | IOException e) {
             return false;
+        }
+    }
+
+    public static Path getAbsolutePath(File dir) throws IOException {
+        return Paths.get(dir.getPath()).toRealPath(LinkOption.NOFOLLOW_LINKS);
+    }
+
+    public static String getAbsolutePathName(File dir) {
+        try {
+            return getAbsolutePath(dir).toString();
+        } catch (IOException e) {
+            return dir.getAbsolutePath();
         }
     }
 

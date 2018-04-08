@@ -66,7 +66,7 @@ public final class DungeonManager {
 	 * @param loader 登録するローダ情報
 	 * @param extendz 対応する拡張子
 	 */
-	public void addFileDungeonLoader(FileDungeonLoader loader, String[] extendz) {
+	public void addFileDungeonLoader(FileDungeonLoader loader, String... extendz) {
 
 		Validate.notEmpty(extendz, "extends can not be empty.");
 
@@ -181,8 +181,13 @@ public final class DungeonManager {
 				// ファイルからダンジョン情報を取得します。
 				IDungeon dungeon = loader.loadFileDungeon(file);
 
-				// ダンジョン情報を登録します。
-				registerDungeon(dungeon);
+				// エラーが発生した場合は登録をしない
+				if (!loader.getLogHandleList().isErrorLog()) {
+
+                    // ダンジョン情報を登録します。
+                    registerDungeon(dungeon);
+
+                }
 
 			}
 
