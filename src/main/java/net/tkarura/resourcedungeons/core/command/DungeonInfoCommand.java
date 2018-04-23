@@ -3,6 +3,8 @@ package net.tkarura.resourcedungeons.core.command;
 import net.tkarura.resourcedungeons.core.dungeon.*;
 import net.tkarura.resourcedungeons.core.exception.DungeonCommandException;
 
+import java.math.BigDecimal;
+
 public class DungeonInfoCommand extends DungeonCommand {
 
     public final static String COMMAND_NAME = "info";
@@ -71,7 +73,8 @@ public class DungeonInfoCommand extends DungeonCommand {
             sender.sendMessage("options not found.");
         }
         for (DungeonGenerateOption option : dungeon.getGenerateOptions()) {
-            sender.sendMessage("function: " + option.getFunctionName() + " percent: " + option.getPercent() +
+            sender.sendMessage("function: " + option.getFunctionName() +
+                    " percent: " + toParcentString(option.getPercent()) +
                     " biomes: " + getListToString(option.getBiomes()));
         }
         sender.sendMessage("==================================================");
@@ -84,6 +87,10 @@ public class DungeonInfoCommand extends DungeonCommand {
             builder.append(list[i]).append(" ");
         }
         return builder.toString();
+    }
+
+    private String toParcentString(double v) {
+        return BigDecimal.valueOf(v).toPlainString();
     }
 
 }
