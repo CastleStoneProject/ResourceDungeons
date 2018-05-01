@@ -11,8 +11,6 @@ public class DNBTTagShort extends DNBTNumber {
 
 	/**
 	 * 中身の情報を0にして生成します。
-	 *
-	 * @param value 値
 	 */
 	public DNBTTagShort() {
 		this((short) 0);
@@ -25,6 +23,36 @@ public class DNBTTagShort extends DNBTNumber {
 	 */
 	public DNBTTagShort(short value) {
 		this.value = value;
+	}
+
+	@Override
+	public byte getValueByte() {
+		return (byte) value;
+	}
+
+	@Override
+	public short getValueShort() {
+		return value;
+	}
+
+	@Override
+	public int getValueInt() {
+		return value;
+	}
+
+	@Override
+	public long getValueLong() {
+		return value;
+	}
+
+	@Override
+	public float getValueFloat() {
+		return value;
+	}
+
+	@Override
+	public double getValueDouble() {
+		return value;
 	}
 
 	@Override

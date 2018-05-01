@@ -1,5 +1,8 @@
 package net.tkarura.resourcedungeons.core.dungeon;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -8,6 +11,8 @@ import java.io.Reader;
  */
 public interface IDungeonScript {
 
-    public Reader getReader() throws IOException;
+    void read(ScriptEngine engine) throws IOException, ScriptException;
+
+    String getLocation();
 
 }

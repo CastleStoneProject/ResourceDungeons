@@ -11,13 +11,11 @@ public class SetBlockSession implements ISession {
 	public void run(GenerateHandle handle, DNBTTagCompound data) {
 
 		IDungeonWorld world = handle.getWorld();
-		String block_id = data.getString("block_id");
-		byte damage = data.getByte("block_data");
 		int x = data.getInt("x");
 		int y = data.getInt("y");
 		int z = data.getInt("z");
-
-		block_id = !block_id.equals("") ? block_id : world.getBlockId(x, y, z);
+		String block_id = data.getString("block_id", world.getBlockId(x, y, z));
+		byte damage = data.getByte("block_data", world.getBlockData(x, y, z));
 
 		world.setBlockId(block_id, x, y, z);
 		world.setBlockData(damage, x, y, z);

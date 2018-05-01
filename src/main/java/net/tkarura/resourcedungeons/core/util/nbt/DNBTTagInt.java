@@ -26,6 +26,36 @@ public class DNBTTagInt extends DNBTNumber {
 	}
 
 	@Override
+	public byte getValueByte() {
+		return (byte) value;
+	}
+
+	@Override
+	public short getValueShort() {
+		return (short) value;
+	}
+
+	@Override
+	public int getValueInt() {
+		return value;
+	}
+
+	@Override
+	public long getValueLong() {
+		return value;
+	}
+
+	@Override
+	public float getValueFloat() {
+		return (float) value;
+	}
+
+	@Override
+	public double getValueDouble() {
+		return (double) value;
+	}
+
+	@Override
 	public Integer getValue() {
 		return this.value;
 	}

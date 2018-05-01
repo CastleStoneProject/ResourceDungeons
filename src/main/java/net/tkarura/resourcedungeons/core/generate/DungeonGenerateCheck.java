@@ -107,7 +107,7 @@ public class DungeonGenerateCheck {
             if (option != null) {
 
                 // 確率から実際に配置するかどうかを判定
-                if (option.getPercent() < random.nextFloat()) {
+                if (option.getPercent() < random.nextDouble()) {
                     continue;
                 }
 

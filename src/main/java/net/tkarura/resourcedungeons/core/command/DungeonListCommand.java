@@ -12,6 +12,7 @@ public class DungeonListCommand extends DungeonCommand {
 
 	public DungeonListCommand() {
 		super("list");
+		this.description = "読み込んだダンジョン一覧を表示します。";
 		this.permission = "ResourceDungeons.Command.List";
 	}
 

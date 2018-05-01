@@ -74,10 +74,10 @@ public class DungeonImpl implements IDungeon {
     /**
      * ダンジョンの説明を設定します。
      *
-     * @param discription ダンジョンの説明
+     * @param description ダンジョンの説明
      */
-    public void setDiscription(String discription) {
-        this.description = discription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
@@ -159,6 +159,22 @@ public class DungeonImpl implements IDungeon {
     @Override
     public List<IDungeonScript> getScripts() {
         return new ArrayList<IDungeonScript>(this.scripts);
+    }
+
+    @Override
+    public String toString() {
+        return "DungeonImpl{" +
+                "id='" + id + '\'' +
+                ", dir=" + dir +
+                ", support='" + support + '\'' +
+                ", name='" + name + '\'' +
+                ", version='" + version + '\'' +
+                ", description='" + description + '\'' +
+                ", authors=" + authors +
+                ", contributors=" + contributors +
+                ", generate_options=" + generate_options +
+                ", scripts=" + scripts +
+                '}';
     }
 
 }

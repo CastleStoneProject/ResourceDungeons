@@ -8,8 +8,8 @@ import net.tkarura.resourcedungeons.core.loader.handle.LoadLogHandleList;
 
 public interface DungeonLoader {
 
-    public IDungeon loadDungeon(InputStream is) throws DungeonLoadException;
+    IDungeon loadDungeon(InputStream is) throws DungeonLoadException;
 
-    public LoadLogHandleList getLogHandleList();
+    LoadLogHandleList getLogHandleList();
 
 }

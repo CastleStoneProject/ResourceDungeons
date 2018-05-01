@@ -13,47 +13,43 @@ import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
 
 /**
  * スクリプト実行結果を格納する為のクラスです。
- * スクリプト側から参照されるクラスな為{@link DungeonScriptParameter}とは別で分けてます。
  */
 public final class GenerateHandle {
 
-    private final UUID uuid = UUID.randomUUID();                // この実行結果のIDです。
-    private IDungeon dungeon;                                   // ダンジョン情報
-    private IDungeonWorld world;                                // ワールド情報
-    private SessionManager sessions;                            // 命令一覧情報
+    protected IDungeon dungeon;                                   // ダンジョン情報
+    protected IDungeonWorld world;                                // ワールド情報
+    protected int base_x = 0;                                     // 生成基点x
+    protected int base_y = 0;                                     // 生成基点y
+    protected int base_z = 0;                                     // 生成基点z
+
+    protected SessionManager sessions;                            // 命令一覧情報
+
     private Deque<DNBTTagCompound> queue = new LinkedList<>();  // 実際に実行させる為の情報
     private DNBTTagCompound register = new DNBTTagCompound();   // スクリプトで取り扱う情報
-    private int base_x = 0;                                     // 生成基点x
-    private int base_y = 0;                                     // 生成基点y
-    private int base_z = 0;                                     // 生成基点z
-
-    /**
-     * 生成を行うダンジョン情報と
-     * @param dungeon ダンジョン情報
-     * @param world ワールド情報
-     * @param sessions 実行する命令情報
-     */
-    protected GenerateHandle(IDungeon dungeon, IDungeonWorld world, SessionManager sessions) {
-        this.dungeon = dungeon;
-        this.world = world;
-        this.sessions = sessions;
-    }
 
     /**
      * レジスタの情報をキューに追加します。
      */
     public void push() {
         this.queue.push(register);
+    }
+
+    public void clean() {
         this.register = new DNBTTagCompound();
     }
 
     /**
      * スクリプトから得た情報を元に実際に実行を行う情報です。
+     * Scriptからの実行がされないようにprotectedで防止してます。
      */
-    public void runSessions() {
+    protected void runSessions() {
 
         SessionManager sessions = this.sessions;
         DNBTTagCompound nbt;
+
+        if (sessions == null) {
+            throw new NullPointerException("sessions is null.");
+        }
 
         // 格納された情報を実行します。
         while ((nbt = this.queue.pollLast()) != null) {
@@ -63,21 +59,17 @@ public final class GenerateHandle {
 
             // 有効なセッション情報な場合は処理
             if (session != null) {
-                runSession(session, nbt);
+
+                try {
+
+                    session.run(this, nbt);
+
+                } catch (DungeonSessionException e) {
+                    e.printStackTrace();
+                }
+
             }
 
-        }
-
-    }
-
-    private void runSession(ISession session, DNBTTagCompound nbt) {
-
-        try {
-
-            session.run(this, nbt);
-
-        } catch (DungeonSessionException e) {
-            e.printStackTrace();
         }
 
     }
@@ -92,14 +84,6 @@ public final class GenerateHandle {
         this.base_x = x;
         this.base_y = y;
         this.base_z = z;
-    }
-
-    /**
-     * このハンドルのUUIDを返します。
-     * @return ハンドルのUUID
-     */
-    public UUID getUUID() {
-        return this.uuid;
     }
 
     /**

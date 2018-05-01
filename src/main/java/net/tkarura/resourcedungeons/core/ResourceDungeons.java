@@ -3,10 +3,7 @@ package net.tkarura.resourcedungeons.core;
 import java.io.File;
 import java.util.logging.Logger;
 
-import net.tkarura.resourcedungeons.core.command.CommandManager;
-import net.tkarura.resourcedungeons.core.command.DungeonGenerateCommand;
-import net.tkarura.resourcedungeons.core.command.DungeonHelpCommand;
-import net.tkarura.resourcedungeons.core.command.DungeonListCommand;
+import net.tkarura.resourcedungeons.core.command.*;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.loader.XMLDungeonLoader;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
@@ -45,6 +42,7 @@ public final class ResourceDungeons {
     private DungeonHelpCommand help_command = new DungeonHelpCommand();
     private DungeonListCommand list_command = new DungeonListCommand();
     private DungeonGenerateCommand generate_command = new DungeonGenerateCommand();
+    private DungeonInfoCommand info_command = new DungeonInfoCommand();
 
     public ResourceDungeons() {
     }
@@ -60,7 +58,7 @@ public final class ResourceDungeons {
     /**
      * ResourceDungeonsの初期化を行います。
      * <b><u>ResourceDungeonsに関わるあらゆる処理は全てこのメソッドの後に定義してください。</u></b>
-     * nullを設定した状態で呼び出した場合
+     * nullを設定した状態で呼び出した場合 {@link NullPointerException} が発生する恐れがあります。
      */
     public void init() {
 
@@ -73,8 +71,7 @@ public final class ResourceDungeons {
         this.dungeons.init();
 
         // xmlローダーを登録
-        String[] xml_extends = {"xml"};
-        this.dungeons.addFileDungeonLoader(new XMLDungeonLoader(), xml_extends);
+        this.dungeons.addFileDungeonLoader(new XMLDungeonLoader(), "xml");
 
         // Dungeonの読み込み
         this.dungeons.loadDungeons(this.dungeons_dir);
@@ -95,15 +92,27 @@ public final class ResourceDungeons {
         this.commands.init();
 
         // サポートするコマンドを登録
+        this.help_command.setCommandManager(this.commands);
         this.commands.register(this.help_command);
         this.list_command.setDungeonManager(this.dungeons);
         this.commands.register(this.list_command);
         this.commands.register(this.generate_command);
         this.generate_command.setDungeonManager(this.dungeons);
         this.generate_command.setSessionManager(this.sessions);
+        this.info_command.setDungeonManager(this.dungeons);
+        this.commands.register(this.info_command);
 
         log.info("End Resource Dungeons Initialized.");
 
+    }
+
+    /**
+     * このクラスで設定されたログ情報を返します。
+     *
+     * @return ログ情報
+     */
+    public Logger getLogger() {
+        return this.log;
     }
 
     /**

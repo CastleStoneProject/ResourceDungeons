@@ -1,5 +1,7 @@
 package net.tkarura.resourcedungeons.core.util.nbt;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,7 +13,7 @@ import java.util.Map.Entry;
 public class DNBTTagCompound extends DNBTBase {
 
 	// タグの値
-	private Map<String, DNBTBase> value = new HashMap<String, DNBTBase>();
+	private Map<String, DNBTBase> value = new HashMap<>();
 
 	/**
 	 * 空のタグ情報を生成します。
@@ -25,7 +27,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @param clone 複製する情報
 	 */
 	public DNBTTagCompound(DNBTTagCompound clone) {
-		this.value = new HashMap<String, DNBTBase>(clone.value);
+		this.value = new HashMap<>(clone.value);
 	}
 
 	/**
@@ -148,10 +150,110 @@ public class DNBTTagCompound extends DNBTBase {
 		set(key, nbt);
 	}
 
+	/**
+	 * byte型タグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setByte(String key, byte value) {
+		set(key, new DNBTTagByte(value));
+	}
+
+	/**
+	 * short型タグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setShort(String key, short value) {
+		set(key, new DNBTTagShort(value));
+	}
+
+	/**
+	 * int型タグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setInt(String key, int value) {
+		set(key, new DNBTTagInt(value));
+	}
+
+	/**
+	 * long型タグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setLong(String key, long value) {
+		set(key, new DNBTTagLong(value));
+	}
+
+	/**
+	 * float型タグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setFloat(String key, float value) {
+		set(key, new DNBTTagFloat(value));
+	}
+
+	/**
+	 * double型タグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setDouble(String key, double value) {
+		set(key, new DNBTTagDouble(value));
+	}
+
+	/**
+	 * Stringタグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setString(String key, String value) {
+		set(key, new DNBTTagString(value));
+	}
+
+	/**
+	 * byte arrayタグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setByteArray(String key, byte[] value) {
+		set(key, new DNBTTagByteArray(value));
+	}
+
+	/**
+	 * int arrayタグ情報を含めます。
+	 *
+	 * @param key 鍵
+	 * @param value 値
+	 */
+	public void setIntArray(String key, int[] value) {
+		set(key, new DNBTTagIntArray(value));
+	}
+
+	/**
+	 * 指定した要素のタグ情報を削除します。
+	 *
+	 * @param key 削除する要素の鍵
+	 */
 	public void remove(String key) {
 		this.value.remove(key);
 	}
 
+	/**
+	 * この構成が持つ要素が空であるかを判定します。
+	 *
+	 * @return 要素が空の場合 true
+	 */
 	public boolean isEmpty() {
 		return this.value.isEmpty();
 	}
@@ -162,8 +264,12 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @param key 鍵
 	 * @return 値
 	 */
-	public DNBTBase get(String key) {
-		return this.value.get(key);
+	public Object get(String key) {
+	    DNBTBase value = this.value.get(key);
+	    if (value != null) {
+	        return value.getValue();
+        }
+		return null;
 	}
 
 	/**
@@ -173,12 +279,8 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @return 値
 	 */
 	public byte getByte(String key) {
-		try {
-			return this.value.containsKey(key) ? (Byte) this.value.get(key).getValue() : (byte) 0;
-		} catch (ClassCastException e) {
-			return (byte) 0;
-		}
-	}
+	    return getByte(key, (byte) 0);
+    }
 
 	/**
 	 * 鍵を指定してshort型の値を取得します。
@@ -187,11 +289,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @return 値
 	 */
 	public short getShort(String key) {
-		try {
-			return this.value.containsKey(key) ? (Short) this.value.get(key).getValue() : (short) 0;
-		} catch (ClassCastException e) {
-			return (short) 0;
-		}
+	    return getShort(key, (short) 0);
 	}
 
 	/**
@@ -201,11 +299,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @return 値
 	 */
 	public int getInt(String key) {
-		try {
-			return this.value.containsKey(key) ? (Integer) this.value.get(key).getValue() : 0;
-		} catch (ClassCastException e) {
-			return 0;
-		}
+	    return getInt(key, 0);
 	}
 
 	/**
@@ -215,11 +309,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @return 値
 	 */
 	public float getFloat(String key) {
-		try {
-			return this.value.containsKey(key) ? (Float) this.value.get(key).getValue() : (float) 0;
-		} catch (ClassCastException e) {
-			return (float) 0;
-		}
+	    return getFloat(key, 0.0f);
 	}
 
 	/**
@@ -229,11 +319,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @return 値
 	 */
 	public double getDouble(String key) {
-		try {
-			return this.value.containsKey(key) ? (Double) this.value.get(key).getValue() : 0;
-		} catch (ClassCastException e) {
-			return 0;
-		}
+	    return getDouble(key, 0.0);
 	}
 
 	/**
@@ -243,11 +329,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @return 値
 	 */
 	public String getString(String key) {
-		try {
-			return this.value.containsKey(key) ? (String) this.value.get(key).getValue() : "";
-		} catch (ClassCastException e) {
-			return "";
-		}
+	    return getString(key, "");
 	}
 
 	/**
@@ -257,11 +339,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @return 値
 	 */
 	public byte[] getByteArray(String key) {
-		try {
-			return this.value.containsKey(key) ? (byte[]) this.value.get(key).getValue() : new byte[0];
-		} catch (ClassCastException e) {
-			return new byte[0];
-		}
+	    return getByteArray(key, new byte[0]);
 	}
 
 	/**
@@ -271,11 +349,7 @@ public class DNBTTagCompound extends DNBTBase {
 	 * @return 値
 	 */
 	public int[] getIntArray(String key) {
-		try {
-			return this.value.containsKey(key) ? (int[]) this.value.get(key).getValue() : new int[0];
-		} catch (ClassCastException e) {
-			return new int[0];
-		}
+	    return getIntArray(key, new int[0]);
 	}
 
 	/**
@@ -305,6 +379,156 @@ public class DNBTTagCompound extends DNBTBase {
 			return new DNBTTagCompound();
 		}
 	}
+
+    /**
+     * 鍵を指定してbyte型の値を取得します。
+     *
+     * @param key 鍵
+     * @param def 存在しない場合の値
+     * @return 値
+     */
+    public byte getByte(String key, byte def) {
+        DNBTBase base = this.value.get(key);
+        if (base == null) {
+            return def;
+        }
+        if (base instanceof DNBTNumber) {
+            return ((DNBTNumber) base).getValueByte();
+        }
+        if (base instanceof DNBTTagString) {
+            return NumberUtils.toByte(((DNBTTagString) base).getValue(), def);
+        }
+        return def;
+    }
+
+    /**
+     * 鍵を指定してshort型の値を取得します。
+     *
+     * @param key 鍵
+     * @param def 存在しない場合の値
+     * @return 値
+     */
+    public short getShort(String key, short def) {
+        DNBTBase base = this.value.get(key);
+        if (base == null) {
+            return def;
+        }
+        if (base instanceof DNBTNumber) {
+            return ((DNBTNumber) base).getValueShort();
+        }
+        if (base instanceof DNBTTagString) {
+            return NumberUtils.toShort(((DNBTTagString) base).getValue(), def);
+        }
+        return def;
+    }
+
+    /**
+     * 鍵を指定してint型の値を取得します。
+     *
+     * @param key 鍵
+     * @return 値
+     */
+    public int getInt(String key, int def) {
+        DNBTBase base = this.value.get(key);
+        if (base == null) {
+            return def;
+        }
+        if (base instanceof DNBTNumber) {
+            return ((DNBTNumber) base).getValueInt();
+        }
+        if (base instanceof DNBTTagString) {
+            return NumberUtils.toInt(((DNBTTagString) base).getValue(), def);
+        }
+        return def;
+    }
+
+    /**
+     * 鍵を指定してfloat型の値を取得します。
+     *
+     * @param key 鍵
+     * @return 値
+     */
+    public float getFloat(String key, float def) {
+        DNBTBase base = this.value.get(key);
+        if (base == null) {
+            return def;
+        }
+        if (base instanceof DNBTNumber) {
+            return ((DNBTNumber) base).getValueFloat();
+        }
+        if (base instanceof DNBTTagString) {
+            return NumberUtils.toFloat(((DNBTTagString) base).getValue(), def);
+        }
+        return def;
+    }
+
+    /**
+     * 鍵を指定してdouble型の値を取得します。
+     *
+     * @param key 鍵
+     * @return 値
+     */
+    public double getDouble(String key, double def) {
+        DNBTBase base = this.value.get(key);
+        if (base == null) {
+            return def;
+        }
+        if (base instanceof DNBTNumber) {
+            return ((DNBTNumber) base).getValueDouble();
+        }
+        if (base instanceof DNBTTagString) {
+            return NumberUtils.toDouble(((DNBTTagString) base).getValue(), def);
+        }
+        return def;
+    }
+
+    /**
+     * 鍵を指定してStringの値を取得します。
+     *
+     * @param key 鍵
+     * @return 値
+     */
+    public String getString(String key, String def) {
+        DNBTBase base = this.value.get(key);
+        if (base == null) {
+            return def;
+        }
+        if (base instanceof DNBTNumber) {
+            return String.valueOf(((DNBTNumber) base).getValue());
+        }
+        if (base instanceof DNBTTagString) {
+            return ((DNBTTagString) base).getValue();
+        }
+        return def;
+    }
+
+    /**
+     * 鍵を指定してbyte arrayの値を取得します。
+     *
+     * @param key 鍵
+     * @return 値
+     */
+    public byte[] getByteArray(String key, byte[] def) {
+        DNBTBase base = this.value.get(key);
+        if (base != null && base instanceof DNBTTagByteArray) {
+            return ((DNBTTagByteArray) base).getValue();
+        }
+        return def;
+    }
+
+    /**
+     * 鍵を指定してint arrayの値を取得します。
+     *
+     * @param key 鍵
+     * @return 値
+     */
+    public int[] getIntArray(String key, int[] def) {
+        DNBTBase base = this.value.get(key);
+        if (base != null && base instanceof DNBTTagIntArray) {
+            return ((DNBTTagIntArray) base).getValue();
+        }
+        return def;
+    }
 
 	@Override
 	public Map<String, DNBTBase> getValue() {

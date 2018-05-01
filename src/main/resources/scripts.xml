@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scripts>
+    <includes>
+        <import src="DungeonScriptAPI/core.js"/>
+        <import src="DungeonScriptAPI/session.js"/>
+        <import src="DungeonScriptAPI/block.js"/>
+        <import src="DungeonScriptAPI/schematic.js"/>
+    </includes>
+</scripts>

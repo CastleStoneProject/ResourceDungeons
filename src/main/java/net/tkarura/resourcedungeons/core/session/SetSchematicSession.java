@@ -1,8 +1,10 @@
 package net.tkarura.resourcedungeons.core.session;
 
+import net.tkarura.resourcedungeons.core.exception.DungeonSessionException;
 import net.tkarura.resourcedungeons.core.schematic.Schematic;
 import net.tkarura.resourcedungeons.core.script.GenerateHandle;
 import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
+import net.tkarura.resourcedungeons.core.util.FileUtil;
 import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
 
 import java.io.File;
@@ -12,13 +14,19 @@ import java.io.IOException;
 public class SetSchematicSession implements ISession {
 
     @Override
-    public void run(GenerateHandle handler, DNBTTagCompound data) {
+    public void run(GenerateHandle handler, DNBTTagCompound data) throws DungeonSessionException {
 
         IDungeonWorld world = handler.getWorld();
         int pos_x = data.getInt("x");
         int pos_y = data.getInt("y");
         int pos_z = data.getInt("z");
-        File schematic_format = new File(handler.getDungeon().getDirectory(), data.getString("schematic"));
+        File dungeon_dir = handler.getDungeon().getDirectory();
+        File schematic_format = new File(dungeon_dir, data.getString("schematic"));
+
+        if (!FileUtil.isDirectoryInPath(dungeon_dir, schematic_format)) {
+            throw new DungeonSessionException("ダンジョンディレクトリ外を参照をしています！");
+        }
+
         Schematic schematic;
 
         try {
@@ -55,7 +63,7 @@ public class SetSchematicSession implements ISession {
 
             }
 
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             e.printStackTrace();
         }
 

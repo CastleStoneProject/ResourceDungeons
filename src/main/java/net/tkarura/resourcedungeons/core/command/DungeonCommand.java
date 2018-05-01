@@ -5,6 +5,7 @@ import net.tkarura.resourcedungeons.core.exception.DungeonCommandException;
 public abstract class DungeonCommand {
 
 	protected final String command_name;
+	protected String description = "Unknown Sub Command.";
 	protected boolean player_only = false;
 	protected String permission;
 
@@ -48,5 +49,7 @@ public abstract class DungeonCommand {
 	public String getName() {
 		return this.command_name;
 	}
+
+	public String getDescription() { return this.description; }
 
 }

@@ -4,34 +4,92 @@ import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeonScript;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptException;
 import net.tkarura.resourcedungeons.core.exception.DungeonScriptRunException;
+import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
+import net.tkarura.resourcedungeons.core.session.SessionManager;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.io.IOException;
+import javax.script.*;
+import java.beans.Expression;
+import java.io.*;
+import java.util.ArrayList;
 
 /**
  * 一つのスクリプト動作を表すクラスです。
  */
 public final class DungeonScriptEngine {
 
-    private DungeonScriptParameter param;       // スクリプト引数情報
-    private GenerateHandle handle;              // ハンドル情報 スクリプト実行結果もこのクラス内に格納されます。
-    private ScriptEngineManager engine_manager; // スクリプトエンジンのマネージャー
-    private ScriptEngine engine;                // スクリプト処理に使用するクラス
+    public final static String DEFAULT_MAIN_FUNCTION_NAME   = "generate";
 
-    /**
-     * 引数と実行結果を格納する情報を引数にスクリプト動作を生成
-     *
-     * @param param スクリプト引数
-     */
-    public DungeonScriptEngine(DungeonScriptParameter param) {
-        this.param = param;
-        this.handle = new GenerateHandle(param.getDungeon(), param.getWorld(), param.getSessions());
+    private GenerateHandle handle;
+    private ScriptEngine engine;
 
-        this.engine_manager = new ScriptEngineManager(param.getUseClassLoader());
-        this.engine = engine_manager.getEngineByName(param.getEngineName());
+    private String main_function_name                       = DEFAULT_MAIN_FUNCTION_NAME;
+    private File script_ext_lib;
+
+    public DungeonScriptEngine(IDungeon dungeon) {
+        this(dungeon, null);
+    }
+
+    public DungeonScriptEngine(IDungeon dungeon, ClassLoader loader) {
+        this.handle = new GenerateHandle();
+        this.handle.dungeon = dungeon;
+        setupScriptEngine(loader);
+    }
+
+    private void setupScriptEngine(ClassLoader loader) {
+
+        // スクリプトを用意
+        ScriptEngineManager sem = new ScriptEngineManager(loader);
+        this.engine = getNashronEngine(sem);
+
+    }
+
+    private ScriptEngine getNashronEngine(ScriptEngineManager engineManager) {
+        ScriptEngine engine = null;
+
+        for (ScriptEngineFactory factory : engineManager.getEngineFactories()) {
+            if (!factory.getNames().contains("nashorn")) {
+                continue;
+            }
+
+            // 特定の環境がクラスパスを通していない可能性があるので
+            // リフレクションを使いNashornScriptEngineFactory#getScriptEngine(String...)に介します。
+            // --no-java オプションを使いスクリプトからJavaへのアクセスを抑制します。
+            // ただしJavaから渡されたオブジェクトなどは扱えます。
+            ArrayList<String> options = new ArrayList<>();
+            options.add("--no-java");
+            Expression exp = new Expression(factory, "getScriptEngine", new Object[] {options.toArray(new String[options.size()])});
+            try {
+                engine = (ScriptEngine) exp.getValue();
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return engine;
+    }
+
+    public void setWorld(IDungeonWorld world) {
+        handle.world = world;
+    }
+
+    public void setSessionManager(SessionManager sessions) {
+        handle.sessions = sessions;
+    }
+
+    public void setBaseLocation(int x, int y, int z) {
+        handle.base_x = x;
+        handle.base_y = y;
+        handle.base_z = z;
+    }
+
+    public void setScriptLibraryDir(File file) {
+        this.script_ext_lib = file;
+    }
+
+    public void setMainFunctionName(String function_name) {
+        this.main_function_name = function_name;
     }
 
     /**
@@ -39,23 +97,42 @@ public final class DungeonScriptEngine {
      *
      * @throws DungeonScriptException
      */
-    public void runScript() throws DungeonScriptException {
+    public void loadScripts() throws DungeonScriptException {
 
-        // 関数呼び出しがサポートされているかを確認します。
-        if (!(engine instanceof Invocable)) {
-            throw new DungeonScriptRunException("Engine not supporting function processing.");
+        if (engine == null) {
+            throw new DungeonScriptException("engine is null.");
         }
 
-        IDungeon dungeon = param.getDungeon();
-
-        for (IDungeonScript script : dungeon.getScripts()) {
+        // APIの読み込み
+        if (script_ext_lib != null) {
 
             try {
-                this.engine.eval(script.getReader());
-            } catch (ScriptException | IOException e) {
+                DungeonScriptAPI dsa = new DungeonScriptAPI(script_ext_lib);
+                dsa.load();
+                dsa.loadScripts(this.engine);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
+        }
+
+        // ダンジョン情報に格納されたスクリプト情報を読み込み
+        for (IDungeonScript script : handle.dungeon.getScripts()) {
+            readScript(script);
+        }
+
+    }
+
+    public void readScript(IDungeonScript script) throws DungeonScriptException {
+
+        if (engine == null) {
+            throw new DungeonScriptException("engine is null.");
+        }
+
+        try {
+            script.read(engine);
+        } catch (IOException | ScriptException e) {
+            throw new DungeonScriptRunException(e.getLocalizedMessage());
         }
 
     }
@@ -67,7 +144,7 @@ public final class DungeonScriptEngine {
      *                                実行中にエラーが起きた場合
      */
     public void callMainFunction() throws DungeonScriptException {
-        this.callFunction(this.param.getMainFunctionName());
+        this.callFunction(this.main_function_name);
     }
 
     /**
@@ -75,34 +152,44 @@ public final class DungeonScriptEngine {
      *
      * @param function_name 実行する関数名
      * @param args          呼び出す引数情報
-     * @throws DungeonScriptException 関数呼び出しがサポートされていないスクリプト言語が選択されていた場合
-     *                                実行中にエラーが起きた場合
+     * @throws DungeonScriptException 実行中にエラーが起きた場合
      */
     public void callFunction(String function_name, Object... args) throws DungeonScriptException {
+
+        if (engine == null) {
+            throw new DungeonScriptException("engine is null.");
+        }
 
         // 実行中の処理
         try {
 
             ((Invocable) engine).invokeFunction(function_name, handle, args);
 
-        } catch (Exception e) {
-
-            // デバッグ用
-            e.printStackTrace();
-
-            // 呼び出し元へ返す例外メッセージ
-            throw new DungeonScriptRunException(e.getLocalizedMessage());
-
+        } catch (NoSuchMethodException e) {
+            throw new DungeonScriptException(e.getLocalizedMessage());
+        } catch (ScriptException e) {
+            throw  new DungeonScriptException(e.getLocalizedMessage());
         }
 
     }
 
     /**
-     * マネージャーに登録されたハンドル情報を返します。
-     * @return ハンドル情報
+     * スクリプトエンジンの実行結果から格納されたセッション情報を全て実行します。
      */
-    public GenerateHandle getHandler() {
-        return this.handle;
+    public void runSessions() {
+        this.handle.runSessions();
+    }
+
+    public IDungeon getDungeon() {
+        return handle.dungeon;
+    }
+
+    public IDungeonWorld getWorld() {
+        return handle.world;
+    }
+
+    public SessionManager getSessionManager() {
+        return handle.sessions;
     }
 
 }
