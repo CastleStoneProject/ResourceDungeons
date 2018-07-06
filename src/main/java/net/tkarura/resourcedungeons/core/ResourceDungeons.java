@@ -25,8 +25,11 @@ import net.tkarura.resourcedungeons.core.session.SetSchematicSession;
  */
 public final class ResourceDungeons {
 
+    public final static String PREFIX = "[RD]";
+    public final static String PREFIX_MES = "&b[&6RD&f&b]&r";
+
     // version
-    public final static String VERSION = "Alpha-1.0.0";
+    public final static String VERSION = "1.0.1";
 
     // dungeon directory.
     private File dungeons_dir = new File("Dungeons");
