@@ -7,6 +7,8 @@ import net.tkarura.resourcedungeons.core.script.DungeonScriptEngine;
 import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
 
+import static net.tkarura.resourcedungeons.core.ResourceDungeons.PREFIX_MES;
+
 public class DungeonGenerateCommand extends DungeonCommand {
 
 	protected DungeonManager dungeon_manager;
@@ -32,7 +34,7 @@ public class DungeonGenerateCommand extends DungeonCommand {
 
 		// 引数チェック
 		if (sender.getArgs().length <= 1) {
-			sender.sendMessage("引数が足りません。dungeon idを指定してください。");
+			sender.sendMessage(PREFIX_MES + "&c引数が足りません。dungeon idを指定してください。");
 			return;
 		}
 
@@ -41,7 +43,7 @@ public class DungeonGenerateCommand extends DungeonCommand {
 
 		// ダンジョン情報があるかを確認
 		if (dungeon == null) {
-			sender.sendMessage("該当のdungeon idはありません。");
+			sender.sendMessage(PREFIX_MES + " &c該当のdungeon idはありません。");
 			return;
 		}
 
@@ -66,7 +68,7 @@ public class DungeonGenerateCommand extends DungeonCommand {
 
 			// 生成に失敗した時の通知
 			e.printStackTrace();
-			sender.sendMessage("Dungeon Generate Faild. reason: " + e.getLocalizedMessage());
+			sender.sendMessage(PREFIX_MES + " &rDungeon Generate Faild. reason: " + e.getLocalizedMessage());
 		}
 
 	}
@@ -79,7 +81,7 @@ public class DungeonGenerateCommand extends DungeonCommand {
 	    script.runSessions();
 
 		// 生成完了の通知
-		sender.sendMessage("Dungeon Generate Complate.");
+		sender.sendMessage(PREFIX_MES + " &bDungeon Generate Complate.");
 
 	}
 
