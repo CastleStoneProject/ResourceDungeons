@@ -274,6 +274,14 @@ public class XMLDungeonLoader extends FileDungeonLoader {
                     option.includeBlock(child_.getTextContent(), x, y, z);
 				}
 
+				if (DOMUtils.isMatchNodeName(child_, "height")) {
+
+					int min = DOMUtils.toIntAttribute(child_, "min", 0);
+					int max = DOMUtils.toIntAttribute(child_, "max", 0);
+
+					option.includeHeight(min, max);
+				}
+
 			}
 
 			list.add(option);
