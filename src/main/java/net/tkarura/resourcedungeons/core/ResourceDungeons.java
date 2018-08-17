@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import net.tkarura.resourcedungeons.core.command.*;
+import net.tkarura.resourcedungeons.core.configuration.Configuration;
 import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.loader.XMLDungeonLoader;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
 import net.tkarura.resourcedungeons.core.session.SetBlockSession;
 import net.tkarura.resourcedungeons.core.session.SetSchematicSession;
+import org.apache.commons.lang3.Validate;
 
 /**
  * ResourceDungeonsの本体 ResourceDungeonsに関わるクラスの初期化とクラスの管理を行います。
@@ -29,13 +31,13 @@ public final class ResourceDungeons {
     public final static String PREFIX_MES = "&b[&6RD&f&b]&r";
 
     // version
-    public final static String VERSION = "1.0.1";
+    public final static String VERSION = "1.0.2";
 
     // dungeon directory.
     private File dungeons_dir = new File("Dungeons");
 
     // logger
-    private Logger log = Logger.getLogger("ResouceDungeons");
+    private static Logger log = Logger.getLogger("ResouceDungeons");
 
     // Managers
     private final DungeonManager dungeons = new DungeonManager();
@@ -47,28 +49,25 @@ public final class ResourceDungeons {
     private DungeonGenerateCommand generate_command = new DungeonGenerateCommand();
     private DungeonInfoCommand info_command = new DungeonInfoCommand();
 
-    public ResourceDungeons() {
-    }
+    public ResourceDungeons() {}
 
     public void setDungeonDirectory(File dir) {
+        Validate.notNull(dir, "dir can not be null.");
         this.dungeons_dir = dir;
     }
 
     public void setLogger(Logger log) {
-        this.log = log;
+        Validate.notNull(log, "log can not be null.");
+        ResourceDungeons.log = log;
     }
 
     /**
      * ResourceDungeonsの初期化を行います。
      * <b><u>ResourceDungeonsに関わるあらゆる処理は全てこのメソッドの後に定義してください。</u></b>
-     * nullを設定した状態で呼び出した場合 {@link NullPointerException} が発生する恐れがあります。
      */
     public void init() {
 
         log.info("Start Resource Dungeons Initialize.");
-
-        // このクラスのLoggerを設定
-        this.dungeons.setLogger(this.log);
 
         // DungeonManagerを初期化
         this.dungeons.init();
@@ -109,13 +108,8 @@ public final class ResourceDungeons {
 
     }
 
-    /**
-     * このクラスで設定されたログ情報を返します。
-     *
-     * @return ログ情報
-     */
-    public Logger getLogger() {
-        return this.log;
+    public static Logger getLogger() {
+        return log;
     }
 
     /**
