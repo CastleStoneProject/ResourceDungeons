@@ -2,6 +2,9 @@ package net.tkarura.resourcedungeons.core.exception;
 
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 
+/**
+ * ResourceDungeonsに関する全ての処理に関わる例外を表します。
+ */
 public class DungeonException extends Exception {
 
     private static final long serialVersionUID = 1L;
