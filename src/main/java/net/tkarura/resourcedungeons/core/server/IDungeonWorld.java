@@ -61,17 +61,6 @@ public interface IDungeonWorld {
     public void setBlockId(int block_id, int x, int y, int z);
 
     /**
-     * 指定した座標のブロックに対しデータ値を設定します。
-     * 座標は絶対座標指定になります。
-     *
-     * @param data データ値
-     * @param x    x座標
-     * @param y    y座標
-     * @param z    z座標
-     */
-    public void setBlockData(byte data, int x, int y, int z);
-
-    /**
      * TileEntityを表すNBTを指定した座標に配置します。
      *
      * @param nbt NBT構造
@@ -91,6 +80,13 @@ public interface IDungeonWorld {
     public void setBiome(String biome, int x, int z);
 
     /**
+     * ワールドの名前を返します。
+     *
+     * @return ワールドの名前
+     */
+    public String getName();
+
+    /**
      * 指定した座標にあるブロックのRegistry IDを取得します。
      *
      * @param x x座標
@@ -99,16 +95,6 @@ public interface IDungeonWorld {
      * @return 指定した座標にあるブロックのRegistry ID
      */
     public String getBlockId(int x, int y, int z);
-
-    /**
-     * 指定した座標にあるブロックのデータ値を取得します。
-     *
-     * @param x x座標
-     * @param y y座標
-     * @param z z座標
-     * @return 指定した座標にあるブロックのデータ値
-     */
-    public byte getBlockData(int x, int y, int z);
 
     /**
      * 指定した座標にあるバイオーム情報を取得します。

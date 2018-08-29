@@ -1,11 +1,8 @@
 package net.tkarura.resourcedungeons.core.generate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import net.tkarura.resourcedungeons.core.dungeon.DungeonGenerateOption;
-import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 
@@ -14,18 +11,21 @@ public class DungeonGenerateCheck {
     // 検索するワールド情報
     private IDungeonWorld world;
 
-    // 検索するダンジョン一覧を格納したマネージャークラス
-    private DungeonManager manager;
-
     // 検索基点座標
-    private int base_x = 0;
-    private int base_y = 0;
-    private int base_z = 0;
+    private int base_x;
+    private int base_y;
+    private int base_z;
 
     // 検索範囲
-    private int width = 0;
-    private int height = 0;
-    private int depth = 0;
+    private int width;
+    private int height;
+    private int depth;
+
+    // ワールドのチェックに使用する項目
+    private Collection<String> worlds = Collections.emptyList();
+
+    // 検索に使用するダンジョン一覧
+    private Collection<IDungeon> dungeons = Collections.emptyList();
 
     // 検索結果を格納するクラス
     private List<DungeonCheckPoint> list = new ArrayList<>();
@@ -38,33 +38,24 @@ public class DungeonGenerateCheck {
      * @param base_z 検索基点z
      * @param width  横幅の検索範囲
      * @param height 高さの検索範囲
-     * @param depth  奥行きの検査範囲
+     * @param length  奥行きの検査範囲
      */
-    public DungeonGenerateCheck(int base_x, int base_y, int base_z, int width, int height, int depth) {
+    public DungeonGenerateCheck(IDungeonWorld world, int base_x, int base_y, int base_z, int width, int height, int length) {
+        this.world = world;
         this.base_x = base_x;
         this.base_y = base_y;
         this.base_z = base_z;
         this.width = width;
         this.height = height;
-        this.depth = depth;
+        this.depth = length;
     }
 
-    /**
-     * 検索するダンジョン一覧情報を設定します。
-     *
-     * @param manager ダンジョン一覧情報
-     */
-    public void setDungeonManager(DungeonManager manager) {
-        this.manager = manager;
+    public void setWorlds(Collection<String> worlds) {
+        this.worlds = worlds;
     }
 
-    /**
-     * 検索するワールド情報を設定します。
-     *
-     * @param world ワールド情報
-     */
-    public void setWorld(IDungeonWorld world) {
-        this.world = world;
+    public void setDungeons(Collection<IDungeon> dungeons) {
+        this.dungeons = dungeons;
     }
 
     public void search() {
@@ -80,6 +71,10 @@ public class DungeonGenerateCheck {
      * @param random 検索に使用する乱数
      */
     public void search(Random random) {
+
+        if (!worlds.isEmpty() && !worlds.contains(world.getName())) {
+            return;
+        }
 
         for (int x = 0; x < width; x++) {
 
@@ -106,7 +101,7 @@ public class DungeonGenerateCheck {
      */
     public void search(int x, int y, int z, Random random) {
 
-        for (IDungeon dungeon : this.manager.getDungeons()) {
+        for (IDungeon dungeon : dungeons) {
 
             DungeonGenerateOption option = this.searchDungeon(dungeon, x, y, z);
 
