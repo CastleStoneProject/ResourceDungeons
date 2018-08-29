@@ -15,6 +15,10 @@ public class CommandManager {
         this.commands.put(command.getName(), command);
     }
 
+    public void unRegister(String name) {
+        this.commands.remove(name);
+    }
+
     public DungeonCommand getCommand(String name) {
         return this.commands.get(name);
     }
