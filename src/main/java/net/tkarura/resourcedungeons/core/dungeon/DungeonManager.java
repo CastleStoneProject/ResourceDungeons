@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.Validate;
 
 import net.tkarura.resourcedungeons.core.exception.DungeonLoadException;
@@ -24,16 +24,13 @@ import net.tkarura.resourcedungeons.core.loader.handle.LoadLogHandleList;
  */
 public final class DungeonManager {
 
-	private Logger log = Logger.getLogger("ResourceDungeons");
+	private Logger log = ResourceDungeons.getLogger();
 
 	// ダンジョン管理情報
 	private Map<String, IDungeon> dungeons = new HashMap<String, IDungeon>();
 
 	// 読み込みクラスの識別
 	private Map<String, FileDungeonLoader> file_loaders = new HashMap<String, FileDungeonLoader>();
-
-	// 再帰処理で読み込める回数
-	private int depth_limit = 15;
 
 	/**
 	 * {@link DungeonManager}を生成します。
@@ -42,14 +39,12 @@ public final class DungeonManager {
 		this.init();
 	}
 
-	public void setLogger(Logger log) {
-		this.log = log;
-	}
-
 	/**
 	 * 初期化します。
 	 */
 	public void init() {
+
+		log = ResourceDungeons.getLogger();
 
 		// ダンジョン情報を全て削除します。
 		this.dungeons.clear();
@@ -61,7 +56,7 @@ public final class DungeonManager {
 
 	/**
 	 * ダンジョン情報を読み込む為のローダを登録します。
-	 * 登録したローダは{{@link #loadDungeon(File)}にて使用されます。
+	 * 登録したローダは{{@link #loadDungeonFile(File)}にて使用されます。
 	 *
 	 * @param loader 登録するローダ情報
 	 * @param extendz 対応する拡張子
@@ -104,65 +99,29 @@ public final class DungeonManager {
 
 	private void loadFolders(File dirs) {
 
-	    for (File dir : dirs.listFiles((FileFilter) FileFilterUtils.directoryFileFilter())) {
-	        loadDungeonFolders(dir);
-        }
+		for (File dir : dirs.listFiles()) {
+
+			if (FileFilterUtils.prefixFileFilter("dungeon.").accept(dir)) {
+				loadDungeonFile(dir);
+				continue;
+			}
+
+			if (dir.isDirectory()) {
+				loadFolders(dir);
+			}
+
+		}
 
     }
-
-    private void loadDungeonFolders(File dirs) {
-
-	    FileFilter fileFilter = new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-
-                if (!pathname.isFile()) {
-                    return false;
-                }
-
-                String file_name = pathname.getName();
-
-                int index = file_name.lastIndexOf('.');
-
-                if (index == -1) {
-                    return false;
-                }
-
-                String name = file_name.substring(0, index);
-
-                if (!name.equalsIgnoreCase("dungeon")) {
-                    return false;
-                }
-
-                return true;
-            }
-        };
-
-	    for (File dir : dirs.listFiles((FileFilter) FileFilterUtils.directoryFileFilter())) {
-	        for (File file : dir.listFiles(fileFilter)) {
-	            loadDungeon(file);
-            }
-        }
-
-    }
-
-	/**
-	 * ダンジョンの定義ファイルであるかの判定を行います。
-	 * @param file 判定を行うファイル
-	 * @return ダンジョン定義ファイルであれば true を返します。
-	 */
-	private boolean isDungeonHeaderFile(File file) {
-		return file.getName().toLowerCase().startsWith("dungeon");
-	}
 
 	/**
 	 * ファイル情報からダンジョン情報を読み込みます。
-	 * 読み込みには{{@link #addFileDungeonLoader(FileDungeonLoader, String[])}にて登録されたローダが使用されます。
+	 * 読み込みには{{@link #addFileDungeonLoader(FileDungeonLoader, String...)}にて登録されたローダが使用されます。
 	 * 読み込み時に呼び出されるローダはファイル拡張子により識別されます。
 	 *
 	 * @param file
 	 */
-	public void loadDungeon(File file) {
+	public void loadDungeonFile(File file) {
 
 		Validate.notNull(file, "file is null.");
 
