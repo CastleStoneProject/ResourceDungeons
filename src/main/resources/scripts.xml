@@ -5,5 +5,7 @@
         <import src="DungeonScriptAPI/session.js"/>
         <import src="DungeonScriptAPI/block.js"/>
         <import src="DungeonScriptAPI/schematic.js"/>
+        <import src="DungeonScriptAPI/random.js"/>
+        <import src="DungeonScriptAPI/log.js"/>
     </includes>
 </scripts>

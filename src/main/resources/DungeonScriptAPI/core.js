@@ -5,13 +5,24 @@ var DungeonScriptAPI = {};
 // ***** メンバ変数 **********************************************************************
 
 DungeonScriptAPI.name = "DungeonScriptAPI"; // 名前
-DungeonScriptAPI.varsion = "1.0.0";         // バージョン情報
+DungeonScriptAPI.version = "1.0.0";         // バージョン情報
 
 DungeonScriptAPI.handle = 0; // スクリプト実行結果を格納するハンドル
 
 DungeonScriptAPI.baseX = 0;
 DungeonScriptAPI.baseY = 0;
 DungeonScriptAPI.baseZ = 0;
+
+DungeonScriptAPI.dungeonId = "";
+DungeonScriptAPI.dungeonName = "";
+DungeonScriptAPI.dungeonVersion = "";
+
+DungeonScriptAPI.log = 0;
+
+DungeonScriptAPI.seedW = 88675123;
+DungeonScriptAPI.seedX = 123456789;
+DungeonScriptAPI.seedY = 362436069;
+DungeonScriptAPI.seedZ = 521288629;
 
 // ***** メンバ関数 **********************************************************************
 
@@ -24,10 +35,22 @@ DungeonScriptAPI.SetHandle = function(_handle)
     // 生成用のハンドル情報を設定
     DungeonScriptAPI.handle = _handle;
 
+    // ログ情報の取得
+    DungeonScriptAPI.log = _handle.getLogger();
+
+    var dungeon = _handle.getDungeon();
+
+    DungeonScriptAPI.dungeonId = dungeon.getId();
+    DungeonScriptAPI.dungeonName = dungeon.getName();
+    DungeonScriptAPI.dungeonVersion = dungeon.getVersion();
+
     // 生成開始位置情報を設定
     DungeonScriptAPI.baseX = _handle.getBaseX();
     DungeonScriptAPI.baseY = _handle.getBaseY();
     DungeonScriptAPI.baseZ = _handle.getBaseZ();
+
+    // シード値を設定
+    DungeonScriptAPI.seedW = _handle.getWorld().getSeed();
 
     DungeonScriptAPI.CleanRegister();
 
