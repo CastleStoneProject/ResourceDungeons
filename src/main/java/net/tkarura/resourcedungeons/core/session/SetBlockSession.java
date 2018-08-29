@@ -15,10 +15,8 @@ public class SetBlockSession implements ISession {
 		int y = data.getInt("y");
 		int z = data.getInt("z");
 		String block_id = data.getString("block_id", world.getBlockId(x, y, z));
-		byte damage = data.getByte("block_data", world.getBlockData(x, y, z));
 
 		world.setBlockId(block_id, x, y, z);
-		world.setBlockData(damage, x, y, z);
 
 	}
 
