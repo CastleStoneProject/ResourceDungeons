@@ -1,6 +1,5 @@
 package net.tkarura.resourcedungeons.core.util;
 
-import com.sun.webkit.dom.NodeListImpl;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -55,7 +54,7 @@ public final class DOMUtils {
     public static Node getNameToFirstNode(Node parent, String node_name) {
         if (parent == null || node_name == null) return null;
         Node[] nodes = getNameToNodeList(parent, node_name);
-        return node_name.length() > 0 ? nodes[0] : null;
+        return nodes.length > 0 ? nodes[0] : null;
     }
 
     public static String getNodeTextContent(Node node, String node_name) {
