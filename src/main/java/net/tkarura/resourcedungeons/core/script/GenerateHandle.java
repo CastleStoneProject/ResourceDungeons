@@ -2,10 +2,11 @@ package net.tkarura.resourcedungeons.core.script;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.UUID;
+import java.util.logging.Logger;
 
+import net.tkarura.resourcedungeons.core.ResourceDungeons;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
-import net.tkarura.resourcedungeons.core.exception.DungeonSessionException;
+import net.tkarura.resourcedungeons.core.exception.SessionException;
 import net.tkarura.resourcedungeons.core.server.IDungeonWorld;
 import net.tkarura.resourcedungeons.core.session.ISession;
 import net.tkarura.resourcedungeons.core.session.SessionManager;
@@ -55,7 +56,7 @@ public final class GenerateHandle {
         while ((nbt = this.queue.pollLast()) != null) {
 
             // セッション情報を取得
-            ISession session = sessions.getSession(nbt.getString("session"));
+            ISession session = sessions.getSession(nbt.getString("structure"));
 
             // 有効なセッション情報な場合は処理
             if (session != null) {
@@ -64,7 +65,7 @@ public final class GenerateHandle {
 
                     session.run(this, nbt);
 
-                } catch (DungeonSessionException e) {
+                } catch (SessionException e) {
                     e.printStackTrace();
                 }
 
@@ -132,6 +133,14 @@ public final class GenerateHandle {
      */
     public int getBaseZ() {
         return this.base_z;
+    }
+
+    /**
+     * ログ情報を取得します。
+     * @return ログ情報
+     */
+    public Logger getLogger() {
+        return ResourceDungeons.getLogger();
     }
 
 }
