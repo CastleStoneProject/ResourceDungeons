@@ -9,17 +9,18 @@ public abstract class DNBTBase {
 
 	public final static String[] TAG_TYPE_NAMES = {
 			"END",        // 0
-			"BYTE",    // 1
-			"SHORT",    // 2
+			"BYTE",       // 1
+			"SHORT",      // 2
 			"INT",        // 3
-			"LONG",    // 4
-			"FLOAT",    // 5
-			"DOUBLE",    // 6
-			"BYTE_ARRAY",    // 7
-			"STRING",    // 8
-			"LIST",    // 9
-			"COMPOUND",    // 10
-			"INT_ARRAY",    // 11
+			"LONG",       // 4
+			"FLOAT",      // 5
+			"DOUBLE",     // 6
+			"BYTE_ARRAY", // 7
+			"STRING",     // 8
+			"LIST",       // 9
+			"COMPOUND",   // 10
+			"INT_ARRAY",  // 11
+			"LONG_ARRAY", // 12
 	};
 
 	public final static byte TAG_END = 0;
@@ -34,6 +35,7 @@ public abstract class DNBTBase {
 	public final static byte TAG_LIST = 9;
 	public final static byte TAG_COMPOUND = 10;
 	public final static byte TAG_INT_ARRAY = 11;
+	public final static byte TAG_LONG_ARRAY = 12;
 
 	/**
 	 * 生成します。
@@ -87,6 +89,8 @@ public abstract class DNBTBase {
 				return new DNBTTagCompound();
 			case TAG_INT_ARRAY:
 				return new DNBTTagIntArray();
+            case TAG_LONG_ARRAY:
+                return new DNBTTagLongArray();
 			default:
 				return null;
 		}
@@ -181,6 +185,15 @@ public abstract class DNBTBase {
 	public static DNBTTagIntArray valueOf(int[] value) {
 		return new DNBTTagIntArray(value);
 	}
+
+    /**
+     * long配列引数のタグを返します。
+     * @param value long配列
+     * @return long配列引数が格納されたタグが返されます。
+     */
+	public static DNBTTagLongArray valueOf(long[] value) {
+	    return new DNBTTagLongArray(value);
+    }
 
 	@Override
 	public boolean equals(Object object) {

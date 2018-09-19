@@ -1,28 +1,16 @@
-package net.tkarura.resourcedungeons.core.util.nbt.stream;
+package net.tkarura.resourcedungeons.core.util.nbt.io;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTBase;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagByte;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagByteArray;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagCompound;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagDouble;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagEnd;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagFloat;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagInt;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagIntArray;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagList;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagLong;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagShort;
-import net.tkarura.resourcedungeons.core.util.nbt.DNBTTagString;
+import net.tkarura.resourcedungeons.core.util.nbt.*;
 
 /**
  * バイナリデータからNBTタグへ変換を行うクラスです。
  * 
  * @author the_karura
  */
-public class DNBTDataInputStream implements AutoCloseable {
+public class DNBTDataInputStream implements Closeable {
     
     // バイナリ読み取り用のストリーム
     protected DataInputStream stream;
@@ -129,6 +117,10 @@ public class DNBTDataInputStream implements AutoCloseable {
 				return new DNBTTagIntArray(readIntArray());
 			}
 
+			case DNBTBase.TAG_LONG_ARRAY: {
+				return new DNBTTagLongArray(readLongArray());
+			}
+
 			// 無効なタグタイプが指定された場合例外を発生させます。
 			default: {
 				throw new IOException("Invaled Tag Type. " + id);
@@ -196,6 +188,17 @@ public class DNBTDataInputStream implements AutoCloseable {
 		// 作成した配列を代入
 		for (int i = 0; i < array.length; i++) {
 			array[i] = this.stream.readInt();
+		}
+
+		return array;
+	}
+
+	private long[] readLongArray() throws IOException {
+
+    	long[] array = new long[this.stream.readInt()];
+
+    	for (int i = 0; i < array.length; i++) {
+    		array[i] = this.stream.readLong();
 		}
 
 		return array;
