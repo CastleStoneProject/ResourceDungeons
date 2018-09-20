@@ -67,10 +67,6 @@ public class DNBTJsonReader implements Closeable {
 
     public DNBTBase read(JsonPrimitive primitive) {
 
-        if (primitive.isBoolean()) {
-            return new DNBTTagByte((byte) (primitive.getAsBoolean() ? 1 : 0));
-        }
-
         if (primitive.isString()) {
             return new DNBTTagString(primitive.getAsString());
         }
