@@ -6,6 +6,8 @@ import net.tkarura.resourcedungeons.core.dungeon.DungeonManager;
 import net.tkarura.resourcedungeons.core.dungeon.IDungeon;
 import net.tkarura.resourcedungeons.core.exception.DungeonCommandException;
 
+import static net.tkarura.resourcedungeons.core.ResourceDungeons.PREFIX_MES;
+
 public class DungeonListCommand extends DungeonCommand {
 
 	private DungeonManager dungeon_manager;
@@ -28,20 +30,22 @@ public class DungeonListCommand extends DungeonCommand {
 
 		// ダンジョンが格納されていない場合は処理をしない
 		if (dungeons.isEmpty()) {
-			sender.sendMessage("dungeon is not loaded.");
+			sender.sendMessage(PREFIX_MES + " &rdungeon is not loaded.");
 			return;
 		}
 
 		// ダンジョンのリストを返します。
-		sender.sendMessage("dungeon lists.");
+		sender.sendMessage(PREFIX_MES + " =============================================&r");
+		sender.sendMessage(PREFIX_MES + " &rdungeon lists.&r");
 
 		// リストの数をカウントをする変数
 		int count = 0;
 
 		// ダンジョン情報をループで取得
 		for (IDungeon dungeon : dungeons) {
-			sender.sendMessage("[" + (count++) + "] id: " + dungeon.getId() + " name: " + dungeon.getName());
+			sender.sendMessage(PREFIX_MES + " [" + (count++) + "] id: " + dungeon.getId() + " name: " + dungeon.getName() + "&r");
 		}
+		sender.sendMessage(PREFIX_MES + " =============================================&r");
 
 	}
 

@@ -5,6 +5,8 @@ import net.tkarura.resourcedungeons.core.exception.DungeonCommandException;
 
 import java.math.BigDecimal;
 
+import static net.tkarura.resourcedungeons.core.ResourceDungeons.PREFIX_MES;
+
 public class DungeonInfoCommand extends DungeonCommand {
 
     public final static String COMMAND_NAME = "info";
@@ -24,60 +26,60 @@ public class DungeonInfoCommand extends DungeonCommand {
     public void execute(DungeonCommandSender sender) throws DungeonCommandException {
 
         if (sender.getArgs().length <= 1) {
-            sender.sendMessage("引数が足りません。dungeon idを指定してください。");
+            sender.sendMessage(PREFIX_MES + " &c引数が足りません。dungeon idを指定してください。");
             return;
         }
 
         IDungeon dungeon = dungeon_manager.getDungeon(sender.getArgs()[1]);
 
         if (dungeon == null) {
-            sender.sendMessage("該当のdungeon idはありません。");
+            sender.sendMessage(PREFIX_MES + " &c該当のdungeon idはありません。");
             return;
         }
 
-        sender.sendMessage("==================================================");
-        sender.sendMessage("id: " + dungeon.getId());
-        sender.sendMessage("name:    " + dungeon.getName());
-        sender.sendMessage("version: " + dungeon.getVersion());
-        sender.sendMessage("--------------------------------------------------");
-        sender.sendMessage(dungeon.getDescription());
-        sender.sendMessage("--------------------------------------------------");
-        sender.sendMessage("authors: ");
+        sender.sendMessage(PREFIX_MES + " =============================================&r");
+        sender.sendMessage(PREFIX_MES + " id: " + dungeon.getId() + "&r");
+        sender.sendMessage(PREFIX_MES + " name:    " + dungeon.getName() + "&r");
+        sender.sendMessage(PREFIX_MES + " version: " + dungeon.getVersion() + "&r");
+        sender.sendMessage(PREFIX_MES + " ---------------------------------------------&r");
+        sender.sendMessage(PREFIX_MES + " " + dungeon.getDescription() + "&r");
+        sender.sendMessage(PREFIX_MES + " ---------------------------------------------&r");
+        sender.sendMessage(PREFIX_MES + " &bauthors:&r");
         if (dungeon.getAuthors().isEmpty()) {
-            sender.sendMessage("author not fount.");
+            sender.sendMessage(PREFIX_MES + " &rauthor not fount.&r");
         }
         for (DungeonUser user : dungeon.getAuthors()) {
-            sender.sendMessage("name: " + user.getName() + " uuid: " + user.getUUID());
+            sender.sendMessage(PREFIX_MES + " > name: " + user.getName() + " uuid: " + user.getUUID() + "&r");
         }
-        sender.sendMessage("--------------------------------------------------");
-        sender.sendMessage("contributors: ");
+        sender.sendMessage(PREFIX_MES + " ---------------------------------------------&r");
+        sender.sendMessage(PREFIX_MES + " &bcontributors:&r");
         if (dungeon.getAuthors().isEmpty()) {
-            sender.sendMessage("contributor not fount.");
+            sender.sendMessage(PREFIX_MES + " &rcontributor not fount.&r");
         }
         for (DungeonUser user : dungeon.getContributors()) {
-            sender.sendMessage("name: " + user.getName() + " uuid: " + user.getUUID());
+            sender.sendMessage(PREFIX_MES + " > name: " + user.getName() + " uuid: " + user.getUUID() + "&r");
         }
-        sender.sendMessage("--------------------------------------------------");
-        sender.sendMessage("scripts: ");
+        sender.sendMessage(PREFIX_MES + " ---------------------------------------------&r");
+        sender.sendMessage(PREFIX_MES + " &bscripts:&r");
         if (dungeon.getScripts().isEmpty()) {
-            sender.sendMessage("script not found.");
+            sender.sendMessage(PREFIX_MES + " &rscript not found.&r");
         } else {
-            sender.sendMessage("script " + dungeon.getScripts().size() + " loaded.");
+            sender.sendMessage(PREFIX_MES + " script " + dungeon.getScripts().size() + " loaded.&r");
         }
         for (IDungeonScript script : dungeon.getScripts()) {
-            sender.sendMessage(script.getLocation());
+            sender.sendMessage(PREFIX_MES + " > " + script.getLocation() + "&r");
         }
-        sender.sendMessage("--------------------------------------------------");
-        sender.sendMessage("options: ");
+        sender.sendMessage(PREFIX_MES + " ---------------------------------------------&r");
+        sender.sendMessage(PREFIX_MES + " &boptions:&r");
         if (dungeon.getGenerateOptions().isEmpty()) {
-            sender.sendMessage("options not found.");
+            sender.sendMessage(PREFIX_MES + " &roptions not found.&r");
         }
         for (DungeonGenerateOption option : dungeon.getGenerateOptions()) {
-            sender.sendMessage("function: " + option.getFunctionName() +
+            sender.sendMessage(PREFIX_MES + " > function: " + option.getFunctionName() +
                     " percent: " + toParcentString(option.getPercent()) +
-                    " biomes: " + getListToString(option.getBiomes()));
+                    " biomes: " + getListToString(option.getBiomes()) + "&r");
         }
-        sender.sendMessage("==================================================");
+        sender.sendMessage(PREFIX_MES + " =============================================&r");
 
     }
 

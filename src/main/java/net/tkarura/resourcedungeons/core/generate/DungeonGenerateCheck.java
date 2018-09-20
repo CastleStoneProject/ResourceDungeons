@@ -17,9 +17,6 @@ public class DungeonGenerateCheck {
     // 検索するダンジョン一覧を格納したマネージャークラス
     private DungeonManager manager;
 
-    // 乱数生成器
-    private Random random;
-
     // 検索基点座標
     private int base_x = 0;
     private int base_y = 0;
@@ -68,13 +65,21 @@ public class DungeonGenerateCheck {
      */
     public void setWorld(IDungeonWorld world) {
         this.world = world;
-        this.random = new Random(world.getSeed() * (base_x + base_y + base_z));
+    }
+
+    public void search() {
+        search(new Random(toPositionSeed() * world.getSeed()));
+    }
+
+    private int toPositionSeed() {
+        return ((base_x * 123) + (base_y * 456) + (base_z * 789));
     }
 
     /**
      * 検索を開始します。
+     * @param random 検索に使用する乱数
      */
-    public void search() {
+    public void search(Random random) {
 
         for (int x = 0; x < width; x++) {
 
@@ -83,7 +88,7 @@ public class DungeonGenerateCheck {
                 for (int z = 0; z < depth; z++) {
 
                     // ブロック単位での検索を始めます。
-                    this.search(base_x + x, base_y + y, base_z + z);
+                    this.search(base_x + x, base_y + y, base_z + z, random);
 
                 }
             }
@@ -97,8 +102,9 @@ public class DungeonGenerateCheck {
      * @param x 検索する座標
      * @param y 検索する座標
      * @param z 検索する座標
+     * @param random 検索に使用する乱数
      */
-    public void search(int x, int y, int z) {
+    public void search(int x, int y, int z, Random random) {
 
         for (IDungeon dungeon : this.manager.getDungeons()) {
 
