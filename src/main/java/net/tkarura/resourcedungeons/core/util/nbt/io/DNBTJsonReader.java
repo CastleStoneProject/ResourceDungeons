@@ -17,7 +17,7 @@ public class DNBTJsonReader implements Closeable {
         this.reader = new JsonReader(reader);
     }
 
-    public DNBTTagCompound read() throws IOException {
+    public DNBTTagCompound read() {
         Gson gson = new Gson();
         return read((JsonObject) gson.fromJson(reader, JsonObject.class));
     }
@@ -36,7 +36,7 @@ public class DNBTJsonReader implements Closeable {
             return read(element.getAsJsonPrimitive());
         }
 
-        throw new IllegalArgumentException("変換出来ない要素 " + element.toString());
+        throw new IllegalArgumentException("can not be converted. " + element.toString());
 
     }
 
@@ -57,8 +57,8 @@ public class DNBTJsonReader implements Closeable {
                 first = base.getTypeId();
             }
             if (i != 0 && base.getTypeId() != first) {
-                throw new IllegalArgumentException("type:" + DNBTBase.TAG_TYPE_NAMES[first] +
-                        " invalid value type:" + DNBTBase.TAG_TYPE_NAMES[base.getTypeId()]);
+                throw new IllegalArgumentException("list value type is " + DNBTBase.TAG_TYPE_NAMES[first] +
+                        ". invalid value type:" + DNBTBase.TAG_TYPE_NAMES[base.getTypeId()]);
             }
             list.add(base);
         }
@@ -80,7 +80,7 @@ public class DNBTJsonReader implements Closeable {
             return DNBTUtils.convert(value);
         }
 
-        throw new IllegalArgumentException("変換出来ない要素");
+        throw new IllegalArgumentException("can not be converted. " + primitive.toString());
     }
 
     @Override
