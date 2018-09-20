@@ -2,9 +2,11 @@ package net.tkarura.resourcedungeons.core.util.nbt;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * 複数のタグ情報を取りまとめたクラスです。
@@ -529,6 +531,10 @@ public class DNBTTagCompound extends DNBTBase {
         }
         return def;
     }
+
+    public Set<String> getKeys() {
+    	return this.value.keySet();
+	}
 
 	@Override
 	public Map<String, DNBTBase> getValue() {
