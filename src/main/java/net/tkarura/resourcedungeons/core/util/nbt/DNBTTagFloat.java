@@ -62,7 +62,7 @@ public class DNBTTagFloat extends DNBTNumber {
 
 	@Override
 	public byte getTypeId() {
-		return 5;
+		return DNBTBase.TAG_FLOAT;
 	}
 
 	@Override

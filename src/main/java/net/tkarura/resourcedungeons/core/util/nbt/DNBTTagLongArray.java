@@ -19,7 +19,7 @@ public class DNBTTagLongArray extends DNBTBase {
 
     @Override
     public byte getTypeId() {
-        return 12;
+        return DNBTBase.TAG_LONG_ARRAY;
     }
 
     @Override

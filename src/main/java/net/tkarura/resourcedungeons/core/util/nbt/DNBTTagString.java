@@ -32,7 +32,7 @@ public class DNBTTagString extends DNBTBase {
 
 	@Override
 	public byte getTypeId() {
-		return 8;
+		return DNBTBase.TAG_STRING;
 	}
 
 	@Override

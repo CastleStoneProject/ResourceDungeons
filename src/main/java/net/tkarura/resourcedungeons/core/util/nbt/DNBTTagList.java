@@ -183,7 +183,7 @@ public class DNBTTagList extends DNBTBase {
 
     @Override
     public byte getTypeId() {
-        return (byte) 9;
+        return DNBTBase.TAG_LIST;
     }
 
     @Override

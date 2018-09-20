@@ -13,7 +13,7 @@ public class DNBTTagEnd extends DNBTBase {
 
 	@Override
 	public byte getTypeId() {
-		return (byte) 0;
+		return DNBTBase.TAG_END;
 	}
 
 	@Override

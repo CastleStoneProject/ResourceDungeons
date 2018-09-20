@@ -32,7 +32,7 @@ public class DNBTTagIntArray extends DNBTBase {
 
 	@Override
 	public byte getTypeId() {
-		return 11;
+		return DNBTBase.TAG_INT_ARRAY;
 	}
 
 	@Override

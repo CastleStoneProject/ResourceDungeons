@@ -62,7 +62,7 @@ public class DNBTTagShort extends DNBTNumber {
 
 	@Override
 	public byte getTypeId() {
-		return (byte) 2;
+		return DNBTBase.TAG_SHORT;
 	}
 
 	@Override

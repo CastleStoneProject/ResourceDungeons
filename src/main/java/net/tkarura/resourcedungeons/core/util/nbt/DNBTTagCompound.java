@@ -543,7 +543,7 @@ public class DNBTTagCompound extends DNBTBase {
 
 	@Override
 	public byte getTypeId() {
-		return (byte) 10;
+		return DNBTBase.TAG_COMPOUND;
 	}
 
 	@Override
